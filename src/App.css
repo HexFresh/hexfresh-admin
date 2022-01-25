@@ -1,0 +1,11 @@
+.App {
+  display: flex;
+}
+
+.App .sub {
+  margin-top: 65px;
+  width: 100%;
+  height: calc(100vh - 65px);
+  background-color: #fafafb;
+  overflow-y: scroll;
+}

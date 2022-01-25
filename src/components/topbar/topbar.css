@@ -1,0 +1,60 @@
+.topbar {
+  width: 100%;
+  height: 65px;
+  padding: 0 10px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: #334155;
+  z-index: 10;
+}
+
+.topbar .container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.topbar .container .notification {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.topbar .container .notification .count-noti {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  padding: 2px;
+  background-color: red;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+  color: white;
+}
+
+.topbar .container .notification .ground {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: #cecece;
+  width: 40px;
+  height: 40px;
+}
+
+.topbar .container .avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
