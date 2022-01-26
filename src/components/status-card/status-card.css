@@ -1,0 +1,66 @@
+.status-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  box-shadow: var(--shadow);
+  border-radius: var(--border-radius);
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-card .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-card .container .left {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 5px;
+  font-weight: bold;
+}
+
+.status-card .container .left .name {
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.status-card .container .left .number {
+  font-size: 26px;
+}
+
+.status-card .container .right {
+  color: white;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  padding: 10px;
+}
+
+.status-card .bottom {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  grid-gap: 8px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.status-card .bottom .percent {
+  display: flex;
+  align-items: center;
+  color: var(--success-color);
+}
+
+.status-card .bottom .since {
+  color: #94a3b8;
+}

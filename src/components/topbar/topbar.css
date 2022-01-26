@@ -5,7 +5,7 @@
   position: fixed;
   top: 0;
   right: 0;
-  background-color: #334155;
+  background-color: var(--main-color);
   z-index: 10;
 }
 

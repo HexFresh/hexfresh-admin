@@ -8,7 +8,7 @@ import SidebarItem from './SidebarItem';
 import logo from '../../assets/images/logo.png';
 
 export default function Sidebar() {
-  const [hide, setHide] = useState(false);
+  const [hide, setHide] = useState(true);
 
   const location = useLocation();
 

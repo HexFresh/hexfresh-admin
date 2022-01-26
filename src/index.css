@@ -5,6 +5,14 @@
   font-family: 'Open Sans', sans-serif;
 }
 
+:root {
+  --main-color: #334155;
+  --page-name: 22px;
+  --shadow: rgba(0, 0, 0, 0.2) 0px 5px 10px;
+  --border-radius: 10px;
+  --success-color: #10b981;
+}
+
 .link {
   text-decoration: none;
   color: white;

@@ -10,7 +10,7 @@
   transform: scale(0);
   transition: transform 0.3s ease 0s;
   border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 10px;
+  box-shadow: var(--shadow);
 }
 
 .notifications.active {

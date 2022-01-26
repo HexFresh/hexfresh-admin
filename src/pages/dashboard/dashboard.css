@@ -1,0 +1,14 @@
+.dashboard {
+  padding: 20px;
+}
+
+.dashboard .container {
+  width: 100%;
+}
+
+.dashboard .container .page-name {
+  color: var(--main-color);
+  font-weight: bold;
+  font-size: var(--page-name);
+  margin-bottom: 30px;
+}
