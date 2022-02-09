@@ -12,3 +12,10 @@
   font-size: var(--page-name);
   margin-bottom: 30px;
 }
+
+.dashboard .container .chart {
+  margin-top: 20px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  border-radius: var(--border-radius);
+}

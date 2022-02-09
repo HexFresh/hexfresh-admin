@@ -8,4 +8,11 @@
   height: calc(100vh - 65px);
   background-color: #fafafb;
   overflow-y: scroll;
+  margin-left: 90px;
+}
+
+@media (max-width: 700px) {
+  .App .sub {
+    margin-left: 0;
+  }
 }

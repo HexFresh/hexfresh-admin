@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { routes } from '../../dummyData/menu';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -7,9 +7,7 @@ import './sidebar.css';
 import SidebarItem from './SidebarItem';
 import logo from '../../assets/images/logo.png';
 
-export default function Sidebar() {
-  const [hide, setHide] = useState(true);
-
+export default function Sidebar({ open, openSidebar, closeSidebar }) {
   const location = useLocation();
 
   const activeItem = routes.findIndex(
@@ -17,16 +15,16 @@ export default function Sidebar() {
   );
 
   return (
-    <div className={hide ? 'sidebar hide' : 'sidebar'}>
+    <div className={open ? 'sidebar' : 'sidebar hide'}>
       <div className="back-button">
-        {hide ? (
+        {!open ? (
           <MenuIcon
             fontSize="large"
             className="menu"
-            onClick={() => setHide(!hide)}
+            onClick={() => openSidebar()}
           />
         ) : (
-          <ArrowBackIcon fontSize="large" onClick={() => setHide(!hide)} />
+          <ArrowBackIcon fontSize="large" onClick={() => closeSidebar()} />
         )}
       </div>
       <div className="container">
@@ -35,11 +33,16 @@ export default function Sidebar() {
         </div>
         <div className="route">
           {routes.map((route, index) => (
-            <Link className="link" key={index} to={route.route}>
+            <Link
+              onClick={() => closeSidebar()}
+              className="link"
+              key={index}
+              to={route.route}
+            >
               <SidebarItem
                 route={route}
                 active={index === activeItem}
-                hide={hide}
+                hide={!open}
               />
             </Link>
           ))}

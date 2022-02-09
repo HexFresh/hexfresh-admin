@@ -4,10 +4,10 @@
   background-color: var(--main-color);
   color: white;
   padding: 15px;
-  position: relative;
+  position: fixed;
   transition: all 0.5s ease;
   overflow-x: hidden;
-  z-index: 11;
+  z-index: 100;
 }
 
 .sidebar.hide {
@@ -81,22 +81,18 @@
   display: none;
 }
 
-@media (max-width: 800px) {
-  .sidebar {
-    width: 100px;
+@media (max-width: 700px) {
+  .sidebar.hide {
+    display: none;
   }
 
-  .sidebar .back-button {
-    display: none;
+  .sidebar {
+    width: 100%;
   }
 
   .sidebar-item {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  .sidebar-item .name {
-    display: none;
   }
 }
