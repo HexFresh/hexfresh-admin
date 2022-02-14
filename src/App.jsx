@@ -14,7 +14,7 @@ function App() {
   const closeSidebar = () => {
     setOpen(false);
   };
-  const isLogin = true;
+  const isLogin = false;
   const authContent = (
     <>
       <Sidebar
