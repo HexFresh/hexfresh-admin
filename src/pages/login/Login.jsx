@@ -1,12 +1,29 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import logo from '../../assets/images/logo.png';
 import InputBase from '@mui/material/InputBase';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import Button from '@mui/material/Button';
+import { signIn } from '../../redux/auth/auth-actions';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import './login.css';
 
 export default function Login() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const username = useRef();
+  const password = useRef();
+
+  const handleSignIn = () => {
+    if (username.current.value !== '' && password.current.value !== '') {
+      const credentials = {
+        username: username.current.value,
+        token: password.current.value,
+      };
+      dispatch(signIn(credentials, navigate));
+    }
+  };
   return (
     <div className="login">
       <img src={logo} alt="logo" />
@@ -18,6 +35,7 @@ export default function Login() {
         <div className="filed">
           <EmailIcon className="icon" />
           <InputBase
+            inputRef={username}
             sx={{ ml: 1, flex: 1 }}
             placeholder="Enter your username"
             autoFocus
@@ -26,12 +44,15 @@ export default function Login() {
         <div className="filed">
           <LockIcon className="icon" />
           <InputBase
+            inputRef={password}
             sx={{ ml: 1, flex: 1 }}
             placeholder="Enter your password"
             type="password"
           />
         </div>
-        <Button variant="contained">Sign In</Button>
+        <Button onClick={handleSignIn} variant="contained">
+          Sign In
+        </Button>
       </div>
     </div>
   );

@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import {
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+  useLocation,
+} from 'react-router-dom';
 import Dashboard from './pages/dashboard/Dashboard';
 import Login from './pages/login/Login';
 import Sidebar from './components/sidebar/Sidebar';
 import './App.css';
 import Topbar from './components/topbar/Topbar';
+import { useSelector, useDispatch } from 'react-redux';
+import { checkAutoLogin } from './redux/auth/auth-services';
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -14,7 +22,17 @@ function App() {
   const closeSidebar = () => {
     setOpen(false);
   };
-  const isLogin = false;
+  const isLogin = useSelector((state) => state.auth.token);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    checkAutoLogin(dispatch, navigate, location);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
+
   const authContent = (
     <>
       <Sidebar

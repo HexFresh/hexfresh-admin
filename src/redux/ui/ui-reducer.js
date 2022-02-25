@@ -1,7 +1,6 @@
 const initialState = { request: null, message: null };
 
 const uiReducer = (state = initialState, action) => {
-  console.log({ name: 'ui', state, action });
   switch (action.type) {
     case 'ui/pending':
       console.log('request is pending');

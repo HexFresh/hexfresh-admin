@@ -1,4 +1,10 @@
-export const unrecordRoute = ['/signin', '/signup', '/change-password', '/courses', '/'];
+export const unrecordRoute = [
+  '/signin',
+  '/signup',
+  '/change-password',
+  '/courses',
+  '/',
+];
 
 export const calculateRemainingTime = (expirationTime) => {
   const currentTime = new Date().getTime();
@@ -13,11 +19,11 @@ export const retrieveStoredToken = () => {
 
   const remainingTime = calculateRemainingTime(storedExpirationDate);
 
-  if (remainingTime <= 3600) {
-    localStorage.removeItem('token');
-    localStorage.removeItem('expirationTime');
-    return null;
-  }
+  // if (remainingTime <= 3600) {
+  //   localStorage.removeItem('token');
+  //   localStorage.removeItem('expirationTime');
+  //   return null;
+  // }
 
   return {
     token: storedToken,
