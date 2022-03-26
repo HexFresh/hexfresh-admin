@@ -22,7 +22,7 @@ function ListProgram() {
   const fetchPrograms = async (value) => {
     setLoading(true);
     const result = await getPrograms();
-    setPrograms(result);
+    setPrograms(result || []);
     setLoading(false);
   };
 
@@ -120,7 +120,7 @@ function ListProgram() {
         </div>
         <div className="pagination">
           <Pagination
-            count={Math.ceil(programs.length / 4)}
+            count={Math.ceil(programs?.length / 4)}
             shape="rounded"
             color="primary"
             page={page}
