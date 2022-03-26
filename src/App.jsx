@@ -6,13 +6,14 @@ import {
   useNavigate,
   useLocation,
 } from 'react-router-dom';
-import Dashboard from './pages/dashboard/Dashboard';
 import Login from './pages/login/Login';
 import Sidebar from './components/sidebar/Sidebar';
 import './App.css';
 import Topbar from './components/topbar/Topbar';
 import { useSelector, useDispatch } from 'react-redux';
 import { checkAutoLogin } from './redux/auth/auth-services';
+import ListProgram from './pages/list-program/ListProgram';
+import Dashboard from './pages/dashboard/Dashboard';
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -43,9 +44,10 @@ function App() {
       <div className="sub">
         <Topbar openSidebar={openSidebar} />
         <Routes>
-          <Route path="/" element={<Navigate replace to="/dashboard" />} />
-          <Route path="/login" element={<Navigate replace to="/dashboard" />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/" element={<Navigate replace to="/programs" />} />
+          <Route path="/login" element={<Navigate replace to="/programs" />} />
+          <Route path="/programs" element={<ListProgram />} />
+          <Route path="/mentors" element={<Dashboard />} />
         </Routes>
       </div>
     </>

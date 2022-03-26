@@ -4,8 +4,8 @@ import GroupIcon from '@mui/icons-material/Group';
 
 export const routes = [
   {
-    display_name: 'Dashboard',
-    route: '/dashboard',
+    display_name: 'Programs',
+    route: '/programs',
     icon: <DashboardIcon />,
   },
   {

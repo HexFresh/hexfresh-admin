@@ -1,4 +1,5 @@
 import { success } from '../ui/ui-actions';
+import axiosClient from '../../api/axiosClient';
 
 export function retrieveTokenAction(token) {
   return {
@@ -31,12 +32,19 @@ export function signOut(history) {
 
 export function signIn(credentials, history) {
   return async (dispatch) => {
-    dispatch(loginConfirmAction(credentials));
-
-    localStorage.setItem('token', credentials.token);
-
-    dispatch(success());
-
-    history('/');
+    const endpoint = 'auth/login';
+    try {
+      const response = await axiosClient.post(
+        endpoint,
+        `username=admin&password=123`
+      );
+      const { token, user } = response.data;
+      localStorage.setItem('token', token);
+      dispatch(loginConfirmAction({ ...user, token }));
+      dispatch(success());
+      history('/');
+    } catch (error) {
+      console.log(error);
+    }
   };
 }
