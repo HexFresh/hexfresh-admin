@@ -3,7 +3,7 @@ import logo from '../../assets/images/logo.png';
 import InputBase from '@mui/material/InputBase';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
-import Button from '@mui/material/Button';
+import { Button } from 'antd';
 import { signIn } from '../../redux/auth/auth-actions';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -50,8 +50,8 @@ export default function Login() {
             type="password"
           />
         </div>
-        <Button onClick={handleSignIn} variant="contained">
-          Sign In
+        <Button onClick={handleSignIn} type="primary">
+          Sign in
         </Button>
       </div>
     </div>
