@@ -267,7 +267,7 @@ function ListUser() {
             <Select
               value={newUser.roleId || 'Admin'}
               onChange={(value) => setNewUser({ ...newUser, roleId: value })}
-              style={{ width: '100%', marginBottom: '20px' }}
+              style={{ width: '100%' }}
             >
               <Option value="1">Admin</Option>
               <Option value="2">HR</Option>
@@ -275,22 +275,25 @@ function ListUser() {
               <Option value="4">Fresher</Option>
             </Select>
           </div>
-          <div className="field">
-            <label>Assign for mentor</label>
-            <Select
-              placeholder="Select mentor"
-              value={newUser.mentorId || null}
-              onChange={(value) => setNewUser({ ...newUser, mentorId: value })}
-              style={{ width: '100%', marginBottom: '20px' }}
-              disabled={newUser.roleId !== '4'}
-            >
-              {mentors.map((mentor) => (
-                <Option key={mentor.id} value={mentor.id}>
-                  {mentor.username}
-                </Option>
-              ))}
-            </Select>
-          </div>
+          {newUser.roleId === '4' && (
+            <div className="field" style={{ marginTop: '20px' }}>
+              <label>Assign for mentor</label>
+              <Select
+                placeholder="Select mentor"
+                value={newUser.mentorId || null}
+                onChange={(value) =>
+                  setNewUser({ ...newUser, mentorId: value })
+                }
+                style={{ width: '100%' }}
+              >
+                {mentors.map((mentor) => (
+                  <Option key={mentor.id} value={mentor.id}>
+                    {mentor.username}
+                  </Option>
+                ))}
+              </Select>
+            </div>
+          )}
         </div>
       </Modal>
     </div>
