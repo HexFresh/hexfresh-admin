@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import logo from '../../assets/images/logo.png';
 import InputBase from '@mui/material/InputBase';
 import EmailIcon from '@mui/icons-material/Email';
@@ -15,6 +15,10 @@ export default function Login() {
   const username = useRef();
   const password = useRef();
 
+  useEffect(() => {
+    document.title = 'Login';
+  }, []);
+
   const handleSignIn = () => {
     if (username.current.value !== '' && password.current.value !== '') {
       const credentials = {
@@ -24,6 +28,7 @@ export default function Login() {
       dispatch(signIn(credentials, navigate));
     }
   };
+
   return (
     <div className="login">
       <img src={logo} alt="logo" />

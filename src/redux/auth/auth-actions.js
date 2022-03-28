@@ -24,9 +24,17 @@ export function fetchProfileInfo(user) {
 
 export function signOut(history) {
   return (dispatch) => {
-    localStorage.removeItem('token');
-    history('/signin');
-    dispatch({ type: 'auth/LOGOUT' });
+    const endpoint = `auth/logout`;
+    try {
+      const response = axiosClient.get(endpoint);
+      const { data } = response;
+      console.log(data);
+      localStorage.removeItem('token');
+      history('/signin');
+      dispatch({ type: 'auth/LOGOUT' });
+    } catch (error) {
+      console.log(error);
+    }
   };
 }
 

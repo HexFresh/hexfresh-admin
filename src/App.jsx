@@ -14,6 +14,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { checkAutoLogin } from './redux/auth/auth-services';
 import ListProgram from './pages/list-program/ListProgram';
 import Dashboard from './pages/dashboard/Dashboard';
+import ListUser from './pages/list-user/ListUser';
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -48,6 +49,7 @@ function App() {
           <Route path="/login" element={<Navigate replace to="/programs" />} />
           <Route path="/programs" element={<ListProgram />} />
           <Route path="/mentors" element={<Dashboard />} />
+          <Route path="/users" element={<ListUser />} />
         </Routes>
       </div>
     </>

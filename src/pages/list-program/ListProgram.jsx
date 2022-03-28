@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { CircularProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { Button, Modal, Input, message } from 'antd';
+import { Button, Modal, Input, message, Pagination } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { InputBase, Pagination, Grid } from '@mui/material';
+import { InputBase, Grid } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import { getPrograms, createProgram } from '../../api/hr/programApi';
 import './list-program.css';
@@ -34,11 +34,12 @@ function ListProgram() {
   };
 
   useEffect(() => {
+    document.title = 'List Program';
     fetchPrograms(page);
   }, [page]);
 
-  const handleChangePage = (event, value) => {
-    setPage(value);
+  const handleChangePage = (page) => {
+    setPage(page);
   };
 
   const showModal = () => {
@@ -104,7 +105,9 @@ function ListProgram() {
                   return (
                     <Grid key={program.id} item xs={12} sm={6} lg={3}>
                       <div className="program">
-                        <div className="cover-photo"></div>
+                        <div className="cover-photo">
+                          <img src={program.image.imageLink} alt="img" />
+                        </div>
                         <div className="program-name">
                           <Link className="link" to="/">
                             {program.title}
@@ -120,10 +123,9 @@ function ListProgram() {
         </div>
         <div className="pagination">
           <Pagination
-            count={Math.ceil(programs?.length / 4)}
-            shape="rounded"
-            color="primary"
-            page={page}
+            current={page}
+            total={programs.length}
+            pageSize={4}
             onChange={handleChangePage}
           />
         </div>

@@ -14,8 +14,8 @@ export const routes = [
     icon: <SupervisedUserCircleIcon />,
   },
   {
-    display_name: 'Freshers',
-    route: '/freshers',
+    display_name: 'Users',
+    route: '/users',
     icon: <GroupIcon />,
   },
 ];
