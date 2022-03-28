@@ -10,7 +10,7 @@ export const getUsers = async (query) => {
     const { data } = response;
     return data;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
@@ -21,6 +21,6 @@ export const createUser = async (user) => {
     const { data } = response;
     return data;
   } catch (error) {
-    console.log(error);
+    return error.message;
   }
 };

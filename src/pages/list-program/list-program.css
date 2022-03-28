@@ -48,7 +48,7 @@
 }
 
 .list-program__container .programs {
-  margin-top: 25px;
+  margin-top: 20px;
   width: 100%;
   min-height: 380px;
   display: flex;
@@ -106,6 +106,6 @@
   justify-content: center;
   align-items: center;
   padding: 0 80px;
-  margin-top: 25px;
+  margin-top: 20px;
   padding-bottom: 20px;
 }

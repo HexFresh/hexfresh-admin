@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { CircularProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
 import {
@@ -27,7 +27,7 @@ const columns = [
     dataIndex: 'username',
     key: 'username',
     sorter: (a, b) => ('' + a.username).localeCompare(b.username),
-    render: (text) => <a>{text}</a>,
+    render: (text, user) => <Link to={`/users/${user.id}`}>{text}</Link>,
   },
   {
     title: 'Email',
@@ -68,6 +68,7 @@ const initNewUser = {
 function ListUser() {
   const [loading, setLoading] = React.useState(false);
   const [users, setUsers] = React.useState([]);
+  const [mentors, setMentors] = React.useState([]);
   const [count, setCount] = React.useState(0);
   const [page, setPage] = React.useState(1);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
@@ -83,11 +84,17 @@ function ListUser() {
     setCount(result.count);
     setLoading(false);
   };
-  console.log({ users });
+
+  const fetchMentors = async () => {
+    const result = await getUsers({ roleId: 3 });
+    const data = result.rows.map((user) => ({ ...user, key: user.id }));
+    setMentors(data || []);
+  };
 
   useEffect(() => {
     document.title = 'List User';
     fetchUsers(keyword, roleId, nPerPage, (page - 1) * nPerPage);
+    fetchMentors();
   }, [page, keyword, roleId]);
 
   const handleChangePage = (page) => {
@@ -113,21 +120,32 @@ function ListUser() {
       mentorId: Number(newUser.mentorId),
     };
 
+    console.log({ user });
+
     const handleCreateNewUser = async () => {
       message
         .loading({ content: 'Creating new user...', key: 'create-user' })
         .then(async () => {
-          await createUser(user);
-          fetchUsers(keyword, roleId, nPerPage, (page - 1) * nPerPage);
-          message.success({
-            content: 'Create new user successfully',
-            key: 'create-user',
-          });
+          const result = await createUser(user);
+          console.log({ result });
+          if (typeof result === 'string') {
+            message.error({
+              content: result,
+              key: 'create-user',
+            });
+          } else {
+            fetchUsers(keyword, roleId, nPerPage, (page - 1) * nPerPage);
+            fetchMentors();
+            message.success({
+              content: 'Create new user successfully',
+              key: 'create-user',
+            });
+            setIsModalVisible(false);
+            setNewUser(initNewUser);
+          }
         });
     };
     handleCreateNewUser();
-    setIsModalVisible(false);
-    setNewUser(initNewUser);
   };
 
   return (
@@ -142,13 +160,26 @@ function ListUser() {
           </div>
         </div>
         <div className="filter-search">
-          <div className="filter">Filter</div>
+          <div className="filter">
+            <Select
+              onChange={(value) => setRoleId(value)}
+              style={{ width: 200 }}
+              placeholder="Filter by role"
+            >
+              <Option value="">All</Option>
+              <Option value="1">Admin</Option>
+              <Option value="2">HR</Option>
+              <Option value="3">Mentor</Option>
+              <Option value="4">Fresher</Option>
+            </Select>
+          </div>
           <div className="search">
-            <Search />
+            <Search style={{ width: '20px', height: '20px' }} />
             <InputBase
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               placeholder="Search"
+              style={{ fontSize: '14px' }}
             />
           </div>
         </div>
@@ -186,7 +217,16 @@ function ListUser() {
           <Button key="back" onClick={handleCancel}>
             Cancel
           </Button>,
-          <Button key="submit" type="primary" onClick={handleOk}>
+          <Button
+            disabled={
+              newUser.username === '' ||
+              newUser.email === '' ||
+              newUser.password === ''
+            }
+            key="submit"
+            type="primary"
+            onClick={handleOk}
+          >
             Create
           </Button>,
         ]}
@@ -225,8 +265,7 @@ function ListUser() {
           <div className="field">
             <label>Choose role</label>
             <Select
-              defaultValue="Admin"
-              value={newUser.roleId}
+              value={newUser.roleId || 'Admin'}
               onChange={(value) => setNewUser({ ...newUser, roleId: value })}
               style={{ width: '100%', marginBottom: '20px' }}
             >
@@ -234,6 +273,22 @@ function ListUser() {
               <Option value="2">HR</Option>
               <Option value="3">Mentor</Option>
               <Option value="4">Fresher</Option>
+            </Select>
+          </div>
+          <div className="field">
+            <label>Assign for mentor</label>
+            <Select
+              placeholder="Select mentor"
+              value={newUser.mentorId || null}
+              onChange={(value) => setNewUser({ ...newUser, mentorId: value })}
+              style={{ width: '100%', marginBottom: '20px' }}
+              disabled={newUser.roleId !== '4'}
+            >
+              {mentors.map((mentor) => (
+                <Option key={mentor.id} value={mentor.id}>
+                  {mentor.username}
+                </Option>
+              ))}
             </Select>
           </div>
         </div>
