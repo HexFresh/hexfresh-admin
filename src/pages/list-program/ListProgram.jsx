@@ -83,24 +83,27 @@ function ListProgram() {
           </div>
         </div>
         <div className="filter-search">
-          <div className="filter"></div>
           <div className="search">
             <Search style={{ width: '20px', height: '20px' }} />
             <InputBase
               value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
+              onChange={(e) => {
+                setPage(1);
+                setKeyword(e.target.value);
+              }}
               placeholder="Search"
-              style={{ fontSize: '14px' }}
+              style={{ fontSize: '14px', width: '100%' }}
             />
           </div>
+          <div className="filter"></div>
         </div>
         <div className="programs">
           {loading ? (
-            <CircularProgress className="circular-progress" />
-          ) : (
+            <CircularProgress />
+          ) : count > 0 ? (
             <div className="programs__container">
               <Grid container spacing={2}>
-                {programs?.map((program) => {
+                {programs.map((program) => {
                   return (
                     <Grid key={program.id} item xs={12} sm={6} lg={3}>
                       <div className="program">
@@ -111,7 +114,10 @@ function ListProgram() {
                           />
                         </div>
                         <div className="program-name">
-                          <Link className="link" to="/">
+                          <Link
+                            className="link"
+                            to={`/mentor/programs/${program.id}/phases`}
+                          >
                             {program.title}
                           </Link>
                         </div>
@@ -121,6 +127,14 @@ function ListProgram() {
                 })}
               </Grid>
             </div>
+          ) : (
+            <div className="img-404">
+              <img
+                style={{ height: '200px' }}
+                src="/no-records.png"
+                alt="no-record"
+              />
+            </div>
           )}
         </div>
         <div className="pagination">
@@ -129,6 +143,7 @@ function ListProgram() {
             total={count}
             pageSize={4}
             onChange={handleChangePage}
+            hideOnSinglePage
           />
         </div>
       </div>

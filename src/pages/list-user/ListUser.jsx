@@ -173,11 +173,23 @@ function ListUser() {
           </div>
         </div>
         <div className="filter-search">
+          <div className="search">
+            <Search style={{ width: '20px', height: '20px' }} />
+            <InputBase
+              value={keyword}
+              onChange={(e) => {
+                setPage(1);
+                setKeyword(e.target.value);
+              }}
+              placeholder="Search"
+              style={{ fontSize: '14px', width: '100%' }}
+            />
+          </div>
           <div className="filter">
             <Select
               onChange={(value) => {
-                setRoleId(value);
                 setPage(1);
+                setRoleId(value);
               }}
               style={{ width: 200 }}
               placeholder="Filter by role"
@@ -188,15 +200,6 @@ function ListUser() {
               <Option value="3">Mentor</Option>
               <Option value="4">Fresher</Option>
             </Select>
-          </div>
-          <div className="search">
-            <Search style={{ width: '20px', height: '20px' }} />
-            <InputBase
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              placeholder="Search"
-              style={{ fontSize: '14px' }}
-            />
           </div>
         </div>
         <div className="users_beside">
@@ -217,6 +220,7 @@ function ListUser() {
                   total={count}
                   pageSize={6}
                   onChange={handleChangePage}
+                  hideOnSinglePage
                 />
               </div>
             </div>
