@@ -175,7 +175,10 @@ function ListUser() {
         <div className="filter-search">
           <div className="filter">
             <Select
-              onChange={(value) => setRoleId(value)}
+              onChange={(value) => {
+                setRoleId(value);
+                setPage(1);
+              }}
               style={{ width: 200 }}
               placeholder="Filter by role"
             >
