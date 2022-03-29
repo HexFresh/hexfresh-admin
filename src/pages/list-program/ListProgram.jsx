@@ -164,7 +164,7 @@ function ListProgram() {
       >
         <div className="form">
           <div className="field">
-            <label>Name</label>
+            <label>Title</label>
             <Input value={name} onChange={changeNewName} />
           </div>
         </div>
