@@ -4,6 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .list-program__container {
@@ -38,7 +39,7 @@
 }
 
 .list-program__container .filter-search .search {
-  width: 300px;
+  width: 350px;
   display: flex;
   align-items: center;
   grid-gap: 5px;
@@ -82,6 +83,8 @@
 
 .list-program__container .program .cover-photo img {
   object-fit: cover;
+  width: 100%;
+  height: 100%;
 }
 
 .list-program__container .program .program-name {

@@ -8,35 +8,29 @@ import { Search } from '@mui/icons-material';
 import { getPrograms, createProgram } from '../../api/hr/programApi';
 import './list-program.css';
 
-const programPerPage = 4;
+const nPerPage = 4;
 
 function ListProgram() {
   const [loading, setLoading] = React.useState(false);
   const [programs, setPrograms] = React.useState([]);
+  const [count, setCount] = React.useState(0);
   const [page, setPage] = React.useState(1);
   const [name, setName] = React.useState('');
   const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [keyword, setKeyword] = React.useState('');
 
-  console.log({ programs, page });
-
-  const fetchPrograms = async (value) => {
+  const fetchPrograms = async (keyword, limit, offset) => {
     setLoading(true);
-    const result = await getPrograms();
-    setPrograms(result || []);
+    const result = await getPrograms({ keyword, limit, offset });
+    setPrograms(result.rows || []);
+    setCount(result.count);
     setLoading(false);
   };
 
-  // get the list of programs with pagination
-  const getArrProgramsWithPagination = (page, programs) => {
-    const start = (page - 1) * programPerPage;
-    const end = page * programPerPage;
-    return programs.slice(start, end);
-  };
-
   useEffect(() => {
-    document.title = 'List Program';
-    fetchPrograms(page);
-  }, [page]);
+    document.title = 'HexAd - List Program';
+    fetchPrograms(keyword, nPerPage, (page - 1) * nPerPage);
+  }, [page, keyword]);
 
   const handleChangePage = (page) => {
     setPage(page);
@@ -89,24 +83,32 @@ function ListProgram() {
           </div>
         </div>
         <div className="filter-search">
-          <div className="filter">Filter</div>
+          <div className="filter"></div>
           <div className="search">
-            <Search />
-            <InputBase placeholder="Search" />
+            <Search style={{ width: '20px', height: '20px' }} />
+            <InputBase
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              placeholder="Search"
+              style={{ fontSize: '14px' }}
+            />
           </div>
         </div>
         <div className="programs">
           {loading ? (
-            <CircularProgress />
+            <CircularProgress className="circular-progress" />
           ) : (
             <div className="programs__container">
               <Grid container spacing={2}>
-                {getArrProgramsWithPagination(page, programs).map((program) => {
+                {programs?.map((program) => {
                   return (
                     <Grid key={program.id} item xs={12} sm={6} lg={3}>
                       <div className="program">
                         <div className="cover-photo">
-                          <img src={program.image.imageLink} alt="img" />
+                          <img
+                            src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/80a9d98d-327f-4bb2-b173-4298d710e51c/derkflv-9f975f3d-791f-4e16-8d9d-fb0a9e5e0554.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzgwYTlkOThkLTMyN2YtNGJiMi1iMTczLTQyOThkNzEwZTUxY1wvZGVya2Zsdi05Zjk3NWYzZC03OTFmLTRlMTYtOGQ5ZC1mYjBhOWU1ZTA1NTQucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.eEDVAlJGBqXo6OeZEORXWk1veGSHFL-ZTUMz43Jtr3Q"
+                            alt="img"
+                          />
                         </div>
                         <div className="program-name">
                           <Link className="link" to="/">
@@ -124,7 +126,7 @@ function ListProgram() {
         <div className="pagination">
           <Pagination
             current={page}
-            total={programs.length}
+            total={count}
             pageSize={4}
             onChange={handleChangePage}
           />

@@ -55,6 +55,21 @@ const columns = [
       }
     },
   },
+  {
+    title: 'Status',
+    key: 'status',
+    dataIndex: 'isActive',
+    render: (isActive) => {
+      switch (isActive) {
+        case false:
+          return <Tag color="red">Inactive</Tag>;
+        case true:
+          return <Tag color="green">Active</Tag>;
+        default:
+          return <Tag color="red">Unknown</Tag>;
+      }
+    },
+  },
 ];
 
 const initNewUser = {
@@ -92,7 +107,7 @@ function ListUser() {
   };
 
   useEffect(() => {
-    document.title = 'List User';
+    document.title = 'HexAd - List User';
     fetchUsers(keyword, roleId, nPerPage, (page - 1) * nPerPage);
     fetchMentors();
   }, [page, keyword, roleId]);
@@ -119,8 +134,6 @@ function ListUser() {
       roleId: Number(newUser.roleId),
       mentorId: Number(newUser.mentorId),
     };
-
-    console.log({ user });
 
     const handleCreateNewUser = async () => {
       message
@@ -185,7 +198,7 @@ function ListUser() {
         </div>
         <div className="users_beside">
           {loading ? (
-            <CircularProgress />
+            <CircularProgress className="circular-progress" />
           ) : (
             <div className="users">
               <Table

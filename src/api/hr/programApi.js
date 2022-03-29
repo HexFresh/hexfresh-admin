@@ -1,13 +1,16 @@
 import axiosClient from '../axiosClient';
 
-export const getPrograms = async () => {
+export const getPrograms = async (query) => {
+  const { keyword, limit, offset } = query;
   const endpoint = `program`;
   try {
-    const response = await axiosClient.get(endpoint);
+    const response = await axiosClient.get(endpoint, {
+      params: { keyword, limit, offset },
+    });
     const { data } = response;
     return data;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
