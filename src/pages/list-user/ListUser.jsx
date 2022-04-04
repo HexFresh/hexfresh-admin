@@ -218,7 +218,7 @@ function ListUser() {
                 <Pagination
                   current={page}
                   total={count}
-                  pageSize={6}
+                  pageSize={nPerPage}
                   onChange={handleChangePage}
                   hideOnSinglePage
                 />
