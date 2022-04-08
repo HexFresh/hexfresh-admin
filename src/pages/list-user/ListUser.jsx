@@ -1,16 +1,7 @@
 import React, { useEffect } from 'react';
 import { CircularProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  Modal,
-  Input,
-  message,
-  Table,
-  Tag,
-  Pagination,
-  Select,
-} from 'antd';
+import { Button, Modal, Input, message, Table, Tag, Pagination, Select } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { InputBase } from '@mui/material';
 import { Search } from '@mui/icons-material';
@@ -132,31 +123,29 @@ function ListUser() {
     const user = {
       ...newUser,
       roleId: Number(newUser.roleId),
-      mentorId: Number(newUser.mentorId),
+      mentorId: newUser.mentorId,
     };
 
     const handleCreateNewUser = async () => {
-      message
-        .loading({ content: 'Creating new user...', key: 'create-user' })
-        .then(async () => {
-          const result = await createUser(user);
-          console.log({ result });
-          if (typeof result === 'string') {
-            message.error({
-              content: result,
-              key: 'create-user',
-            });
-          } else {
-            fetchUsers(keyword, roleId, nPerPage, (page - 1) * nPerPage);
-            fetchMentors();
-            message.success({
-              content: 'Create new user successfully',
-              key: 'create-user',
-            });
-            setIsModalVisible(false);
-            setNewUser(initNewUser);
-          }
-        });
+      message.loading({ content: 'Creating new user...', key: 'create-user' }).then(async () => {
+        const result = await createUser(user);
+        console.log({ result });
+        if (typeof result === 'string') {
+          message.error({
+            content: result,
+            key: 'create-user',
+          });
+        } else {
+          fetchUsers(keyword, roleId, nPerPage, (page - 1) * nPerPage);
+          fetchMentors();
+          message.success({
+            content: 'Create new user successfully',
+            key: 'create-user',
+          });
+          setIsModalVisible(false);
+          setNewUser(initNewUser);
+        }
+      });
     };
     handleCreateNewUser();
   };
@@ -207,12 +196,7 @@ function ListUser() {
             <CircularProgress className="circular-progress" />
           ) : (
             <div className="users">
-              <Table
-                className="table"
-                columns={columns}
-                dataSource={users}
-                pagination={false}
-              />
+              <Table className="table" columns={columns} dataSource={users} pagination={false} />
 
               <div className="pagination">
                 <Pagination
@@ -238,11 +222,7 @@ function ListUser() {
             Cancel
           </Button>,
           <Button
-            disabled={
-              newUser.username === '' ||
-              newUser.email === '' ||
-              newUser.password === ''
-            }
+            disabled={newUser.username === '' || newUser.email === '' || newUser.password === ''}
             key="submit"
             type="primary"
             onClick={handleOk}
@@ -255,31 +235,25 @@ function ListUser() {
           <div className="field">
             <label>Username</label>
             <Input
-              style={{ marginBottom: '20px' }}
+              style={{ marginBottom: '20px', marginTop: '5px' }}
               value={newUser.username}
-              onChange={(e) =>
-                setNewUser({ ...newUser, username: e.target.value })
-              }
+              onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
             />
           </div>
           <div className="field">
             <label>Email</label>
             <Input
-              style={{ marginBottom: '20px' }}
+              style={{ marginBottom: '20px', marginTop: '5px' }}
               value={newUser.email}
-              onChange={(e) =>
-                setNewUser({ ...newUser, email: e.target.value })
-              }
+              onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
             />
           </div>
           <div className="field">
             <label>Password</label>
             <Input.Password
-              style={{ marginBottom: '20px' }}
+              style={{ marginBottom: '20px', marginTop: '5px' }}
               value={newUser.password}
-              onChange={(e) =>
-                setNewUser({ ...newUser, password: e.target.value })
-              }
+              onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
             />
           </div>
           <div className="field">
@@ -287,7 +261,7 @@ function ListUser() {
             <Select
               value={newUser.roleId || 'Admin'}
               onChange={(value) => setNewUser({ ...newUser, roleId: value })}
-              style={{ width: '100%' }}
+              style={{ width: '100%', marginTop: '5px' }}
             >
               <Option value="1">Admin</Option>
               <Option value="2">HR</Option>
@@ -301,10 +275,8 @@ function ListUser() {
               <Select
                 placeholder="Select mentor"
                 value={newUser.mentorId || null}
-                onChange={(value) =>
-                  setNewUser({ ...newUser, mentorId: value })
-                }
-                style={{ width: '100%' }}
+                onChange={(value) => setNewUser({ ...newUser, mentorId: value })}
+                style={{ width: '100%', marginTop: '5px' }}
               >
                 {mentors.map((mentor) => (
                   <Option key={mentor.id} value={mentor.id}>

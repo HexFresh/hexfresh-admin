@@ -24,3 +24,15 @@ export const createUser = async (user) => {
     return error.message;
   }
 };
+
+export const assignFresherToMentor = async (fresherId, mentorId) => {
+  console.log(fresherId, mentorId);
+  const endpoint = `mentor-permission`;
+  try {
+    const response = await axiosClient.post(endpoint, { mentorId, fresherId });
+    const { data } = response;
+    return data;
+  } catch (error) {
+    return error.message;
+  }
+};
