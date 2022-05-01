@@ -61,13 +61,13 @@ function ListProgram() {
       const handleCreatePhase = async () => {
         message.loading({ content: 'Creating...' }).then(async () => {
           await createProgram(newProgram);
-          fetchPrograms();
+          fetchPrograms(keyword, nPerPage, (page - 1) * nPerPage);
+          setIsModalVisible(false);
+          setName('');
           message.success({ content: 'Created', key: 'success' });
         });
       };
       handleCreatePhase();
-      setIsModalVisible(false);
-      setName('');
     }
   };
 
@@ -114,10 +114,7 @@ function ListProgram() {
                           />
                         </div>
                         <div className="program-name">
-                          <Link
-                            className="link"
-                            to={`/mentor/programs/${program.id}/phases`}
-                          >
+                          <Link className="link" to={`/programs/${program.id}`}>
                             {program.title}
                           </Link>
                         </div>
@@ -129,22 +126,12 @@ function ListProgram() {
             </div>
           ) : (
             <div className="img-404">
-              <img
-                style={{ height: '200px' }}
-                src="/no-records.png"
-                alt="no-record"
-              />
+              <img style={{ height: '200px' }} src="/no-records.png" alt="no-record" />
             </div>
           )}
         </div>
         <div className="pagination">
-          <Pagination
-            current={page}
-            total={count}
-            pageSize={4}
-            onChange={handleChangePage}
-            hideOnSinglePage
-          />
+          <Pagination current={page} total={count} pageSize={4} onChange={handleChangePage} hideOnSinglePage />
         </div>
       </div>
       <Modal
