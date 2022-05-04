@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Routes,
-  Route,
-  Navigate,
-  useNavigate,
-  useLocation,
-} from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import Login from './pages/login/Login';
 import Sidebar from './components/sidebar/Sidebar';
 import './App.css';
@@ -15,6 +9,7 @@ import { checkAutoLogin } from './redux/auth/auth-services';
 import ListProgram from './pages/list-program/ListProgram';
 import Dashboard from './pages/dashboard/Dashboard';
 import ListUser from './pages/list-user/ListUser';
+import UserDetail from './pages/user-detail/UserDetail';
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -37,11 +32,7 @@ function App() {
 
   const authContent = (
     <>
-      <Sidebar
-        open={open}
-        openSidebar={openSidebar}
-        closeSidebar={closeSidebar}
-      />
+      <Sidebar open={open} openSidebar={openSidebar} closeSidebar={closeSidebar} />
       <div className="sub">
         <Topbar openSidebar={openSidebar} />
         <Routes>
@@ -50,6 +41,7 @@ function App() {
           <Route path="/programs" element={<ListProgram />} />
           <Route path="/mentors" element={<Dashboard />} />
           <Route path="/users" element={<ListUser />} />
+          <Route path="/users/:userId" element={<UserDetail />} />
         </Routes>
       </div>
     </>

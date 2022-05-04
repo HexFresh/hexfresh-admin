@@ -6,7 +6,7 @@
   margin-top: 65px;
   width: 100%;
   height: calc(100vh - 65px);
-  background-color: #F6F7F8;
+  background-color: #f1f2f7;
   overflow-y: scroll;
   margin-left: 90px;
 }
