@@ -33,13 +33,25 @@ export const createNewEmptyUserProfile = async (id) => {
   }
 };
 
-export const updateUserProfile = async (id, data) => {
+export const updateUserProfile = async (id, userProfile) => {
   const endpoint = `user/${id}/user-profile`;
   try {
-    const response = await axiosClient.put(endpoint, data);
+    const response = await axiosClient.put(endpoint, userProfile);
     const { data } = response;
     return data;
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const getAllPhaseOfFresher = async (fresherId) => {
+  const endpoint = `user/${fresherId}/current-program/phase`;
+  try {
+    const response = await axiosClient.get(endpoint);
+    const { data } = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
   }
 };

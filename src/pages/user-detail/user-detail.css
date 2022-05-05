@@ -4,7 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px 150px;
+  padding: 20px 150px 0 150px;
 }
 
 .user-detail__container {
@@ -19,6 +19,7 @@
   font-size: 22px;
   font-weight: bold;
   color: var(--main-color);
+  margin-bottom: 10px;
 }
 
 .user-detail__container .card-body {
@@ -81,4 +82,19 @@
   font-weight: bold;
   font-size: 20px;
   letter-spacing: 2px;
+}
+
+.user-detail__container .card-body .message-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: #f1388b;
+  color: white;
+  border-radius: 6px;
+  border: none;
+}
+
+.user-detail__container .card-body .message-btn:hover {
+  background-color: white;
+  color: #f1388b;
 }

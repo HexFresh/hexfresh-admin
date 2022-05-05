@@ -42,11 +42,9 @@ export function signIn(credentials, history) {
   return async (dispatch) => {
     const endpoint = 'auth/login';
     try {
-      const response = await axiosClient.post(
-        endpoint,
-        `username=admin&password=123`
-      );
+      const response = await axiosClient.post(endpoint, credentials);
       const { token, user } = response.data;
+      console.log(user);
       localStorage.setItem('token', token);
       dispatch(loginConfirmAction({ ...user, token }));
       dispatch(success());

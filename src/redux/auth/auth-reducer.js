@@ -13,12 +13,18 @@ const authReducer = (state = initialState, action) => {
         ...state,
         username: action.user.username,
         token: action.user.token,
+        id: action.user.id,
+        email: action.user.email,
+        roleId: action.user.roleId,
       };
     case 'auth/fetchProfile':
       return {
         ...state,
         username: action.user.username,
         token: action.user.token,
+        id: action.user.id,
+        email: action.user.email,
+        roleId: action.user.roleId,
       };
     case 'auth/retrieveToken':
       return {

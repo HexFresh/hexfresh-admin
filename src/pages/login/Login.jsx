@@ -23,7 +23,7 @@ export default function Login() {
     if (username.current.value !== '' && password.current.value !== '') {
       const credentials = {
         username: username.current.value,
-        token: password.current.value,
+        password: password.current.value,
       };
       dispatch(signIn(credentials, navigate));
     }
@@ -34,26 +34,14 @@ export default function Login() {
       <img src={logo} alt="logo" />
       <div className="container">
         <div className="welcome">Welcome Back</div>
-        <div className="sub-welcome">
-          Enter the credentials to access your account
-        </div>
+        <div className="sub-welcome">Enter the credentials to access your account</div>
         <div className="filed">
           <EmailIcon className="icon" />
-          <InputBase
-            inputRef={username}
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="Enter your username"
-            autoFocus
-          />
+          <InputBase inputRef={username} sx={{ ml: 1, flex: 1 }} placeholder="Enter your username" autoFocus />
         </div>
         <div className="filed">
           <LockIcon className="icon" />
-          <InputBase
-            inputRef={password}
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="Enter your password"
-            type="password"
-          />
+          <InputBase inputRef={password} sx={{ ml: 1, flex: 1 }} placeholder="Enter your password" type="password" />
         </div>
         <Button onClick={handleSignIn} type="primary">
           Sign in
