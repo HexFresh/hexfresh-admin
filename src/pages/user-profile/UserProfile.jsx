@@ -55,8 +55,6 @@ export default function UserProfile() {
     setJobPositions(result || []);
   };
 
-  console.log(userProfile);
-
   const fetchUserProfile = async () => {
     const result = await getCurrentUserProfile();
     if (result === undefined) {
@@ -180,7 +178,7 @@ export default function UserProfile() {
         <CircularProgress />
       ) : (
         <div className="user-profile__container">
-          <div className="page-name">Profile</div>
+          <div className="page-name">Your Profile</div>
           <div className="card-body">
             <div className="cover-img">
               <div className="card__infor">

@@ -31,6 +31,7 @@ export function signOut(history) {
       console.log(data);
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
+      localStorage.removeItem('roleId');
       history('/signin');
       dispatch({ type: 'auth/LOGOUT' });
     } catch (error) {
@@ -48,6 +49,7 @@ export function signIn(credentials, history) {
       console.log(user);
       localStorage.setItem('token', token);
       localStorage.setItem('userId', user.id);
+      localStorage.setItem('roleId', user.roleId);
       dispatch(loginConfirmAction({ ...user, token }));
       dispatch(success());
       history('/');

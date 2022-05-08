@@ -16,3 +16,16 @@
     margin-left: 0;
   }
 }
+
+.no-role {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  font-weight: bold;
+  font-size: 30px;
+  flex-direction: column;
+  grid-gap: 20px;
+}

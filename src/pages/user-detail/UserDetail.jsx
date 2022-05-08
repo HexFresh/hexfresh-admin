@@ -38,8 +38,6 @@ export default function UserDetail() {
 
   const { userId } = useParams();
 
-  console.log({ userProfile });
-
   const fetchUserAccount = async () => {
     const result = await getUserAccountById(userId);
     setUserAccount(result);
