@@ -1,25 +1,25 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
-import './user-detail.css';
-import { Link, useParams } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import './user-profile.css';
+import { useParams } from 'react-router-dom';
 import {
-  createNewEmptyUserProfile,
+  createCurrentNewEmptyUserProfile,
   getUserAccountById,
-  getUserProfileById,
-  updateUserProfile,
+  getCurrentUserProfile,
+  updateCurrentUserProfile,
   getAllDegree,
   getAllJobPosition,
 } from '../../api/user';
 import { CircularProgress } from '@mui/material';
-import { Breadcrumb, Button, message, Input, DatePicker, Select } from 'antd';
-import { UserOutlined, MessageFilled } from '@ant-design/icons';
+import { Button, message, Input, DatePicker, Select } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import moment from 'moment';
 
 const dateFormat = 'YYYY-MM-DD';
 const BASE_ADDRESS_API_URL = 'https://provinces.open-api.vn/api';
 
-export default function UserDetail() {
+export default function UserProfile() {
   const [loading, setLoading] = useState(false);
   const [userAccount, setUserAccount] = useState({});
   const [userProfile, setUserProfile] = useState({});
@@ -37,8 +37,7 @@ export default function UserDetail() {
   const [jobPositions, setJobPositions] = useState([]);
 
   const { userId } = useParams();
-
-  console.log({ userProfile });
+  const refInput = useRef(null);
 
   const fetchUserAccount = async () => {
     const result = await getUserAccountById(userId);
@@ -56,8 +55,10 @@ export default function UserDetail() {
     setJobPositions(result || []);
   };
 
+  console.log(userProfile);
+
   const fetchUserProfile = async () => {
-    const result = await getUserProfileById(userId);
+    const result = await getCurrentUserProfile();
     if (result === undefined) {
       const newUF = {
         address: {
@@ -68,7 +69,7 @@ export default function UserDetail() {
           country: 'Vietnam',
         },
       };
-      await createNewEmptyUserProfile(userId, newUF);
+      await createCurrentNewEmptyUserProfile(newUF);
       await fetchUserProfile();
     } else {
       setUserProfile(result);
@@ -101,19 +102,36 @@ export default function UserDetail() {
     fetchData();
   }, []);
 
+  const uploadNewAvatar = async (file) => {
+    if (file) {
+      message.loading('Uploading...').then(async () => {
+        const data = new FormData();
+        data.append('file', file);
+        data.append('upload_preset', 'qk9dvfij');
+        const res = await axios.post(`https://api.cloudinary.com/v1_1/hexfresh/image/upload`, data);
+        if (res) {
+          message.success('Uploaded!', 0.5);
+          await updateCurrentUserProfile({ avatar: res.data.secure_url });
+          await fetchUserProfile();
+        }
+      });
+    }
+  };
+
   const handleUpdateUserProfile = async () => {
     message.loading('Updating...').then(async () => {
       const newUserProfile = {
         ...userProfile,
         address: {
-          province: selectedProvince || '',
-          district: selectedDistrict || '',
-          ward: selectedWard || '',
+          province: selectedProvince,
+          district: selectedDistrict,
+          ward: selectedWard,
           country: 'Vietnam',
-          street: selectedStreet || '',
+          street: selectedStreet,
         },
       };
-      const result = await updateUserProfile(userId, newUserProfile);
+
+      const result = await updateCurrentUserProfile(newUserProfile);
       if (result) {
         message.success('Updated!', 0.5);
       }
@@ -157,36 +175,42 @@ export default function UserDetail() {
   };
 
   return (
-    <div className="user-detail">
+    <div className="user-profile">
       {loading ? (
         <CircularProgress />
       ) : (
-        <div className="user-detail__container">
+        <div className="user-profile__container">
           <div className="page-name">Profile</div>
-          <Breadcrumb className="breadcrumb">
-            <Breadcrumb.Item>
-              <Link to="/users">
-                <UserOutlined />
-                <span>List User</span>
-              </Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>Profile</Breadcrumb.Item>
-          </Breadcrumb>
           <div className="card-body">
             <div className="cover-img">
               <div className="card__infor">
                 <div className="avatar">
                   <img src={userProfile?.avatar || 'https://cdn-icons-png.flaticon.com/512/21/21104.png'} alt="avt" />
+                  <Button
+                    onClick={() => {
+                      refInput.current?.click();
+                    }}
+                    className="edit-btn"
+                    icon={<EditOutlined />}
+                    shape="circle"
+                  >
+                    <input
+                      ref={refInput}
+                      style={{ display: 'none' }}
+                      type="file"
+                      accept="image/*"
+                      onChange={(event) => {
+                        if (event.target.files) {
+                          uploadNewAvatar(event.target.files[0]);
+                        }
+                      }}
+                    />
+                  </Button>
                 </div>
                 <div className="card-body__right">
                   <div className="card-body__right__name">{displayFirstName + ' ' + displayLastName}</div>
                   <div className="card-body__right__email">{displayEmail}</div>
                 </div>
-              </div>
-              <div>
-                <Button className="message-btn" icon={<MessageFilled />}>
-                  Message
-                </Button>
               </div>
             </div>
           </div>

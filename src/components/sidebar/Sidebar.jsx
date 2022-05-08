@@ -3,17 +3,17 @@ import { Link, useLocation } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import GroupIcon from '@mui/icons-material/Group';
-import { useSelector } from 'react-redux';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MenuIcon from '@mui/icons-material/Menu';
 import './sidebar.css';
 import SidebarItem from './SidebarItem';
 import logo from '../../assets/images/logo.png';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 
 export default function Sidebar({ open, openSidebar, closeSidebar }) {
   const location = useLocation();
 
-  const userId = useSelector((state) => state.auth.id);
+  const userId = localStorage.getItem('userId');
 
   const routes = [
     {
@@ -34,7 +34,7 @@ export default function Sidebar({ open, openSidebar, closeSidebar }) {
     {
       display_name: 'Your Profile',
       route: `/profile/${userId}`,
-      icon: <GroupIcon />,
+      icon: <AssignmentIndIcon />,
     },
   ];
 

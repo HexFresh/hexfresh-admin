@@ -10,6 +10,7 @@ import ListProgram from './pages/list-program/ListProgram';
 import Dashboard from './pages/dashboard/Dashboard';
 import ListUser from './pages/list-user/ListUser';
 import UserDetail from './pages/user-detail/UserDetail';
+import UserProfile from './pages/user-profile/UserProfile';
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -42,6 +43,7 @@ function App() {
           <Route path="/mentors" element={<Dashboard />} />
           <Route path="/users" element={<ListUser />} />
           <Route path="/users/:userId" element={<UserDetail />} />
+          <Route path="/profile/:userId" element={<UserProfile />} />
         </Routes>
       </div>
     </>
