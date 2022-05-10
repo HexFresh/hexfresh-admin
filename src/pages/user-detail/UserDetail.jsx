@@ -9,7 +9,11 @@ import {
   updateUserProfile,
   getAllDegree,
   getAllJobPosition,
-} from '../../api/user';
+  getAllMentorOfFresher,
+  deleteMentorOfFresher,
+  addMentorOfFresher,
+} from '../../api/userProfile';
+import { getUsers } from '../../api/hr/userApi';
 import { CircularProgress } from '@mui/material';
 import { Breadcrumb, Button, message, Input, DatePicker, Select } from 'antd';
 import { UserOutlined, MessageFilled } from '@ant-design/icons';
@@ -35,6 +39,8 @@ export default function UserDetail() {
   const [selectedStreet, setSelectedStreet] = useState('');
   const [degrees, setDegrees] = useState([]);
   const [jobPositions, setJobPositions] = useState([]);
+  const [mentors, setMentors] = useState([]);
+  const [oldMentor, setOldMentor] = useState(null);
 
   const { userId } = useParams();
 
@@ -42,6 +48,18 @@ export default function UserDetail() {
     const result = await getUserAccountById(userId);
     setUserAccount(result);
     setDisplayEmail(result.email);
+    if (result.roleId === 4) {
+      const resultMentor = await getAllMentorOfFresher(userId);
+      if (resultMentor.length > 0) {
+        setOldMentor(resultMentor[0].id);
+      }
+    }
+  };
+
+  const fetchMentors = async () => {
+    const result = await getUsers({ roleId: 3 });
+    const data = result.rows.map((user) => ({ ...user, key: user.id }));
+    setMentors(data || []);
   };
 
   const fetchAllDegree = async () => {
@@ -86,16 +104,20 @@ export default function UserDetail() {
     }
   };
 
+  const fetchData = async () => {
+    setLoading(true);
+    await Promise.all([
+      fetchUserAccount(),
+      fetchUserProfile(),
+      fetchProvinces(),
+      fetchMentors(),
+      fetchAllDegree(),
+      fetchAllJobPosition(),
+    ]);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      await fetchUserAccount();
-      await fetchUserProfile();
-      await fetchProvinces();
-      await fetchAllDegree();
-      await fetchAllJobPosition();
-      setLoading(false);
-    };
     fetchData();
   }, []);
 
@@ -154,6 +176,20 @@ export default function UserDetail() {
     setSelectedWard(value);
   };
 
+  const handleChangeMentor = async (value) => {
+    setOldMentor(value);
+    message.loading('Updating...').then(async () => {
+      const result = await deleteMentorOfFresher(userId, oldMentor);
+      if (result) {
+        const resultAdd = await addMentorOfFresher(userId, value);
+        if (resultAdd) {
+          message.success('Updated!', 0.5);
+          fetchData();
+        }
+      }
+    });
+  };
+
   return (
     <div className="user-detail">
       {loading ? (
@@ -164,7 +200,11 @@ export default function UserDetail() {
           <Breadcrumb className="breadcrumb">
             <Breadcrumb.Item>
               <Link to="/users">
-                <UserOutlined />
+                <UserOutlined
+                  style={{
+                    marginRight: '5px',
+                  }}
+                />
                 <span>List User</span>
               </Link>
             </Breadcrumb.Item>
@@ -276,6 +316,23 @@ export default function UserDetail() {
                     ))}
                   </Select>
                 </div>
+                {userAccount.roleId === 4 && (
+                  <div className="field">
+                    <div className="field__title">Mentor</div>
+                    <Select
+                      className="input"
+                      placeholder="Mentor"
+                      onChange={(value) => handleChangeMentor(value)}
+                      value={oldMentor}
+                    >
+                      {mentors.map((mentor) => (
+                        <Select.Option value={mentor.id} key={mentor.id}>
+                          {mentor.username}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  </div>
+                )}
               </div>
               <div className="contact-info">
                 <div className="info__title">Contact Information</div>

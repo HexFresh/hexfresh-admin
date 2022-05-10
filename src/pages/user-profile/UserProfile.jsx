@@ -9,7 +9,7 @@ import {
   updateCurrentUserProfile,
   getAllDegree,
   getAllJobPosition,
-} from '../../api/user';
+} from '../../api/userProfile';
 import { CircularProgress } from '@mui/material';
 import { Button, message, Input, DatePicker, Select } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
@@ -90,11 +90,13 @@ export default function UserProfile() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await fetchUserAccount();
-      await fetchUserProfile();
-      await fetchProvinces();
-      await fetchAllDegree();
-      await fetchAllJobPosition();
+      await Promise.all([
+        fetchUserAccount(),
+        fetchUserProfile(),
+        fetchProvinces(),
+        fetchAllDegree(),
+        fetchAllJobPosition(),
+      ]);
       setLoading(false);
     };
     fetchData();

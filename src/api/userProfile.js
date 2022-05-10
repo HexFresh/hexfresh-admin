@@ -110,3 +110,45 @@ export const getAllJobPosition = async () => {
     console.log(error);
   }
 };
+
+export const getAllMentorOfFresher = async (fresherId) => {
+  const endpoint = `user/${fresherId}/mentor`;
+  try {
+    const response = await axiosClient.get(endpoint);
+    const { data } = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
+export const deleteMentorOfFresher = async (fresherId, mentorId) => {
+  const payload = {
+    fresherId,
+    mentorId,
+  };
+  const endpoint = `mentor-permission`;
+  try {
+    const response = await axiosClient.delete(endpoint, { data: payload });
+    const { data } = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addMentorOfFresher = async (fresherId, mentorId) => {
+  const payload = {
+    fresherId,
+    mentorId,
+  };
+  const endpoint = `mentor-permission`;
+  try {
+    const response = await axiosClient.post(endpoint, payload);
+    const { data } = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};

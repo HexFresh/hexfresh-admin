@@ -13,6 +13,7 @@ import UserDetail from './pages/user-detail/UserDetail';
 import UserProfile from './pages/user-profile/UserProfile';
 import { Button } from 'antd';
 import { signOut } from './redux/auth/auth-actions';
+import ProgramDetail from './pages/program-detail/ProgramDetail';
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -48,6 +49,7 @@ function App() {
             <Route path="/" element={<Navigate replace to="/programs" />} />
             <Route path="/login" element={<Navigate replace to="/programs" />} />
             <Route path="/programs" element={<ListProgram />} />
+            <Route path="/programs/:programId" element={<ProgramDetail />} />
             <Route path="/mentors" element={<Dashboard />} />
             <Route path="/users" element={<ListUser />} />
             <Route path="/users/:userId" element={<UserDetail />} />
