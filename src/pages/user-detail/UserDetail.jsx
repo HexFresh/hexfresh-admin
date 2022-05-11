@@ -268,6 +268,9 @@ export default function UserDetail() {
                 <div className="field">
                   <div className="field__title">Gender</div>
                   <Select
+                    showSearch
+                    optionFilterProp="children"
+                    filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                     className="input"
                     placeholder="Gender"
                     onChange={(value) => setUserProfile({ ...userProfile, gender: value })}
@@ -288,6 +291,9 @@ export default function UserDetail() {
                 <div className="field">
                   <div className="field__title">Degree</div>
                   <Select
+                    showSearch
+                    optionFilterProp="children"
+                    filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                     placeholder="Degree"
                     className="input"
                     onChange={(value) => setUserProfile({ ...userProfile, degreeId: value })}
@@ -304,6 +310,9 @@ export default function UserDetail() {
                 <div className="field">
                   <div className="field__title">Job position</div>
                   <Select
+                    showSearch
+                    optionFilterProp="children"
+                    filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                     className="input"
                     placeholder="Job position"
                     onChange={(value) => setUserProfile({ ...userProfile, jobPositionId: value })}
@@ -320,6 +329,9 @@ export default function UserDetail() {
                   <div className="field">
                     <div className="field__title">Mentor</div>
                     <Select
+                      showSearch
+                      optionFilterProp="children"
+                      filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                       className="input"
                       placeholder="Mentor"
                       onChange={(value) => handleChangeMentor(value)}
@@ -354,6 +366,11 @@ export default function UserDetail() {
                   <div className="input">
                     <div className="select">
                       <Select
+                        showSearch
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                          option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
                         placeholder="Provinces"
                         style={{
                           width: '100%',
@@ -368,6 +385,11 @@ export default function UserDetail() {
                         ))}
                       </Select>
                       <Select
+                        showSearch
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                          option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
                         placeholder="Districts"
                         style={{
                           width: '100%',
@@ -382,6 +404,11 @@ export default function UserDetail() {
                         ))}
                       </Select>
                       <Select
+                        showSearch
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                          option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
                         placeholder="Wards"
                         style={{
                           width: '100%',
