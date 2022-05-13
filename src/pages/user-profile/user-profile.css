@@ -147,6 +147,17 @@
   justify-content: center;
   align-items: center;
   border-radius: 4px;
+  width: 100px;
+}
+
+.user-profile__container .editprofile-btn {
+  font-weight: bold;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  width: 100px;
 }
 
 .user-profile__container .ant-select {

@@ -35,6 +35,7 @@ export default function UserProfile() {
   const [selectedStreet, setSelectedStreet] = useState('');
   const [degrees, setDegrees] = useState([]);
   const [jobPositions, setJobPositions] = useState([]);
+  const [edit, setEdit] = useState(false);
 
   const { userId } = useParams();
   const refInput = useRef(null);
@@ -54,6 +55,8 @@ export default function UserProfile() {
     const result = await getAllJobPosition();
     setJobPositions(result || []);
   };
+
+  console.log({ userProfile });
 
   const fetchUserProfile = async () => {
     const result = await getCurrentUserProfile();
@@ -136,6 +139,7 @@ export default function UserProfile() {
         message.success('Updated!', 0.5);
       }
       await fetchUserProfile();
+      setEdit(false);
     });
   };
 
@@ -221,11 +225,12 @@ export default function UserProfile() {
                 <div className="info__title">Personal Information</div>
                 <div className="field">
                   <div className="field__title">Username</div>
-                  <Input value={userAccount.username || ''} className="input" placeholder="Username" />
+                  <Input disabled value={userAccount.username || ''} className="input" placeholder="Username" />
                 </div>
                 <div className="field">
                   <div className="field__title">First Name</div>
                   <Input
+                    disabled={!edit}
                     value={userProfile.firstName || ''}
                     onChange={(e) => setUserProfile({ ...userProfile, firstName: e.target.value })}
                     className="input"
@@ -235,6 +240,7 @@ export default function UserProfile() {
                 <div className="field">
                   <div className="field__title">Last Name</div>
                   <Input
+                    disabled={!edit}
                     value={userProfile.lastName || ''}
                     onChange={(e) => setUserProfile({ ...userProfile, lastName: e.target.value })}
                     className="input"
@@ -244,6 +250,7 @@ export default function UserProfile() {
                 <div className="field">
                   <div className="field__title">Date of birth</div>
                   <DatePicker
+                    disabled={!edit}
                     defaultValue={moment(userProfile.dateOfBirth || '2022-01-01', dateFormat)}
                     onChange={onDateOfBirthChange}
                     format={dateFormat}
@@ -254,6 +261,7 @@ export default function UserProfile() {
                 <div className="field">
                   <div className="field__title">Gender</div>
                   <Select
+                    disabled={!edit}
                     showSearch
                     optionFilterProp="children"
                     filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
@@ -277,13 +285,14 @@ export default function UserProfile() {
                 <div className="field">
                   <div className="field__title">Degree</div>
                   <Select
+                    disabled={!edit}
                     showSearch
                     optionFilterProp="children"
                     filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                     placeholder="Degree"
                     className="input"
                     onChange={(value) => setUserProfile({ ...userProfile, degreeId: value })}
-                    value={userProfile?.degreeId}
+                    value={userProfile?.degree?.id}
                   >
                     {degrees.map((degree) => (
                       <Select.Option value={degree.id} key={degree.id}>
@@ -296,13 +305,14 @@ export default function UserProfile() {
                 <div className="field">
                   <div className="field__title">Job position</div>
                   <Select
+                    disabled={!edit}
                     showSearch
                     optionFilterProp="children"
                     filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                     className="input"
                     placeholder="Job position"
                     onChange={(value) => setUserProfile({ ...userProfile, jobPositionId: value })}
-                    value={userProfile?.jobPositionId}
+                    value={userProfile?.job_position?.id}
                   >
                     {jobPositions.map((job) => (
                       <Select.Option value={job.id} key={job.id}>
@@ -316,11 +326,12 @@ export default function UserProfile() {
                 <div className="info__title">Contact Information</div>
                 <div className="field">
                   <div className="field__title">Email</div>
-                  <Input value={userAccount.email || ''} className="input" />
+                  <Input disabled value={userAccount.email || ''} className="input" />
                 </div>
                 <div className="field">
                   <div className="field__title">Phone</div>
                   <Input
+                    disabled={!edit}
                     value={userProfile.phoneNumber || ''}
                     onChange={(e) => setUserProfile({ ...userProfile, phoneNumber: e.target.value })}
                     className="input"
@@ -332,12 +343,13 @@ export default function UserProfile() {
                   <div className="input">
                     <div className="select">
                       <Select
+                        disabled={!edit}
                         showSearch
                         optionFilterProp="children"
                         filterOption={(input, option) =>
                           option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
-                        placeholder="Provinces"
+                        placeholder="Province"
                         style={{
                           width: '100%',
                         }}
@@ -351,12 +363,13 @@ export default function UserProfile() {
                         ))}
                       </Select>
                       <Select
+                        disabled={!edit}
                         showSearch
                         optionFilterProp="children"
                         filterOption={(input, option) =>
                           option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
-                        placeholder="Districts"
+                        placeholder="District"
                         style={{
                           width: '100%',
                         }}
@@ -370,12 +383,13 @@ export default function UserProfile() {
                         ))}
                       </Select>
                       <Select
+                        disabled={!edit}
                         showSearch
                         optionFilterProp="children"
                         filterOption={(input, option) =>
                           option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
-                        placeholder="Wards"
+                        placeholder="Ward"
                         style={{
                           width: '100%',
                         }}
@@ -390,6 +404,7 @@ export default function UserProfile() {
                       </Select>
                     </div>
                     <Input
+                      disabled={!edit}
                       value={selectedStreet || ''}
                       onChange={(e) => setSelectedStreet(e.target.value)}
                       style={{
@@ -401,9 +416,15 @@ export default function UserProfile() {
                 </div>
               </div>
               <div className="save-btn__container">
-                <Button className="save-btn" onClick={handleUpdateUserProfile}>
-                  Save
-                </Button>
+                {edit ? (
+                  <Button className="save-btn" onClick={handleUpdateUserProfile}>
+                    Save
+                  </Button>
+                ) : (
+                  <Button className="editprofile-btn" onClick={() => setEdit(true)}>
+                    Edit
+                  </Button>
+                )}
               </div>
             </div>
           </div>

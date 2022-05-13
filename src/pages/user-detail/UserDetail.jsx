@@ -41,6 +41,8 @@ export default function UserDetail() {
   const [jobPositions, setJobPositions] = useState([]);
   const [mentors, setMentors] = useState([]);
   const [oldMentor, setOldMentor] = useState(null);
+  const [newMentor, setNewMentor] = useState(null);
+  const [edit, setEdit] = useState(false);
 
   const { userId } = useParams();
 
@@ -52,9 +54,11 @@ export default function UserDetail() {
       const resultMentor = await getAllMentorOfFresher(userId);
       if (resultMentor.length > 0) {
         setOldMentor(resultMentor[0].id);
+        setNewMentor(resultMentor[0].id);
       }
     }
   };
+  console.log({ userProfile });
 
   const fetchMentors = async () => {
     const result = await getUsers({ roleId: 3 });
@@ -133,11 +137,19 @@ export default function UserDetail() {
           street: selectedStreet || '',
         },
       };
+      if (oldMentor !== newMentor) {
+        const resultDelete = await deleteMentorOfFresher(userId, oldMentor);
+        if (resultDelete) {
+          await addMentorOfFresher(userId, newMentor);
+        }
+      }
       const result = await updateUserProfile(userId, newUserProfile);
       if (result) {
         message.success('Updated!', 0.5);
       }
       await fetchUserProfile();
+      await fetchUserAccount();
+      setEdit(false);
     });
   };
 
@@ -174,20 +186,6 @@ export default function UserDetail() {
 
   const handleChangeWard = async (value) => {
     setSelectedWard(value);
-  };
-
-  const handleChangeMentor = async (value) => {
-    setOldMentor(value);
-    message.loading('Updating...').then(async () => {
-      const result = await deleteMentorOfFresher(userId, oldMentor);
-      if (result) {
-        const resultAdd = await addMentorOfFresher(userId, value);
-        if (resultAdd) {
-          message.success('Updated!', 0.5);
-          fetchData();
-        }
-      }
-    });
   };
 
   return (
@@ -235,11 +233,12 @@ export default function UserDetail() {
                 <div className="info__title">Personal Information</div>
                 <div className="field">
                   <div className="field__title">Username</div>
-                  <Input value={userAccount.username || ''} className="input" placeholder="Username" />
+                  <Input disabled value={userAccount.username || ''} className="input" placeholder="Username" />
                 </div>
                 <div className="field">
                   <div className="field__title">First Name</div>
                   <Input
+                    disabled={!edit}
                     value={userProfile.firstName || ''}
                     onChange={(e) => setUserProfile({ ...userProfile, firstName: e.target.value })}
                     className="input"
@@ -249,6 +248,7 @@ export default function UserDetail() {
                 <div className="field">
                   <div className="field__title">Last Name</div>
                   <Input
+                    disabled={!edit}
                     value={userProfile.lastName || ''}
                     onChange={(e) => setUserProfile({ ...userProfile, lastName: e.target.value })}
                     className="input"
@@ -258,6 +258,7 @@ export default function UserDetail() {
                 <div className="field">
                   <div className="field__title">Date of birth</div>
                   <DatePicker
+                    disabled={!edit}
                     defaultValue={moment(userProfile.dateOfBirth || '2022-01-01', dateFormat)}
                     onChange={onDateOfBirthChange}
                     format={dateFormat}
@@ -268,6 +269,7 @@ export default function UserDetail() {
                 <div className="field">
                   <div className="field__title">Gender</div>
                   <Select
+                    disabled={!edit}
                     showSearch
                     optionFilterProp="children"
                     filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
@@ -291,13 +293,14 @@ export default function UserDetail() {
                 <div className="field">
                   <div className="field__title">Degree</div>
                   <Select
+                    disabled={!edit}
                     showSearch
                     optionFilterProp="children"
                     filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                     placeholder="Degree"
                     className="input"
                     onChange={(value) => setUserProfile({ ...userProfile, degreeId: value })}
-                    value={userProfile?.degreeId}
+                    value={userProfile?.degree?.id}
                   >
                     {degrees.map((degree) => (
                       <Select.Option value={degree.id} key={degree.id}>
@@ -310,13 +313,14 @@ export default function UserDetail() {
                 <div className="field">
                   <div className="field__title">Job position</div>
                   <Select
+                    disabled={!edit}
                     showSearch
                     optionFilterProp="children"
                     filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                     className="input"
                     placeholder="Job position"
                     onChange={(value) => setUserProfile({ ...userProfile, jobPositionId: value })}
-                    value={userProfile?.jobPositionId}
+                    value={userProfile?.job_position?.id}
                   >
                     {jobPositions.map((job) => (
                       <Select.Option value={job.id} key={job.id}>
@@ -329,13 +333,14 @@ export default function UserDetail() {
                   <div className="field">
                     <div className="field__title">Mentor</div>
                     <Select
+                      disabled={!edit}
                       showSearch
                       optionFilterProp="children"
                       filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                       className="input"
                       placeholder="Mentor"
-                      onChange={(value) => handleChangeMentor(value)}
-                      value={oldMentor}
+                      onChange={(value) => setNewMentor(value)}
+                      value={newMentor}
                     >
                       {mentors.map((mentor) => (
                         <Select.Option value={mentor.id} key={mentor.id}>
@@ -350,11 +355,12 @@ export default function UserDetail() {
                 <div className="info__title">Contact Information</div>
                 <div className="field">
                   <div className="field__title">Email</div>
-                  <Input value={userAccount.email || ''} className="input" />
+                  <Input disabled value={userAccount.email || ''} className="input" />
                 </div>
                 <div className="field">
                   <div className="field__title">Phone</div>
                   <Input
+                    disabled={!edit}
                     value={userProfile.phoneNumber || ''}
                     onChange={(e) => setUserProfile({ ...userProfile, phoneNumber: e.target.value })}
                     className="input"
@@ -366,12 +372,13 @@ export default function UserDetail() {
                   <div className="input">
                     <div className="select">
                       <Select
+                        disabled={!edit}
                         showSearch
                         optionFilterProp="children"
                         filterOption={(input, option) =>
                           option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
-                        placeholder="Provinces"
+                        placeholder="Province"
                         style={{
                           width: '100%',
                         }}
@@ -385,12 +392,13 @@ export default function UserDetail() {
                         ))}
                       </Select>
                       <Select
+                        disabled={!edit}
                         showSearch
                         optionFilterProp="children"
                         filterOption={(input, option) =>
                           option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
-                        placeholder="Districts"
+                        placeholder="District"
                         style={{
                           width: '100%',
                         }}
@@ -404,12 +412,13 @@ export default function UserDetail() {
                         ))}
                       </Select>
                       <Select
+                        disabled={!edit}
                         showSearch
                         optionFilterProp="children"
                         filterOption={(input, option) =>
                           option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
-                        placeholder="Wards"
+                        placeholder="Ward"
                         style={{
                           width: '100%',
                         }}
@@ -424,6 +433,7 @@ export default function UserDetail() {
                       </Select>
                     </div>
                     <Input
+                      disabled={!edit}
                       value={selectedStreet || ''}
                       onChange={(e) => setSelectedStreet(e.target.value)}
                       style={{
@@ -435,9 +445,15 @@ export default function UserDetail() {
                 </div>
               </div>
               <div className="save-btn__container">
-                <Button className="save-btn" onClick={handleUpdateUserProfile}>
-                  Save
-                </Button>
+                {edit ? (
+                  <Button className="save-btn" onClick={handleUpdateUserProfile}>
+                    Save
+                  </Button>
+                ) : (
+                  <Button className="editprofile-btn" onClick={() => setEdit(true)}>
+                    Edit
+                  </Button>
+                )}
               </div>
             </div>
           </div>
