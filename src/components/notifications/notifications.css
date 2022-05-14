@@ -4,7 +4,7 @@
   right: 0;
   width: 400px;
   max-height: 600px;
-  background-color: white;
+  background-color: lightblue;
   transform-origin: top right;
   overflow-y: scroll;
   transform: scale(0);
@@ -15,4 +15,22 @@
 
 .notifications.active {
   transform: scale(1);
+}
+
+.notification-item {
+  display: flex;
+  align-items: center;
+}
+
+.notification-item__left {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.notification-item__left .avt {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
 }

@@ -94,15 +94,15 @@ export default function UserDetail() {
       setUserProfile(result);
       setDisplayFirstName(result.firstName || '');
       setDisplayLastName(result.lastName || '');
-      setSelectedProvince(Number(result?.address?.province) || null);
-      setSelectedDistrict(Number(result?.address?.district) || null);
-      setSelectedWard(Number(result?.address?.ward) || null);
+      setSelectedProvince(result?.address?.province || null);
+      setSelectedDistrict(result?.address?.district || null);
+      setSelectedWard(result?.address?.ward || null);
       setSelectedStreet(result?.address?.street || '');
       await fetchProvinces();
-      if (Number(result?.address?.province)) {
-        await fetchDistricts(Number(result?.address?.province));
-        if (Number(result?.address?.district)) {
-          await fetchWards(Number(result?.address?.district));
+      if (result?.address?.province?.split(',')[0]) {
+        await fetchDistricts(result?.address?.province?.split(',')[0]);
+        if (result?.address?.district.split(',')[0]) {
+          await fetchWards(result?.address?.district?.split(',')[0]);
         }
       }
     }
@@ -173,14 +173,14 @@ export default function UserDetail() {
 
   const handleChangeProvince = async (value) => {
     setSelectedProvince(value);
-    await fetchDistricts(value);
+    await fetchDistricts(value.split(',')[0]);
     setSelectedDistrict(null);
     setSelectedWard(null);
   };
 
   const handleChangeDistrict = async (value) => {
     setSelectedDistrict(value);
-    await fetchWards(value);
+    await fetchWards(value.split(',')[0]);
     setSelectedWard(null);
   };
 
@@ -386,7 +386,7 @@ export default function UserDetail() {
                         value={selectedProvince}
                       >
                         {provinces.map((province) => (
-                          <Select.Option value={province.code} key={province.code}>
+                          <Select.Option value={`${province.code},${province.name}`} key={province.code}>
                             {province.name}
                           </Select.Option>
                         ))}
@@ -406,7 +406,7 @@ export default function UserDetail() {
                         value={selectedDistrict}
                       >
                         {districts.map((district) => (
-                          <Select.Option value={district.code} key={district.code}>
+                          <Select.Option value={`${district.code},${district.name}`} key={district.code}>
                             {district.name}
                           </Select.Option>
                         ))}
@@ -426,7 +426,7 @@ export default function UserDetail() {
                         value={selectedWard}
                       >
                         {wards.map((ward) => (
-                          <Select.Option value={ward.code} key={ward.code}>
+                          <Select.Option value={`${ward.code},${ward.name}`} key={ward.code}>
                             {ward.name}
                           </Select.Option>
                         ))}
