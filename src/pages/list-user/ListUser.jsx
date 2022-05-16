@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { CircularProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Button, Modal, Input, message, Table, Tag, Pagination, Select } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
 import { InputBase } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import { getUsers, createUser } from '../../api/hr/userApi';
+import { createNotification } from '../../api/notification';
 import './list-user.css';
 
 const nPerPage = 6;
@@ -82,6 +82,45 @@ function ListUser() {
   const [keyword, setKeyword] = React.useState('');
   const [roleId, setRoleId] = React.useState('');
 
+  const [notification, setNotification] = React.useState({
+    recipients: [],
+    title: '',
+    body: '',
+  });
+  const [isNotificationModal, setIsNotificationModal] = React.useState(false);
+
+  const handleChangeUsersToSendNotification = (value) => {
+    if (value) {
+      setNotification({
+        ...notification,
+        recipients: value,
+      });
+    } else {
+      setNotification({
+        ...notification,
+        recipients: [],
+      });
+    }
+  };
+
+  const sendNotification = () => {
+    console.log(notification);
+    message.loading('Sending notification...').then(async () => {
+      const result = await createNotification(notification);
+      if (result) {
+        message.success('Notification sent!');
+        setIsNotificationModal(false);
+        setNotification({
+          recipients: [],
+          title: '',
+          body: '',
+        });
+      } else {
+        message.error('Error sending notification!');
+      }
+    });
+  };
+
   const fetchUsers = async (keyword, roleId, limit, offset) => {
     setLoading(true);
     const result = await getUsers({ keyword, roleId, limit, offset });
@@ -117,6 +156,23 @@ function ListUser() {
 
   const handleCancel = () => {
     setIsModalVisible(false);
+  };
+
+  const showNotificationModal = () => {
+    setIsNotificationModal(true);
+  };
+
+  const handleNotificationOk = () => {
+    sendNotification();
+  };
+
+  const handleNotificationCancel = () => {
+    setIsNotificationModal(false);
+    setNotification({
+      recipients: [],
+      title: '',
+      body: '',
+    });
   };
 
   const submitNewProgram = () => {
@@ -156,7 +212,16 @@ function ListUser() {
         <div className="top">
           <div className="page-name">Users</div>
           <div className="add-user">
-            <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
+            <Button
+              type="primary"
+              style={{
+                marginRight: '10px',
+              }}
+              onClick={showNotificationModal}
+            >
+              Send notification
+            </Button>
+            <Button type="primary" onClick={showModal}>
               Create new user
             </Button>
           </div>
@@ -286,6 +351,64 @@ function ListUser() {
               </Select>
             </div>
           )}
+        </div>
+      </Modal>
+      <Modal
+        className="modal"
+        title="Send notification"
+        visible={isNotificationModal}
+        onOk={handleNotificationOk}
+        onCancel={handleNotificationCancel}
+        footer={[
+          <Button key="back" onClick={handleNotificationCancel}>
+            Cancel
+          </Button>,
+          <Button
+            disabled={!notification.recipients || notification.body === '' || notification.title === ''}
+            key="submit"
+            type="primary"
+            onClick={handleNotificationOk}
+          >
+            Send
+          </Button>,
+        ]}
+      >
+        <div className="form">
+          <div className="field">
+            <label>Choose users</label>
+            <Select
+              mode="multiple"
+              allowClear
+              style={{ width: '100%', marginBottom: '20px', marginTop: '5px' }}
+              placeholder="Please select"
+              onChange={handleChangeUsersToSendNotification}
+              value={notification.recipients}
+            >
+              {users.map((user) => (
+                <Option key={user.id} value={user.id}>
+                  {user.username}
+                </Option>
+              ))}
+            </Select>
+          </div>
+
+          <div className="field">
+            <label>Title</label>
+            <Input
+              style={{ marginBottom: '20px', marginTop: '5px' }}
+              value={notification.title}
+              onChange={(e) => setNotification({ ...notification, title: e.target.value })}
+            />
+          </div>
+
+          <div className="field">
+            <label>Body</label>
+            <Input
+              style={{ marginBottom: '20px', marginTop: '5px' }}
+              value={notification.body}
+              onChange={(e) => setNotification({ ...notification, body: e.target.value })}
+            />
+          </div>
         </div>
       </Modal>
     </div>

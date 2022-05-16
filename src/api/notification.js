@@ -17,3 +17,20 @@ export const getNotifications = async () => {
     return error;
   }
 };
+
+export const createNotification = async (notification) => {
+  const token = localStorage.getItem('token');
+  const endpoint = `notification`;
+  try {
+    const response = await axiosNotification.post(endpoint, notification, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+    });
+    const { data } = response;
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
