@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect} from 'react';
 import './notifications.css';
-import { getNotifications } from '../../api/notification';
-import { getUserProfileById } from '../../api/userProfile';
 import moment from 'moment';
+import {useDispatch, useSelector} from "react-redux";
+import {getNotificationsAction} from "../../redux/notification/notification-actions";
 
-const dateFormat = 'YYYY-MM-DD HH:mm:ss';
-
-export default function Notifications({ open }) {
+export default function Notifications({open}) {
   const active = open === true ? 'active' : '';
-  const [notifications, setNotifications] = useState([]);
+  const dispatch = useDispatch();
+  const notifications = useSelector(state => state.notification);
 
   const fetchNotifications = async () => {
-    const result = await getNotifications();
-    console.log({ result });
-    setNotifications(result || []);
+    dispatch(getNotificationsAction());
   };
 
   useEffect(() => {
@@ -43,7 +40,8 @@ export default function Notifications({ open }) {
             </div>
             <div className="notification-item__right">
               <div className="notification-item__right__title">{notification.title}</div>
-              <div className="notification-item__right__date">{moment(notification.createdAt).format(dateFormat)}</div>
+              <div className="notification-item__right__body">{notification.body}</div>
+              <div className="notification-item__right__date">{moment(notification.createdAt).fromNow()}</div>
             </div>
           </div>
         );

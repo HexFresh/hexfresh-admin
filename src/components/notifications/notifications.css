@@ -2,15 +2,16 @@
   position: absolute;
   top: calc(100% + 5px);
   right: 0;
-  width: 400px;
+  width: 500px;
   max-height: 600px;
-  background-color: lightblue;
+  background-color: white;
   transform-origin: top right;
   overflow-y: scroll;
   transform: scale(0);
   transition: transform 0.3s ease 0s;
   border-radius: 10px;
   box-shadow: var(--shadow);
+  padding: 10px;
 }
 
 .notifications.active {
@@ -20,12 +21,28 @@
 .notification-item {
   display: flex;
   align-items: center;
+  grid-gap: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 10px;
 }
 
 .notification-item__left {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.notification-item__right__title {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--main-color);
+}
+
+.notification-item__right__date {
+  color: var(--main-color);
+  font-weight: bold;
 }
 
 .notification-item__left .avt {

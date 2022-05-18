@@ -9,8 +9,7 @@ export const unrecordRoute = [
 export const calculateRemainingTime = (expirationTime) => {
   const currentTime = new Date().getTime();
   const expiredTime = new Date(expirationTime).getTime();
-  const remainingTime = expiredTime - currentTime;
-  return remainingTime;
+  return expiredTime - currentTime;
 };
 
 export const retrieveStoredToken = () => {
