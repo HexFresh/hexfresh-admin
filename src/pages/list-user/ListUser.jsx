@@ -7,6 +7,8 @@ import { Search } from '@mui/icons-material';
 import { getUsers, createUser } from '../../api/hr/userApi';
 import { createNotification } from '../../api/notification';
 import './list-user.css';
+import {useDispatch} from "react-redux";
+import {getNotificationsAction} from "../../redux/notification/notification-actions";
 
 const nPerPage = 6;
 
@@ -82,6 +84,8 @@ function ListUser() {
   const [keyword, setKeyword] = React.useState('');
   const [roleId, setRoleId] = React.useState('');
 
+  const dispatch = useDispatch();
+
   const [notification, setNotification] = React.useState({
     recipients: [],
     title: '',
@@ -115,6 +119,7 @@ function ListUser() {
           title: '',
           body: '',
         });
+        dispatch(getNotificationsAction());
       } else {
         message.error('Error sending notification!');
       }
