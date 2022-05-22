@@ -1,0 +1,138 @@
+.badges {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.badges__container {
+  width: 100%;
+  height: 100%;
+}
+
+.badges__container .top {
+  color: var(--main-color);
+  font-weight: bold;
+  font-size: var(--page-name);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  padding: 20px 120px;
+}
+
+.badges__container .top .page-name {
+  line-height: 30px;
+}
+
+.badges__container .filter-search {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  padding: 10px 120px;
+  margin-top: 2px;
+}
+
+.badges__container .filter-search .search {
+  width: 350px;
+  display: flex;
+  align-items: center;
+  grid-gap: 5px;
+  border-radius: 4px;
+  border: 1px solid #dcdfe3;
+  padding: 0 10px;
+}
+
+.badges__container .programs {
+  margin-top: 20px;
+  width: 100%;
+  min-height: 380px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 120px;
+}
+
+.badges__container .programs__container {
+  width: 100%;
+  height: auto;
+}
+
+.badges__container .program {
+  width: 100%;
+  height: 380px;
+  box-shadow: var(--shadow);
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.badges__container .program .cover-photo {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #dcdfe3;
+}
+
+.badges__container .program .cover-photo img {
+  object-fit: cover;
+  width: 120px;
+  height: 120px;
+}
+
+.badges__container .program .program-name {
+  width: 100%;
+  height: 50%;
+  padding: 10px;
+}
+
+.badges__container .program .program-title {
+  color: black;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.badges__container .program .program-description {
+  color: black;
+  font-size: 16px;
+}
+
+.badges__container .program .program-name .link:hover {
+  text-decoration: underline;
+}
+
+.badges__container .pagination {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  padding: 0 80px 20px;
+}
+
+.ant-modal-body .form-badge {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  grid-gap:20px
+}
+
+.ant-modal-body .form-badge .field {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 5px;
+}
+
+.ant-modal-body .form-badge img {
+  width: 50%;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+

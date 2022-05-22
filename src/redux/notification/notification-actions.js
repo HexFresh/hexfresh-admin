@@ -10,6 +10,7 @@ export function getAllNotifications(notifications) {
 export function getNotificationsAction() {
   return async (dispatch) => {
     const data = await getNotifications();
+    console.log(data);
     dispatch(getAllNotifications(data));
   };
 }
