@@ -1,10 +1,14 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import './notifications.css';
 import moment from 'moment';
 import {useDispatch, useSelector} from "react-redux";
 import {getNotificationsAction} from "../../redux/notification/notification-actions";
+import {Button, Input, Modal} from "antd";
+import {getNotification} from "../../api/notification";
 
 export default function Notifications({open}) {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedNotification, setSelectedNotification] = useState(null);
   const active = open === true ? 'active' : '';
   const dispatch = useDispatch();
   const notifications = useSelector(state => state.notification);
@@ -20,6 +24,14 @@ export default function Notifications({open}) {
     fetchData();
   }, []);
 
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   return (
     <div className={`notifications ${active}`}>
       {notifications.map((notification) => {
@@ -30,7 +42,11 @@ export default function Notifications({open}) {
         // const userProfile = getUserProfile();
         // console.log({ userProfile });
         return (
-          <div key={notification._id} className="notification-item">
+          <div key={notification._id} className="notification-item"
+               onClick={async () => {
+                 setSelectedNotification(notification);
+                 showModal();
+               }}>
             <div className="notification-item__left">
               <img
                 className="avt"
@@ -40,12 +56,34 @@ export default function Notifications({open}) {
             </div>
             <div className="notification-item__right">
               <div className="notification-item__right__title">{notification.title}</div>
-              <div className="notification-item__right__body">{notification.body}</div>
               <div className="notification-item__right__date">{moment(notification.createdAt).fromNow()}</div>
             </div>
           </div>
         );
       })}
+      <Modal
+        className="modal"
+        title={selectedNotification?.title}
+        visible={isModalVisible}
+        onOk={handleCancel}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="submit" type="primary" onClick={handleCancel}>
+            Ok
+          </Button>,
+        ]}
+      >
+        <div className="detail-notification">
+          <div className="field">
+            <label>Content:</label>
+            <span>{selectedNotification?.body}</span>
+          </div>
+          <div className="field">
+            <label>From:</label>
+            <span>{"Admin"}</span>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

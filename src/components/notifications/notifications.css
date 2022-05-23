@@ -42,7 +42,8 @@
 
 .notification-item__right__date {
   color: var(--main-color);
-  font-weight: bold;
+  font-size: 14px;
+  font-style: italic;
 }
 
 .notification-item__left .avt {
@@ -50,4 +51,21 @@
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.ant-modal-body .detail-notification {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  grid-gap: 20px
+}
+
+.ant-modal-body .detail-notification .field {
+  display: flex;
+  grid-gap: 10px;
+}
+
+.ant-modal-body .detail-notification .field label {
+  font-weight: bold;
 }
