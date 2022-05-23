@@ -1,11 +1,11 @@
-import {Button, Input, message, Modal, Pagination} from "antd";
+import {Button, Input, message, Modal, Pagination, Tooltip} from "antd";
 import {Search} from "@mui/icons-material";
 import {CircularProgress, Grid, InputBase} from "@mui/material";
 import React, {useEffect, useRef, useState} from "react";
 import './badges.css'
-import {createBadge, getBadges} from "../../api/badgesApi";
+import {createBadge, deleteBadge, getBadges} from "../../api/badgesApi";
 import axios from "axios";
-import {PlusOutlined} from "@ant-design/icons";
+import {PlusOutlined, DeleteOutlined} from "@ant-design/icons";
 
 const nPerPage = 4;
 
@@ -82,6 +82,14 @@ export default function Badges() {
     });
   }
 
+  function handleRemoveBadge(id) {
+    message.loading('Deleting...').then(async () => {
+      await deleteBadge(id);
+      message.success('Deleted!', 0.5);
+      await fetchBadges(keyword, nPerPage, (page - 1) * nPerPage);
+    });
+  }
+
   return (<div className="badges">
     <div className="badges__container">
       <div className="top">
@@ -108,7 +116,7 @@ export default function Badges() {
         <div className="filter"></div>
       </div>
       <div className="programs">
-        {loading ? (<CircularProgress/>) : count > 0 ? (<div className="programs__container">
+        {loading ? (<CircularProgress/>) : badges.length > 0 ? (<div className="programs__container">
           <Grid container spacing={2}>
             {badges.map((badge) => {
               return (<Grid key={badge.id} item xs={12} sm={6} lg={3}>
@@ -118,6 +126,10 @@ export default function Badges() {
                       src={badge.image}
                       alt="img"
                     />
+                    <Tooltip className={"remove-btn"} title="remove">
+                      <Button onClick={() => handleRemoveBadge(badge.id)} type="circle" shape="circle"
+                              icon={<DeleteOutlined/>}/>
+                    </Tooltip>
                   </div>
                   <div className="program-name">
                     <div className="program-title">

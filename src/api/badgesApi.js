@@ -24,3 +24,14 @@ export const createBadge = async (badge) => {
     return error;
   }
 }
+
+export const deleteBadge = async (id) => {
+  const endpoint = `badge/${id}`;
+  try {
+    const response = await axiosClient.delete(endpoint);
+    const {data} = response;
+    return data;
+  } catch (error) {
+    return error;
+  }
+}
