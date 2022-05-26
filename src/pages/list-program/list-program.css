@@ -71,6 +71,22 @@
   flex-direction: column;
 }
 
+.list-program__container .program:hover .remove-btn {
+  opacity: 1;
+}
+
+.list-program__container .program:hover {
+  transform: scale(1.05);
+}
+
+.list-program__container .remove-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  opacity: 0;
+  z-index: 1;
+}
+
 .list-program__container .program .cover-photo {
   width: 100%;
   height: 50%;

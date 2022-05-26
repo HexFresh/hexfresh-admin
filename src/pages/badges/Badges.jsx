@@ -5,7 +5,7 @@ import React, {useEffect, useRef, useState} from "react";
 import './badges.css'
 import {createBadge, deleteBadge, getBadges} from "../../api/badgesApi";
 import axios from "axios";
-import {PlusOutlined, DeleteOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 
 const nPerPage = 4;
 
@@ -18,7 +18,7 @@ export default function Badges() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [image, setImage] = useState("");
+  const [imageFile, setImageFile] = useState(null);
 
   const refInput = useRef(null);
 
@@ -50,34 +50,30 @@ export default function Badges() {
     setIsModalVisible(false);
     setTitle('');
     setDescription('');
-    setImage('');
+    setImageFile(null);
   };
 
-  const uploadNewBadgeImage = async (file) => {
+  const uploadNewBadgeImage = (file) => {
     if (file) {
-      message.loading('Loading...').then(async () => {
-        const data = new FormData();
-        data.append('file', file);
-        data.append('upload_preset', 'qk9dvfij');
-        const res = await axios.post(`https://api.cloudinary.com/v1_1/hexfresh/image/upload`, data);
-        if (res) {
-          message.success('Uploaded!', 0.5);
-          setImage(res.data.secure_url);
-        }
-      });
+      setImageFile(file);
     }
   };
 
   const handleCreate = async () => {
     message.loading('Creating...').then(async () => {
-      const data = await createBadge({title, description, image});
-      if (data) {
+      const data = new FormData();
+      data.append('file', imageFile);
+      data.append('upload_preset', 'qk9dvfij');
+      const res = await axios.post(`https://api.cloudinary.com/v1_1/hexfresh/image/upload`, data);
+
+      const result = await createBadge({title, description, image: res.data.secure_url});
+      if (result) {
         message.success('Created!', 0.5);
         await fetchBadges(keyword, nPerPage, (page - 1) * nPerPage);
         setIsModalVisible(false);
         setTitle('');
         setDescription('');
-        setImage('');
+        setImageFile(null);
       }
     });
   }
@@ -160,7 +156,7 @@ export default function Badges() {
       onCancel={handleCancel}
       footer={[<Button key="back" onClick={handleCancel}>
         Cancel
-      </Button>, <Button disabled={title === "" || description === "" || image === ""} key="submit" type="primary"
+      </Button>, <Button disabled={title === "" || description === "" || imageFile === null} key="submit" type="primary"
                          onClick={handleOk}>
         Create
       </Button>,]}
@@ -176,13 +172,13 @@ export default function Badges() {
         </div>
         <div className="field">
           <label>Image</label>
-          {image === "" ? (<></>) : (<img src={image} alt="img" className="img-badge"/>)}
+          {imageFile === null ? <></> : (<img src={URL.createObjectURL(imageFile)} alt="img" className="img-badge"/>)}
           <Button
             onClick={() => {
               refInput.current?.click();
             }}
             className="edit-btn"
-            icon={<PlusOutlined/>}
+            icon={imageFile === null ? <PlusOutlined/> : <EditOutlined/>}
           >
             <input
               ref={refInput}
@@ -192,6 +188,7 @@ export default function Badges() {
               onChange={(event) => {
                 if (event.target.files) {
                   uploadNewBadgeImage(event.target.files[0]);
+                  event.target.value = null;
                 }
               }}
             />
