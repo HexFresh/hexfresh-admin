@@ -1,4 +1,4 @@
-import { success } from '../ui/ui-actions';
+import {success} from '../ui/ui-actions';
 import axiosClient from '../../api/axiosClient';
 
 export function retrieveTokenAction(token) {
@@ -27,13 +27,13 @@ export function signOut(history) {
     const endpoint = `auth/logout`;
     try {
       const response = axiosClient.get(endpoint);
-      const { data } = response;
+      const {data} = response;
       console.log(data);
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
       localStorage.removeItem('roleId');
-      history('/signin');
-      dispatch({ type: 'auth/LOGOUT' });
+      history('/login');
+      dispatch({type: 'auth/LOGOUT'});
     } catch (error) {
       console.log(error);
     }
@@ -45,12 +45,12 @@ export function signIn(credentials, history) {
     const endpoint = 'auth/login';
     try {
       const response = await axiosClient.post(endpoint, credentials);
-      const { token, user } = response.data;
+      const {token, user} = response.data;
       console.log(user);
       localStorage.setItem('token', token);
       localStorage.setItem('userId', user.id);
       localStorage.setItem('roleId', user.roleId);
-      dispatch(loginConfirmAction({ ...user, token }));
+      dispatch(loginConfirmAction({...user, token}));
       dispatch(success());
       history('/');
     } catch (error) {

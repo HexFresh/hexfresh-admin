@@ -79,7 +79,7 @@
   transform: scale(1.05);
 }
 
-.list-program__container .remove-btn {
+.list-program__container .program .remove-btn {
   position: absolute;
   top: 5px;
   right: 5px;
@@ -94,6 +94,7 @@
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid #dcdfe3;
+  position: relative;
 }
 
 .list-program__container .program .cover-photo img {

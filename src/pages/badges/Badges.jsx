@@ -24,8 +24,8 @@ export default function Badges() {
 
   const fetchBadges = async (keyword, limit, offset) => {
     const data = await getBadges({keyword, limit, offset});
-    console.log(data);
-    setBadges(data);
+    setBadges(data.rows);
+    setCount(data.count);
   }
 
   useEffect(() => {
@@ -37,6 +37,10 @@ export default function Badges() {
     }
     fetchData();
   }, [page, keyword])
+
+  const handleChangePage = (page) => {
+    setPage(page);
+  };
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -145,7 +149,7 @@ export default function Badges() {
         </div>)}
       </div>
       <div className="pagination">
-        <Pagination current={page} total={count} pageSize={4} hideOnSinglePage/>
+        <Pagination current={page} total={count} pageSize={4} onChange={handleChangePage} hideOnSinglePage/>
       </div>
     </div>
     <Modal
