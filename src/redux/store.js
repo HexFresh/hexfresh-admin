@@ -1,10 +1,12 @@
-import { applyMiddleware, createStore } from 'redux';
-import ThunkMiddleware from 'redux-thunk';
-import rootReducer from './reducer';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import {configureStore} from "@reduxjs/toolkit";
+import authReducer from "./auth/auth-slice";
+import notificationReducer from "./notification/notification-slice";
+import profileReducer from "./profile/profile-slice";
 
-const composedEnhancers = composeWithDevTools(applyMiddleware(ThunkMiddleware));
-
-const store = createStore(rootReducer, composedEnhancers);
-
-export default store;
+export const store = configureStore({
+  reducer: {
+    auth: authReducer,
+    notification: notificationReducer,
+    profile: profileReducer,
+  }
+})

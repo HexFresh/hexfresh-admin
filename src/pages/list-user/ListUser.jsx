@@ -8,7 +8,7 @@ import {getUsers, createUser} from '../../api/hr/userApi';
 import {createNotification} from '../../api/notification';
 import './list-user.css';
 import {useDispatch} from "react-redux";
-import {getNotificationsAction} from "../../redux/notification/notification-actions";
+import {getNotificationsAction} from "../../redux/notification/notification-slice";
 
 const nPerPage = 6;
 

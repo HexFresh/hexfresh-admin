@@ -1,6 +1,6 @@
 import axiosNotification from './axiosNotification';
 
-export const getNotifications = async () => {
+export const getNotificationsService = async () => {
   const token = localStorage.getItem('token');
   const endpoint = `notification`;
   try {

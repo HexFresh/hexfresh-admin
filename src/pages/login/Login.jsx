@@ -1,13 +1,13 @@
-import React, { useRef, useEffect } from 'react';
+import React, {useRef, useEffect} from 'react';
 import logo from '../../assets/images/logo.png';
 import InputBase from '@mui/material/InputBase';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
-import { Button } from 'antd';
-import { signIn } from '../../redux/auth/auth-actions';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import {Button} from 'antd';
+import {useDispatch} from 'react-redux';
+import {useNavigate} from "react-router-dom";
 import './login.css';
+import {signIn} from "../../redux/auth/auth-slice";
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -22,31 +22,28 @@ export default function Login() {
   const handleSignIn = () => {
     if (username.current.value !== '' && password.current.value !== '') {
       const credentials = {
-        username: username.current.value,
-        password: password.current.value,
+        username: username.current.value, password: password.current.value,
       };
-      dispatch(signIn(credentials, navigate));
+      dispatch(signIn({credentials, navigate}));
     }
   };
 
-  return (
-    <div className="login">
-      <img src={logo} alt="logo" />
-      <div className="container">
-        <div className="welcome">Welcome Back</div>
-        <div className="sub-welcome">Enter the credentials to access your account</div>
-        <div className="filed">
-          <EmailIcon className="icon" />
-          <InputBase inputRef={username} sx={{ ml: 1, flex: 1 }} placeholder="Enter your username" autoFocus />
-        </div>
-        <div className="filed">
-          <LockIcon className="icon" />
-          <InputBase inputRef={password} sx={{ ml: 1, flex: 1 }} placeholder="Enter your password" type="password" />
-        </div>
-        <Button onClick={handleSignIn} type="primary">
-          Sign in
-        </Button>
+  return (<div className="login">
+    <img src={logo} alt="logo"/>
+    <div className="container">
+      <div className="welcome">Welcome Back</div>
+      <div className="sub-welcome">Enter the credentials to access your account</div>
+      <div className="filed">
+        <EmailIcon className="icon"/>
+        <InputBase inputRef={username} sx={{ml: 1, flex: 1}} placeholder="Enter your username" autoFocus/>
       </div>
+      <div className="filed">
+        <LockIcon className="icon"/>
+        <InputBase inputRef={password} sx={{ml: 1, flex: 1}} placeholder="Enter your password" type="password"/>
+      </div>
+      <Button onClick={handleSignIn} type="primary">
+        Sign in
+      </Button>
     </div>
-  );
+  </div>);
 }
