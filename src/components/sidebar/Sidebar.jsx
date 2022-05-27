@@ -25,7 +25,7 @@ export default function Sidebar({open, openSidebar, closeSidebar}) {
   }, {
     display_name: 'Badges', route: `/badges`, icon: <BadgeIcon/>,
   }, {
-    display_name: 'Your Profile', route: `/profile/${userId}`, icon: <AssignmentIndIcon/>,
+    display_name: 'Profile', route: `/profile/${userId}`, icon: <AssignmentIndIcon/>,
   },];
 
   const activeItem = routes.findIndex((item) => item.route === location.pathname);

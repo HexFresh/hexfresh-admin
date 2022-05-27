@@ -6,11 +6,11 @@ export const getNotificationsService = async () => {
   try {
     const response = await axiosNotification.get(endpoint, {
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json', Authorization: 'Bearer ' + token,
       },
     });
     const {data} = response;
+    console.log(data);
     return data;
   } catch (error) {
     return error;
@@ -23,8 +23,7 @@ export const getNotification = async id => {
   try {
     const response = await axiosNotification.get(endpoint, {
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json', Authorization: 'Bearer ' + token,
       },
     });
     const {data} = response;
@@ -41,8 +40,7 @@ export const createNotification = async (notification) => {
   try {
     const response = await axiosNotification.post(endpoint, notification, {
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json', Authorization: 'Bearer ' + token,
       },
     });
     const {data} = response;

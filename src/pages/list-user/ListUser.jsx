@@ -109,7 +109,8 @@ function ListUser() {
   const fetchUsers = async (keyword, roleId, limit, offset) => {
     setLoading(true);
     const result = await getUsers({keyword, roleId, limit, offset});
-    const fullResult = await getUsers({keyword, roleId});
+    const fullResult = await getUsers({keyword: "", limit: result.count});
+    console.log(fullResult)
     const data = result.rows.map((user) => ({...user, key: user.id}));
     setUsers(data || []);
     setFullUser(fullResult.rows);
@@ -343,6 +344,9 @@ function ListUser() {
         <div className="field">
           <label>Choose users</label>
           <Select
+            showSearch
+            optionFilterProp="children"
+            filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
             mode="multiple"
             allowClear
             style={{width: '100%', marginBottom: '20px', marginTop: '5px'}}
