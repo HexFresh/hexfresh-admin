@@ -7,7 +7,7 @@ import {createBadge, deleteBadge, getBadges} from "../../api/badgesApi";
 import axios from "axios";
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 
-const nPerPage = 4;
+const nPerPage = 6;
 
 export default function Badges() {
   const [badges, setBadges] = useState([]);
@@ -119,7 +119,7 @@ export default function Badges() {
         {loading ? (<CircularProgress/>) : badges.length > 0 ? (<div className="programs__container">
           <Grid container spacing={2}>
             {badges.map((badge) => {
-              return (<Grid key={badge.id} item xs={12} sm={6} lg={3}>
+              return (<Grid key={badge.id} item xs={12} sm={6} lg={2}>
                 <div className="program">
                   <div className="cover-photo">
                     <img
@@ -149,7 +149,7 @@ export default function Badges() {
         </div>)}
       </div>
       <div className="pagination">
-        <Pagination current={page} total={count} pageSize={4} onChange={handleChangePage} hideOnSinglePage/>
+        <Pagination current={page} total={count} pageSize={nPerPage} onChange={handleChangePage} hideOnSinglePage/>
       </div>
     </div>
     <Modal

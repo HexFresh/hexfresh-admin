@@ -84,6 +84,7 @@
   align-items: center;
   border-bottom: 1px solid #dcdfe3;
   position: relative;
+  padding: 10px;
 }
 
 .badges__container .program:hover .remove-btn {
@@ -100,8 +101,8 @@
 
 .badges__container .program .cover-photo img {
   object-fit: cover;
-  width: 150px;
-  height: 150px;
+  width: 100%;
+  height: 100%;
 }
 
 .badges__container .program .program-name {
