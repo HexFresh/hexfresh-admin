@@ -21,7 +21,7 @@ export const createBadge = async (badge) => {
     const {data} = response;
     return data;
   } catch (error) {
-    return error;
+    console.log(error);
   }
 }
 
@@ -32,6 +32,17 @@ export const deleteBadge = async (id) => {
     const {data} = response;
     return data;
   } catch (error) {
-    return error;
+    console.log(error);
+  }
+}
+
+export const getBadgeOfProgram = async (id) => {
+  const endpoint = `program/${id}/badge`;
+  try {
+    const response = await axiosClient.get(endpoint);
+    const {data} = response;
+    return data;
+  } catch (error) {
+    console.log(error);
   }
 }

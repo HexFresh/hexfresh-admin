@@ -17,6 +17,11 @@ import {signOut} from "./redux/auth/auth-slice";
 
 function App() {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+
+  }, []);
+
   const openSidebar = () => {
     setOpen(true);
   };
@@ -28,13 +33,6 @@ function App() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const userId = localStorage.getItem('userId');
-    if (userId) {
-      navigate('/programs');
-    }
-  }, [dispatch]);
 
   const handleLogout = () => {
     dispatch(signOut({navigate}));
