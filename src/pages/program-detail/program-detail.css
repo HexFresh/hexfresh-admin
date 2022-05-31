@@ -50,6 +50,9 @@
   font-size: 18px;
   font-weight: bold;
   color: var(--main-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .program-detail-bottom .users-list {
@@ -86,8 +89,46 @@
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
+  grid-gap: 20px;
+  padding: 20px 0;
+}
+
+.program-detail-bottom .badges .badges-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--main-color);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.program-detail-bottom .badges-list {
+  width: 100%;
+  height: 100%;
+  display: flex;
   overflow-y: auto;
   flex-direction: column;
   grid-gap: 20px;
-  background-color: #10b981;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.program-detail-bottom .badges .badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  grid-gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: var(--shadow);
+}
+
+.program-detail-bottom .badges .badge-left {
+  display: flex;
+  align-items: center;
+  grid-gap: 10px;
 }
