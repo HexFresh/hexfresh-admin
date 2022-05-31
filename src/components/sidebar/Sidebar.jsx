@@ -28,7 +28,7 @@ export default function Sidebar({open, openSidebar, closeSidebar}) {
     display_name: 'Profile', route: `/profile/${userId}`, icon: <AssignmentIndIcon/>,
   },];
 
-  const activeItem = routes.findIndex((item) => item.route === location.pathname);
+  const activeItem = routes.findIndex((item) => location.pathname.includes(item.route));
 
   return (<div className={open ? 'sidebar' : 'sidebar hide'}>
     <div className="back-button">
