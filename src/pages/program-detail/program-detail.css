@@ -82,6 +82,7 @@
   display: flex;
   align-items: center;
   grid-gap: 10px;
+  font-weight: bold;
 }
 
 .program-detail-bottom .badges {
@@ -131,4 +132,16 @@
   display: flex;
   align-items: center;
   grid-gap: 10px;
+  font-weight: bold;
+}
+
+.program-detail-bottom .badges .badge-rank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--main-color);
+  color: white;
 }

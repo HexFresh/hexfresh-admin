@@ -5,10 +5,11 @@ import './program-detail.css';
 import {addAvailableBadgeToProgram, addNewBadgeToProgram, getProgramDetail} from './api';
 import {getBadgeOfProgram, getBadges} from "../../api/badgesApi";
 import {CircularProgress} from '@mui/material';
-import {Button, Input, message, Modal, Tag} from 'antd';
-import {EditOutlined, PlusOutlined} from "@ant-design/icons";
+import {Button, Input, message, Modal, Switch, Tag, Tooltip} from 'antd';
+import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import axios from "axios";
 import {Select} from 'antd';
+import {findAllUsersInLeaderboard, updateStatusOfLeaderboard} from "../../api/leaderboardApi";
 
 const {Option} = Select;
 
@@ -23,6 +24,8 @@ export default function ProgramDetail() {
   const [imageFile, setImageFile] = useState(null);
   const [addBadgeMode, setAddBadgeMode] = useState('available');
   const [selectedBadge, setSelectedBadge] = useState(null);
+  const [leaderboard, setLeaderboard] = useState({});
+  const [loadingStatus, setLoadingStatus] = useState(false);
 
   const refInput = useRef(null);
   const {programId} = useParams();
@@ -40,14 +43,18 @@ export default function ProgramDetail() {
 
   const fetchAllBadges = async () => {
     const result = await getBadges({keyword: '', limit: 100});
-    console.log(result.rows);
     setAllBadges(result.rows || []);
+  }
+
+  const fetchLeaderboard = async () => {
+    const result = await findAllUsersInLeaderboard(programId);
+    setLeaderboard(result);
   }
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await Promise.all([fetchProgram(), fetchBadges(), fetchAllBadges()]);
+      await Promise.all([fetchProgram(), fetchBadges(), fetchAllBadges(), fetchLeaderboard()]);
       setLoading(false);
     };
     fetchData();
@@ -74,9 +81,18 @@ export default function ProgramDetail() {
 
   const handleOk = () => {
     if (addBadgeMode === 'available') {
-      handleAddAvailableBadgeToProgram()
+      if (!selectedBadge) {
+        message.error({content: 'Please select a badge to add'});
+      } else {
+        handleAddAvailableBadgeToProgram()
+      }
+
     } else {
-      handleAddNewBadgeToProgram();
+      if (!title || !description || !imageFile) {
+        message.error({content: 'Please fill all fields'});
+      } else {
+        handleAddNewBadgeToProgram();
+      }
     }
   };
 
@@ -123,6 +139,19 @@ export default function ProgramDetail() {
     });
   }
 
+  const handleChangeLeaderboardStatus = async (checked) => {
+    const change = async () => {
+      setLoadingStatus(true);
+      const result = await updateStatusOfLeaderboard(programId, checked ? true : "0");
+      if (result) {
+        message.success('Change status successfully', 0.5);
+        await fetchLeaderboard();
+      }
+      setLoadingStatus(false);
+    }
+    await change();
+  }
+
   return (<div className="program-detail">
     {loading ? (<CircularProgress/>) : (<div className="program-detail-container">
       <div className="top">
@@ -137,7 +166,7 @@ export default function ProgramDetail() {
             <div className="users-title-name">Users</div>
             <div className="users-title-btn">
               <Button type="primary">
-                Add user to program
+                Add user
               </Button>
             </div>
           </div>
@@ -166,7 +195,7 @@ export default function ProgramDetail() {
             <div className="badges-title-name">Badges</div>
             <div className="badges-title-btn">
               <Button type="primary" onClick={showModal}>
-                Add badge to program
+                Add badge
               </Button>
             </div>
           </div>
@@ -183,6 +212,43 @@ export default function ProgramDetail() {
                   </div>
                   <div className="badge-name">{badge.title}</div>
                 </div>
+                <div className="badge-right">
+                  <Tooltip className={"remove-btn"} title="remove">
+                    <Button type="circle" shape="circle"
+                            icon={<DeleteOutlined/>}/>
+                  </Tooltip>
+                </div>
+              </div>)
+            })}
+          </div>
+        </div>
+
+        <div className={"badges"}>
+          <div className="badges-title">
+            <div className="badges-title-name">Leaderboard</div>
+            <div className="badges-title-btn">
+              <Switch checked={leaderboard.isActive} loading={loadingStatus} checkedChildren="Active"
+                      unCheckedChildren="Block" onChange={handleChangeLeaderboardStatus}/>
+            </div>
+          </div>
+          <div className="badges-list">
+            {leaderboard?.user_leaderboards?.map((user, index) => {
+              return (<div key={user.id} className="badge">
+                <div className="badge-left">
+                  <div
+                    className="badge-rank">{index + 1}</div>
+                  <div className="badge-avatar">
+                    <img style={{
+                      width: '50px', height: '50px', objectFit: 'cover', borderRadius: '50%',
+                    }}
+                         src={user?.user?.user_information.avatar || "https://i0.wp.com/lh3.googleusercontent.com/-Jsg_ToJfbm4/WHmCdcXhHSI/AAAAAAAAAoU/XgAWhvRAASM/s0/58798274ad088.jpg"}
+                         alt=""/>
+                  </div>
+                  <div className="badge-name">{user?.user.username}</div>
+                </div>
+                <div className="badge-right">
+                  {user?.point}
+                </div>
               </div>)
             })}
           </div>
@@ -197,7 +263,7 @@ export default function ProgramDetail() {
       onCancel={handleCancel}
       footer={[<Button key="back" onClick={handleCancel}>
         Cancel
-      </Button>, <Button type="primary" onClick={handleOk}>
+      </Button>, <Button key="create" type="primary" onClick={handleOk}>
         Create
       </Button>,]}
     >
@@ -218,7 +284,7 @@ export default function ProgramDetail() {
         <Select placeholder={"Select badge"} value={selectedBadge} style={{width: '100%'}}
                 onChange={(value) => setSelectedBadge(value)}>
           {allBadges.map(badge => {
-            return (<Option value={badge.id}>{badge.title}</Option>)
+            return (<Option key={badge.id} value={badge.id}>{badge.title}</Option>)
           })}
         </Select>
       </div>) : (<div className="form-add-badge">
