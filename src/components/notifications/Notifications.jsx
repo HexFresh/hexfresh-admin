@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {Button, Modal} from "antd";
 import {getNotificationsAction} from "../../redux/notification/notification-slice";
 import NotificationItem from "./NotificationItem";
+import {getNotification} from "../../api/notification";
 
 export default function Notifications({open}) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -27,11 +28,16 @@ export default function Notifications({open}) {
   const handleNotificationItemClick = (notification, userProfile) => {
     setSelectedNotification(notification);
     setSelectedUserProfile(userProfile);
-    showModal()
+    const getNotify = async () => {
+      await getNotification(notification._id);
+      await showModal()
+    }
+    getNotify();
   }
 
-  const showModal = () => {
+  const showModal = async () => {
     setIsModalVisible(true);
+    await fetchNotifications();
   };
 
   const handleCancel = () => {

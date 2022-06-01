@@ -90,7 +90,6 @@ function ListUser() {
   };
 
   const sendNotification = () => {
-    console.log(notification);
     message.loading('Sending notification...').then(async () => {
       const result = await createNotification(notification);
       if (result) {
@@ -110,7 +109,6 @@ function ListUser() {
     setLoading(true);
     const result = await getUsers({keyword, roleId, limit, offset});
     const fullResult = await getUsers({keyword: "", limit: result.count});
-    console.log(fullResult)
     const data = result.rows.map((user) => ({...user, key: user.id}));
     setUsers(data || []);
     setFullUser(fullResult.rows);
@@ -169,7 +167,6 @@ function ListUser() {
     const handleCreateNewUser = async () => {
       message.loading({content: 'Creating new user...', key: 'create-user'}).then(async () => {
         const result = await createUser(user);
-        console.log({result});
         if (typeof result === 'string') {
           message.error({
             content: result, key: 'create-user',

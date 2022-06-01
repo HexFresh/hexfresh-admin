@@ -26,6 +26,20 @@
   margin-top: 10px;
   border-bottom: 1px solid #e0e0e0;
   padding: 10px;
+  background-color: #d8e7ff;
+  position: relative;
+}
+
+.notification-item.seen {
+  display: flex;
+  align-items: center;
+  grid-gap: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 10px;
+  background-color: white;
+  position: relative;
 }
 
 .notification-item__left {
@@ -68,4 +82,15 @@
 
 .ant-modal-body .detail-notification .field label {
   font-weight: bold;
+}
+
+.notification-item .seen {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #10b981;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
 }
