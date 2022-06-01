@@ -2,7 +2,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import './program-detail.css';
-import {addAvailableBadgeToProgram, addNewBadgeToProgram, getProgramDetail} from './api';
+import {addAvailableBadgeToProgram, addNewBadgeToProgram, getProgramDetail, removeBadgeFromProgram} from './api';
 import {getBadgeOfProgram, getBadges} from "../../api/badgesApi";
 import {CircularProgress} from '@mui/material';
 import {Button, Input, message, Modal, Switch, Tag, Tooltip} from 'antd';
@@ -152,6 +152,13 @@ export default function ProgramDetail() {
     await change();
   }
 
+  const handleRemoveBadge = async (badgeId) => {
+    await removeBadgeFromProgram(programId, badgeId);
+    message.success('Remove badge successfully', 0.5);
+    await fetchBadges();
+    await fetchAllBadges();
+  }
+
   return (<div className="program-detail">
     {loading ? (<CircularProgress/>) : (<div className="program-detail-container">
       <div className="top">
@@ -214,7 +221,7 @@ export default function ProgramDetail() {
                 </div>
                 <div className="badge-right">
                   <Tooltip className={"remove-btn"} title="remove">
-                    <Button type="circle" shape="circle"
+                    <Button onClick={() => handleRemoveBadge(badge.id)} type="circle" shape="circle"
                             icon={<DeleteOutlined/>}/>
                   </Tooltip>
                 </div>

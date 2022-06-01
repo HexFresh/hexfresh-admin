@@ -43,3 +43,14 @@ export const addNewBadgeToProgram = async (programId, badge) => {
     return error;
   }
 }
+
+export const removeBadgeFromProgram = async (programId, badgeId) => {
+  const endpoint = `program/${programId}/badge/${badgeId}`;
+  try {
+    const response = await axiosClient.delete(endpoint);
+    const {data} = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
