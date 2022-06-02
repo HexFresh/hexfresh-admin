@@ -10,6 +10,7 @@ import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import axios from "axios";
 import {Select} from 'antd';
 import {findAllUsersInLeaderboard, updateStatusOfLeaderboard} from "../../api/leaderboardApi";
+import Avatar from "@mui/material/Avatar";
 
 const {Option} = Select;
 
@@ -182,11 +183,11 @@ export default function ProgramDetail() {
               return (<div key={participant.id} className="user">
                 <div className="user-left">
                   <div className="user-avatar">
-                    <img style={{
+                    <Avatar style={{
                       width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover',
                     }}
-                         src={participant.user_information.avatar ?? "https://i0.wp.com/lh3.googleusercontent.com/-Jsg_ToJfbm4/WHmCdcXhHSI/AAAAAAAAAoU/XgAWhvRAASM/s0/58798274ad088.jpg"}
-                         alt=""/>
+                            src={participant.user_information.avatar}
+                            alt=""/>
                   </div>
                   <div className="user-name">{participant.username}</div>
                 </div>
@@ -245,11 +246,11 @@ export default function ProgramDetail() {
                   <div
                     className="badge-rank">{index + 1}</div>
                   <div className="badge-avatar">
-                    <img style={{
+                    <Avatar style={{
                       width: '50px', height: '50px', objectFit: 'cover', borderRadius: '50%',
                     }}
-                         src={user?.user?.user_information.avatar || "https://i0.wp.com/lh3.googleusercontent.com/-Jsg_ToJfbm4/WHmCdcXhHSI/AAAAAAAAAoU/XgAWhvRAASM/s0/58798274ad088.jpg"}
-                         alt=""/>
+                            src={user?.user?.user_information.avatar}
+                            alt=""/>
                   </div>
                   <div className="badge-name">{user?.user.username}</div>
                 </div>
