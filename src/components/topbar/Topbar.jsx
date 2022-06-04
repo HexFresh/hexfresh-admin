@@ -21,7 +21,6 @@ export default function Topbar({openSidebar}) {
   const userProfile = useSelector(state => state.profile.profile);
 
   const countNotification = useSelector(state => state.countNotification.counter);
-  console.log({countNotification});
 
   const fetchUserProfile = async () => {
     dispatch(getUserProfileAction())
@@ -51,6 +50,11 @@ export default function Topbar({openSidebar}) {
     handleClose();
   };
 
+  const handleProfile = () => {
+    navigate(`/profile/${localStorage.getItem('userId')}`)
+    handleClose();
+  }
+
   return (<div className="topbar">
     <div className="container">
       <div className="left">
@@ -61,7 +65,7 @@ export default function Topbar({openSidebar}) {
         />
       </div>
       <div className="right">
-        <div className="notification" tabIndex="1" onBlur={onClose}>
+        <div className="notification" onBlur={onClose}>
           <Notifications open={openNotification}/>
           {countNotification.unseen > 0 && <div className="count-notification">{countNotification?.unseen}</div>}
           <div className="ground" onClick={() => setOpenNotification(!openNotification)}>
@@ -91,6 +95,7 @@ export default function Topbar({openSidebar}) {
       }}
     >
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
+      <MenuItem onClick={handleProfile}>Profile</MenuItem>
     </Menu>
   </div>);
 }

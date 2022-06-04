@@ -12,6 +12,9 @@
   border-radius: 10px;
   box-shadow: var(--shadow);
   padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .notifications.active {
@@ -28,6 +31,7 @@
   padding: 10px;
   background-color: #d8e7ff;
   position: relative;
+  width: 100%;
 }
 
 .notification-item.seen {
@@ -93,4 +97,8 @@
   top: 50%;
   right: 10px;
   transform: translateY(-50%);
+}
+
+.notification-circular-progress {
+  width: 100%;
 }

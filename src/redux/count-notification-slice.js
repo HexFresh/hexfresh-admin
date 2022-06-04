@@ -13,8 +13,8 @@ export const getCountNotificationAction = createAsyncThunk('notification/getCoun
 
 export const countNotificationSlice = createSlice({
   name: 'countNotification', initialState, reducers: {
-    getCounter: (state, payload) => {
-      state.counter = payload;
+    getCounter: (state, action) => {
+      state.counter = action.payload;
     }
   }, extraReducers: {
     [getCountNotificationAction.fulfilled]: (state, action) => {

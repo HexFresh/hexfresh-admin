@@ -2,10 +2,15 @@ import React, {useEffect, useState} from 'react';
 import './notifications.css';
 import {useDispatch, useSelector} from "react-redux";
 import {Button, Modal} from "antd";
-import {getNotificationsAction} from "../../redux/notification/notification-slice";
+import {
+  getAllNotification, getMoreNotification, getNotificationsAction
+} from "../../redux/notification/notification-slice";
 import NotificationItem from "./NotificationItem";
-import {getNotification} from "../../api/notification";
+import {getNotification, getNotificationsService} from "../../api/notification";
 import {getCounter} from "../../redux/count-notification-slice";
+import {CircularProgress} from "@mui/material";
+
+const nPerPage = 5;
 
 export default function Notifications({open}) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -14,16 +19,31 @@ export default function Notifications({open}) {
   const active = open === true ? 'active' : '';
   const dispatch = useDispatch();
   const notifications = useSelector(state => state.notification.notifications);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const unseen = useSelector(state => state.countNotification.counter.unseen);
+  const total = useSelector(state => state.countNotification.counter.total);
 
-  const fetchNotifications = async () => {
-    dispatch(getNotificationsAction())
+  const fetchNotifications = async (mess = "No") => {
+    if (notifications.length === 0 || mess === "Yes") {
+      setPage(1);
+      const payload = {
+        skip: (1 - 1) * nPerPage, limit: nPerPage
+      }
+      dispatch(getNotificationsAction(payload));
+    } else {
+      dispatch(getAllNotification(notifications))
+    }
   };
+
+  console.log(notifications, total);
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetchNotifications();
+      if (notifications.length === 0) {
+        await fetchNotifications();
+      }
     };
     fetchData();
   }, []);
@@ -33,23 +53,37 @@ export default function Notifications({open}) {
     setSelectedUserProfile(userProfile);
     await getNotification(notification._id);
     dispatch(getCounter({
-      unseen: unseen - 1
+      total: total, unseen: unseen - 1
     }))
-    showModal()
+    await showModal()
   }
 
-  const showModal = () => {
+  const showModal = async () => {
     setIsModalVisible(true);
-    fetchNotifications();
+    await fetchNotifications("Yes");
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
 
+  const handeLoadMoreNotifications = async () => {
+    setLoading(true);
+    setPage(page + 1);
+    const payload = {
+      skip: (page) * nPerPage, limit: nPerPage
+    }
+    const result = await getNotificationsService(payload);
+    dispatch(getMoreNotification(result));
+    setLoading(false);
+  }
+
   return (<div className={`notifications ${active}`}>
     {notifications.map((notification) => (<NotificationItem key={notification._id} notification={notification}
                                                             notificationItemClick={handleNotificationItemClick}/>))}
+    {loading && <CircularProgress className={"notification-circular-progress"}/>}
+    {notifications.length < total &&
+      <Button className="notification-load-more" onClick={handeLoadMoreNotifications}>Load more</Button>}
     <Modal
       className="modal"
       title={selectedNotification?.title}

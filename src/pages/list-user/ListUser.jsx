@@ -99,7 +99,10 @@ function ListUser() {
         setNotification({
           recipients: [], title: '', body: '',
         });
-        dispatch(getNotificationsAction());
+        const payload = {
+          skip: (1 - 1) * nPerPage, limit: nPerPage
+        }
+        dispatch(getNotificationsAction(payload));
         dispatch(getCountNotificationAction());
       } else {
         message.error('Error sending notification!');
