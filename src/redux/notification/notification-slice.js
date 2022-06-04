@@ -20,7 +20,7 @@ export const notificationSlice = createSlice({
 
     }, [getNotificationsAction.fulfilled]: (state, action) => {
       state.status = 'idle';
-      state.notifications = action.payload;
+      state.notifications = action.payload || [];
     }
   }
 })

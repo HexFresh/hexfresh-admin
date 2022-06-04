@@ -5,6 +5,7 @@ import {Button, Modal} from "antd";
 import {getNotificationsAction} from "../../redux/notification/notification-slice";
 import NotificationItem from "./NotificationItem";
 import {getNotification} from "../../api/notification";
+import {getCounter} from "../../redux/count-notification-slice";
 
 export default function Notifications({open}) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -13,6 +14,8 @@ export default function Notifications({open}) {
   const active = open === true ? 'active' : '';
   const dispatch = useDispatch();
   const notifications = useSelector(state => state.notification.notifications);
+
+  const unseen = useSelector(state => state.countNotification.counter.unseen);
 
   const fetchNotifications = async () => {
     dispatch(getNotificationsAction())
@@ -25,19 +28,19 @@ export default function Notifications({open}) {
     fetchData();
   }, []);
 
-  const handleNotificationItemClick = (notification, userProfile) => {
+  const handleNotificationItemClick = async (notification, userProfile) => {
     setSelectedNotification(notification);
     setSelectedUserProfile(userProfile);
-    const getNotify = async () => {
-      await getNotification(notification._id);
-      await showModal()
-    }
-    getNotify();
+    await getNotification(notification._id);
+    dispatch(getCounter({
+      unseen: unseen - 1
+    }))
+    showModal()
   }
 
-  const showModal = async () => {
+  const showModal = () => {
     setIsModalVisible(true);
-    await fetchNotifications();
+    fetchNotifications();
   };
 
   const handleCancel = () => {

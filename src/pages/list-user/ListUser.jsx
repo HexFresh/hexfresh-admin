@@ -9,6 +9,7 @@ import {createNotification} from '../../api/notification';
 import './list-user.css';
 import {useDispatch} from "react-redux";
 import {getNotificationsAction} from "../../redux/notification/notification-slice";
+import {getCountNotificationAction} from "../../redux/count-notification-slice";
 
 const nPerPage = 6;
 
@@ -99,6 +100,7 @@ function ListUser() {
           recipients: [], title: '', body: '',
         });
         dispatch(getNotificationsAction());
+        dispatch(getCountNotificationAction());
       } else {
         message.error('Error sending notification!');
       }

@@ -49,3 +49,19 @@ export const createNotification = async (notification) => {
     return error;
   }
 };
+
+export const countNotification = async () => {
+  const token = localStorage.getItem('token');
+  const endpoint = `notification/counter`;
+  try {
+    const response = await axiosNotification.get(endpoint, {
+      headers: {
+        'Content-Type': 'application/json', Authorization: 'Bearer ' + token,
+      },
+    });
+    const {data} = response;
+    return data;
+  } catch (error) {
+    return error;
+  }
+}

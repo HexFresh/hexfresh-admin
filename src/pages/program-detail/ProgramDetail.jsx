@@ -119,6 +119,8 @@ export default function ProgramDetail() {
       await fetchBadges();
       await fetchAllBadges();
       handleCancel();
+    } else {
+      message.error({content: 'Add badge failed'});
     }
   }
 
@@ -208,53 +210,57 @@ export default function ProgramDetail() {
             </div>
           </div>
           <div className="badges-list">
-            {badges.map(badge => {
-              return (<div key={badge.id} className="badge">
-                <div className="badge-left">
-                  <div className="badge-avatar">
-                    <img style={{
-                      width: '50px', height: '50px', objectFit: 'cover',
-                    }}
-                         src={badge.image}
-                         alt=""/>
-                  </div>
-                  <div className="badge-name">{badge.title}</div>
-                </div>
-                <div className="badge-right">
-                  <Tooltip className={"remove-btn"} title="remove">
-                    <Button onClick={() => handleRemoveBadge(badge.id)} type="circle" shape="circle"
-                            icon={<DeleteOutlined/>}/>
+            <div className={"badges-list-wrap"}>
+              {badges.map(badge => {
+                return (<div key={badge.id} className="badge">
+                  <Tooltip title={badge.title}>
+                    <div className="badge-left">
+                      <div className="badge-avatar">
+                        <img style={{
+                          width: '130px', height: '130px', objectFit: 'cover',
+                        }}
+                             src={badge.image}
+                             alt=""/>
+                      </div>
+                    </div>
                   </Tooltip>
-                </div>
-              </div>)
-            })}
+                  <div className="badge-right">
+                    <Tooltip className={"remove-btn"} title="remove">
+                      <Button onClick={() => handleRemoveBadge(badge.id)} type="circle" shape="circle"
+                              icon={<DeleteOutlined/>}/>
+                    </Tooltip>
+                  </div>
+                </div>)
+              })}
+            </div>
           </div>
         </div>
 
-        <div className={"badges"}>
-          <div className="badges-title">
-            <div className="badges-title-name">Leaderboard</div>
-            <div className="badges-title-btn">
+        <div className={"leaderboards"}>
+          <div className="leaderboards-title">
+            <div className="leaderboards-title-name">Leaderboard</div>
+            <div className="leaderboards-title-btn">
               <Switch checked={leaderboard.isActive} loading={loadingStatus} checkedChildren="Active"
                       unCheckedChildren="Block" onChange={handleChangeLeaderboardStatus}/>
             </div>
           </div>
-          <div className="badges-list">
+
+          <div className="leaderboards-list">
             {leaderboard?.user_leaderboards?.map((user, index) => {
-              return (<div key={user.id} className="badge">
-                <div className="badge-left">
+              return (<div key={user.id} className="leaderboard">
+                <div className="leaderboard-left">
                   <div
-                    className="badge-rank">{index + 1}</div>
-                  <div className="badge-avatar">
+                    className="leaderboard-rank">{`#${index + 1}`}</div>
+                  <div className="leaderboard-avatar">
                     <Avatar style={{
-                      width: '50px', height: '50px', objectFit: 'cover', borderRadius: '50%',
+                      width: '50px', height: '50px', objectFit: 'cover', borderRadius: '50%', border: 'none'
                     }}
                             src={user?.user?.user_information.avatar}
                             alt=""/>
                   </div>
-                  <div className="badge-name">{user?.user.username}</div>
+                  <div className="leaderboard-name">{user?.user.username}</div>
                 </div>
-                <div className="badge-right">
+                <div className="leaderboard-right">
                   {user?.point}
                 </div>
               </div>)
@@ -280,8 +286,8 @@ export default function ProgramDetail() {
           Mode
         </div>
         <Select value={addBadgeMode} style={{width: '100%'}} onChange={(value) => setAddBadgeMode(value)}>
-          <Option value="available">Chọn badge có sẵn</Option>
-          <Option value="new">Thêm badge mới</Option>
+          <Option value="available">Available badge</Option>
+          <Option value="new">Add new badge</Option>
         </Select>
       </div>
 
@@ -292,7 +298,14 @@ export default function ProgramDetail() {
         <Select placeholder={"Select badge"} value={selectedBadge} style={{width: '100%'}}
                 onChange={(value) => setSelectedBadge(value)}>
           {allBadges.map(badge => {
-            return (<Option key={badge.id} value={badge.id}>{badge.title}</Option>)
+            return (<Option style={{
+              display: 'flex', alignItems: 'center',
+            }} key={badge.id} value={badge.id}>
+              <img style={{
+                width: '20px', height: '20px', objectFit: 'cover', marginRight: '10px',
+              }} src={badge.image} alt=""/>
+              {badge.title}
+            </Option>)
           })}
         </Select>
       </div>) : (<div className="form-add-badge">

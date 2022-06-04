@@ -21,7 +21,7 @@ export const signOutService = async (navigate) => {
     localStorage.removeItem('userId');
     localStorage.removeItem('roleId');
     localStorage.removeItem('token');
-    navigate('/login');
+    navigate('/login', {replace: true});
   } catch (error) {
     console.log(error);
   }

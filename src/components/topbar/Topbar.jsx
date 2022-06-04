@@ -10,12 +10,18 @@ import {useDispatch, useSelector} from 'react-redux';
 import {signOut} from "../../redux/auth/auth-slice";
 import {useNavigate} from "react-router-dom";
 import {getUserProfileAction} from "../../redux/profile/profile-slice";
+import {getCountNotificationAction} from "../../redux/count-notification-slice";
 
 export default function Topbar({openSidebar}) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [openNotification, setOpenNotification] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const userProfile = useSelector(state => state.profile.profile);
+
+  const countNotification = useSelector(state => state.countNotification.counter);
+  console.log({countNotification});
 
   const fetchUserProfile = async () => {
     dispatch(getUserProfileAction())
@@ -24,12 +30,10 @@ export default function Topbar({openSidebar}) {
   useEffect(() => {
     const fetchData = async () => {
       await fetchUserProfile();
+      dispatch(getCountNotificationAction())
     }
     fetchData();
-  }, [])
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  }, [dispatch])
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -59,7 +63,7 @@ export default function Topbar({openSidebar}) {
       <div className="right">
         <div className="notification" tabIndex="1" onBlur={onClose}>
           <Notifications open={openNotification}/>
-          <div className="count-notification">10</div>
+          {countNotification.unseen > 0 && <div className="count-notification">{countNotification?.unseen}</div>}
           <div className="ground" onClick={() => setOpenNotification(!openNotification)}>
             <NotificationsIcon/>
           </div>

@@ -14,6 +14,7 @@ import {Button} from 'antd';
 import ProgramDetail from './pages/program-detail/ProgramDetail';
 import Badges from "./pages/badges/Badges";
 import {signOut} from "./redux/auth/auth-slice";
+import {ErrorBoundary} from "./pages/ErrorBoundary";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -67,7 +68,9 @@ function App() {
   </Routes>);
 
   const routedContent = isLogin ? authContent : unAuthContent;
-  return <div className="App">{routedContent}</div>;
+  return (<ErrorBoundary handleError={handleLogout}>
+    <div className="App">{routedContent}</div>
+  </ErrorBoundary>);
 }
 
 export default App;

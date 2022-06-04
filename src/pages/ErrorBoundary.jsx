@@ -1,4 +1,5 @@
-import React, {useState} from "react";
+import React, from "react";
+import {Button} from "antd";
 
 export class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -7,7 +8,17 @@ export class ErrorBoundary extends React.Component {
   }
 
   static getDerivedStateFromError(error) {
+    console.log(error);
     return {hasError: true};
+  }
+
+  handleErrorClick = () => {
+    this.setState({hasError: false});
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('roleId');
+
+    window.location.reload();
   }
 
   componentDidCatch(error, errorInfo) {
@@ -17,7 +28,10 @@ export class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      return <h1>Some thing went wrong</h1>;
+      return (<>
+        <h1>Some thing went wrong</h1>
+        <Button onClick={this.handleErrorClick}>Handle Error</Button>
+      </>);
     }
     return this.props.children;
   }
