@@ -23,10 +23,6 @@ function App() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const payload = {
-      skip: (1 - 1) * 5, limit: 5
-    }
-    dispatch(getNotificationsAction(payload));
   }, []);
 
   const openSidebar = () => {

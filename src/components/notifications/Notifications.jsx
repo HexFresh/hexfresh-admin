@@ -39,6 +39,7 @@ export default function Notifications({open}) {
 
   useEffect(() => {
     const fetchData = async () => {
+      await fetchNotifications();
     };
     fetchData();
   }, []);

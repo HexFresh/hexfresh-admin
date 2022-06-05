@@ -49,6 +49,7 @@ export default function ProgramDetail() {
 
   const fetchLeaderboard = async () => {
     const result = await findAllUsersInLeaderboard(programId);
+    console.log(result);
     setLeaderboard(result);
   }
 
