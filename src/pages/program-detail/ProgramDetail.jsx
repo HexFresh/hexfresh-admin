@@ -247,7 +247,7 @@ export default function ProgramDetail() {
           </div>
 
           <div className="leaderboards-list">
-            {leaderboard?.user_leaderboards?.map((user, index) => {
+            {leaderboard?.user_leaderboards?.rows.map((user, index) => {
               return (<div key={user.id} className="leaderboard">
                 <div className="leaderboard-left">
                   <div
