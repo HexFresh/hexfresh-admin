@@ -9,7 +9,6 @@ export const getNotificationsService = async (payload) => {
       headers: {'Content-Type': 'application/json', Authorization: 'Bearer ' + token,}, params: {skip, limit}
     });
     const {data} = response;
-    console.log(data);
     return data;
   } catch (error) {
     return error;
@@ -26,7 +25,6 @@ export const getNotification = async id => {
       },
     });
     const {data} = response;
-    console.log(data);
     return data;
   } catch (error) {
     return error;

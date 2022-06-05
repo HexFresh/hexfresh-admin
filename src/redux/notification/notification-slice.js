@@ -11,11 +11,10 @@ export const getNotificationsAction = createAsyncThunk('notification/getNotifica
 
 export const notificationSlice = createSlice({
   name: 'notification', initialState, reducers: {
-    getAllNotification: (state, payload) => {
-      state.notifications = payload.payload;
-    }, getMoreNotification: (state, payload) => {
-      console.log({payload});
-      state.notifications = [...state.notifications, ...payload.payload];
+    getAllNotification: (state, action) => {
+      state.notifications = action.payload;
+    }, getMoreNotification: (state, action) => {
+      state.notifications = [...state.notifications, ...action.payload];
     }
   }, extraReducers: {
     [getNotificationsAction.pending]: (state) => {

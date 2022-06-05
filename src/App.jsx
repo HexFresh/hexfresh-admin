@@ -15,12 +15,18 @@ import ProgramDetail from './pages/program-detail/ProgramDetail';
 import Badges from "./pages/badges/Badges";
 import {signOut} from "./redux/auth/auth-slice";
 import {ErrorBoundary} from "./pages/ErrorBoundary";
+import {getNotificationsAction} from "./redux/notification/notification-slice";
 
 function App() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-
+    const payload = {
+      skip: (1 - 1) * 5, limit: 5
+    }
+    dispatch(getNotificationsAction(payload));
   }, []);
 
   const openSidebar = () => {
@@ -31,9 +37,6 @@ function App() {
   };
   const isLogin = localStorage.getItem('userId');
   const roleId = localStorage.getItem('roleId');
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleLogout = () => {
     dispatch(signOut({navigate}));
