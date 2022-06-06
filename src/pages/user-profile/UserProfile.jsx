@@ -11,13 +11,13 @@ import {
   getAllJobPosition,
 } from '../../api/userProfile';
 import {CircularProgress} from '@mui/material';
-import {Button, message, Input, DatePicker, Select} from 'antd';
+import {Button, message, Input, DatePicker, Select, Modal} from 'antd';
 import {EditOutlined} from '@ant-design/icons';
 import axios from 'axios';
 import moment from 'moment';
 import {useDispatch} from "react-redux";
 import {getUserProfileAction} from "../../redux/profile/profile-slice";
-import Avatar from "@mui/material/Avatar";
+import {verifyResetPasswordRequest} from "../../api/verificationApi";
 
 const dateFormat = 'YYYY-MM-DD';
 const BASE_ADDRESS_API_URL = 'https://provinces.open-api.vn/api';
@@ -39,6 +39,35 @@ export default function UserProfile() {
   const [degrees, setDegrees] = useState([]);
   const [jobPositions, setJobPositions] = useState([]);
   const [edit, setEdit] = useState(false);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = async () => {
+    message.loading('Processing...').then(async () => {
+      const response = await verifyResetPasswordRequest(oldPassword, newPassword);
+      if (response) {
+        message.success('Change password successfully');
+        handleCancel()
+      } else {
+        message.error('Wrong old password');
+        setOldPassword('');
+      }
+    });
+  };
+
+  const handleCancel = () => {
+    setOldPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
+    setIsModalVisible(false);
+  };
 
   const {userId} = useParams();
   const refInput = useRef(null);
@@ -179,11 +208,9 @@ export default function UserProfile() {
         <div className="cover-img">
           <div className="card__infor">
             <div className="avatar">
-              <Avatar
-                style={{
-                  width: '110px', height: '110px',
-                }}
-                src={userProfile.avatar}
+              <img
+                src={userProfile?.avatar || 'https://cdn-icons-png.flaticon.com/512/21/21104.png'}
+                alt="avt"
               />
               <Button
                 onClick={() => {
@@ -211,6 +238,12 @@ export default function UserProfile() {
               <div className="card-body__right__email">{displayEmail}</div>
             </div>
           </div>
+        </div>
+
+        <div className="open-modal">
+          <Button type="primary" className="open-modal-btn" onClick={showModal}>
+            Change Password
+          </Button>
         </div>
       </div>
 
@@ -406,5 +439,46 @@ export default function UserProfile() {
         </div>
       </div>
     </div>)}
+    <Modal
+      className="modal"
+      title="Change Password"
+      visible={isModalVisible}
+      onOk={handleOk}
+      onCancel={handleCancel}
+      footer={[<Button key="back" onClick={handleCancel}>
+        Cancel
+      </Button>, <Button
+        disabled={oldPassword === '' || newPassword === '' || confirmPassword === '' || newPassword !== confirmPassword}
+        key="submit"
+        type="primary" onClick={handleOk}>
+        Change Password
+      </Button>,]}
+    >
+      <div className="change-password-form">
+        <div className="field">
+          <div className={"title"}>Old password</div>
+          <Input.Password style={{width: '100%', marginTop: '10px', marginBottom: "20px"}} value={oldPassword}
+                          onChange={(e) => setOldPassword(e.target.value)}/>
+        </div>
+        <div className="field">
+          <div className={"title"}>New password</div>
+          <Input.Password style={{width: '100%', marginTop: '10px', marginBottom: "20px"}} value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}/>
+        </div>
+        <div className="field">
+          <div className={"title"}>Confirm password</div>
+          <div className={"input"}>
+            <Input.Password
+              style={{width: '100%', marginTop: '10px', marginBottom: "20px"}}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}/>
+            {(confirmPassword !== newPassword && confirmPassword !== "" && newPassword !== "") && (<div style={{
+              marginTop: '-15px', color: 'red',
+            }} className={"validate"}>The password confirmation does not match</div>)}
+          </div>
+
+        </div>
+      </div>
+    </Modal>
   </div>);
 }

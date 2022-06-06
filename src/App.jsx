@@ -15,7 +15,7 @@ import ProgramDetail from './pages/program-detail/ProgramDetail';
 import Badges from "./pages/badges/Badges";
 import {signOut} from "./redux/auth/auth-slice";
 import {ErrorBoundary} from "./pages/ErrorBoundary";
-import {getNotificationsAction} from "./redux/notification/notification-slice";
+import ForgotPassword from "./pages/forgot-password/ForgotPassword";
 
 function App() {
   const dispatch = useDispatch();
@@ -63,6 +63,7 @@ function App() {
 
   const unAuthContent = (<Routes>
     <Route path="/login" element={<Login/>}/>
+    <Route path="/forgot-password" element={<ForgotPassword/>}/>
     <Route path="*" element={<Navigate replace to="/login"/>}/>
   </Routes>);
 

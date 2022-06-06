@@ -52,3 +52,8 @@
 .login .container .filed .icon {
   color: #267fff;
 }
+
+.f-password {
+  cursor: pointer;
+  color: #007fff;
+}

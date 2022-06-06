@@ -1,26 +1,40 @@
+.user-profile-main {
+  width: 100vw;
+  height: 100vh;
+}
+
 .user-profile {
   width: 100%;
-  height: 100%;
+  height: calc(100% - 64px);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0 150px 0 150px;
+  padding: 0 200px 0 200px;
+  background-color: #f1f2f7;
+  overflow-y: scroll;
+  margin-bottom: 20px;
 }
 
 .user-profile__container {
   width: 100%;
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
+}
+
+.open-modal {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
 }
 
 .user-profile__container .page-name {
-  margin-top: 20px;
+  margin-top: 450px;
   font-size: 22px;
   font-weight: bold;
-  color: var(--main-color);
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .user-profile__container .breadcrumb {
@@ -111,7 +125,6 @@
 }
 
 .user-profile__container .info__title {
-  color: var(--main-color);
   font-weight: bold;
   font-size: 16px;
   text-transform: uppercase;
@@ -150,7 +163,7 @@
   width: 100px;
 }
 
-.user-profile__container .editprofile-btn {
+.user-profile__container .edit-profile-btn {
   font-weight: bold;
   color: black;
   display: flex;
@@ -170,4 +183,12 @@
   align-items: center;
   grid-gap: 10px;
   margin-bottom: 20px;
+}
+
+.ant-modal-body .change-password-form {
+
+}
+
+.ant-modal-body .change-password-form .field .title {
+  font-weight: bold;
 }
