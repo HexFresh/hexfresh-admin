@@ -5,15 +5,13 @@
 
 .user-profile {
   width: 100%;
-  height: calc(100% - 64px);
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0 200px 0 200px;
   background-color: #f1f2f7;
   overflow-y: scroll;
-  margin-bottom: 20px;
 }
 
 .user-profile__container {
@@ -21,6 +19,8 @@
   height: auto;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  padding: 0 200px 0 200px;
 }
 
 .open-modal {
@@ -30,7 +30,6 @@
 }
 
 .user-profile__container .page-name {
-  margin-top: 450px;
   font-size: 22px;
   font-weight: bold;
   margin-bottom: 10px;
