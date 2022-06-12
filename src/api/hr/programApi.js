@@ -24,3 +24,14 @@ export const createProgram = async (program) => {
     console.log(error);
   }
 };
+
+export const removeProgram = async (id) => {
+  const endpoint = `program/${id}`;
+  try {
+    const response = await axiosClient.delete(endpoint);
+    const { data } = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}

@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 import {Button, Input, message, Modal, Pagination, Tooltip} from 'antd';
 import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
 import {Search} from '@mui/icons-material';
-import {createProgram, getPrograms} from '../../api/hr/programApi';
+import {createProgram, getPrograms, removeProgram} from '../../api/hr/programApi';
 import './list-program.css';
 
 const nPerPage = 4;
@@ -69,6 +69,12 @@ function ListProgram() {
     }
   };
 
+  const handleRemoveProgram = async (id) => {
+    await removeProgram(id);
+    message.success({content: 'Removed', key: 'success'});
+    await fetchPrograms(keyword, nPerPage, (page - 1) * nPerPage);
+  }
+
   return (<div className="list-program">
     <div className="list-program__container">
       <div className="top">
@@ -106,7 +112,7 @@ function ListProgram() {
                       alt="img"
                     />
                     <Tooltip className={"remove-btn"} title="remove">
-                      <Button type="circle" shape="circle"
+                      <Button type="circle" shape="circle" onClick={() => handleRemoveProgram(program.id)}
                               icon={<DeleteOutlined/>}/>
                     </Tooltip>
                   </div>

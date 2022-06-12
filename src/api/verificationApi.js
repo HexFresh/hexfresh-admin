@@ -32,3 +32,14 @@ export const verifyResetPasswordRequest = async (oldPassword, newPassword) => {
     console.log(error);
   }
 }
+
+export const testAccess = async () => {
+  const endpoint = ``;
+  try {
+    const response = await axiosClient.get(endpoint);
+    const {data} = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}

@@ -9,8 +9,15 @@ export default function NotificationItem(props) {
   const userId = localStorage.getItem("userId");
 
   const fetchUserProfile = async () => {
-    const userProfile = await getUserProfileById(notification.from);
-    setUserProfile(userProfile);
+    if (notification.from === "system") {
+      setUserProfile({
+        avatar: "https://flyclipart.com/thumb2/computer-icons-system-administrator-download-user-avatar-free-518338.png",
+        firstName: "System",
+      });
+    } else {
+      const result = await getUserProfileById(notification.from);
+      setUserProfile(result);
+    }
   }
 
   useEffect(() => {
