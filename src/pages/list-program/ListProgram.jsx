@@ -1,11 +1,12 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {CircularProgress, Grid, InputBase} from '@mui/material';
 import {Link} from 'react-router-dom';
 import {Button, Input, message, Modal, Pagination, Tooltip} from 'antd';
-import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
+import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
 import {Search} from '@mui/icons-material';
 import {createProgram, getPrograms, removeProgram} from '../../api/hr/programApi';
 import './list-program.css';
+import axios from "axios";
 
 const nPerPage = 4;
 
@@ -17,6 +18,9 @@ function ListProgram() {
   const [name, setName] = React.useState('');
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [keyword, setKeyword] = React.useState('');
+  const [imageFile, setImageFile] = useState(null);
+
+  const refInput = useRef(null);
 
   const fetchPrograms = async (keyword, limit, offset) => {
     setLoading(true);
@@ -45,27 +49,31 @@ function ListProgram() {
 
   const handleCancel = () => {
     setIsModalVisible(false);
+    setName('');
+    setImageFile(null);
   };
 
   const changeNewName = (e) => {
     setName(e.target.value);
   };
 
-  const submitNewProgram = () => {
+  const submitNewProgram = async () => {
     if (name) {
-      const newProgram = {
-        title: name, imageId: 1,
-      };
-      const handleCreatePhase = async () => {
-        message.loading({content: 'Creating...'}).then(async () => {
-          await createProgram(newProgram);
+      message.loading('Creating...').then(async () => {
+        const data = new FormData();
+        data.append('file', imageFile);
+        data.append('upload_preset', 'qk9dvfij');
+        const res = await axios.post(`https://api.cloudinary.com/v1_1/hexfresh/image/upload`, data);
+
+        const result = await createProgram({title: name, image: res.data.secure_url});
+        if (result) {
+          message.success('Created!', 0.5);
           await fetchPrograms(keyword, nPerPage, (page - 1) * nPerPage);
           setIsModalVisible(false);
           setName('');
-          message.success({content: 'Created', key: 'success'});
-        });
-      };
-      handleCreatePhase();
+          setImageFile(null);
+        }
+      });
     }
   };
 
@@ -74,6 +82,12 @@ function ListProgram() {
     message.success({content: 'Removed', key: 'success'});
     await fetchPrograms(keyword, nPerPage, (page - 1) * nPerPage);
   }
+
+  const uploadNewBadgeImage = (file) => {
+    if (file) {
+      setImageFile(file);
+    }
+  };
 
   return (<div className="list-program">
     <div className="list-program__container">
@@ -112,7 +126,8 @@ function ListProgram() {
                       alt="img"
                     />
                     <Tooltip className={"remove-btn"} title="remove">
-                      <Button type="circle" shape="circle" onClick={() => handleRemoveProgram(program.id)}
+                      <Button type="circle" shape="circle"
+                              onClick={() => handleRemoveProgram(program.id)}
                               icon={<DeleteOutlined/>}/>
                     </Tooltip>
                   </div>
@@ -145,10 +160,36 @@ function ListProgram() {
         Create
       </Button>,]}
     >
-      <div className="form">
+      <div className="form-program">
         <div className="field">
           <label>Title</label>
           <Input value={name} onChange={changeNewName}/>
+        </div>
+
+        <div className="field">
+          <label>Image</label>
+          {imageFile === null ? <></> : (<img src={URL.createObjectURL(imageFile)} alt="img" className="img-badge"/>)}
+          <Button
+            onClick={() => {
+              refInput.current?.click();
+            }}
+            className="edit-btn"
+            icon={imageFile === null ? <PlusOutlined/> : <EditOutlined/>}
+          >
+            <input
+              ref={refInput}
+              style={{display: 'none'}}
+              type="file"
+              accept="image/*"
+              onChange={(event) => {
+                if (event.target.files) {
+                  uploadNewBadgeImage(event.target.files[0]);
+                  event.target.value = null;
+                }
+              }}
+            />
+          </Button>
+
         </div>
       </div>
     </Modal>

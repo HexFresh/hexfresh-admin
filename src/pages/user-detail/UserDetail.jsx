@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './user-detail.css';
-import { Link, useParams } from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import {
   createNewEmptyUserProfile,
   getUserAccountById,
@@ -12,11 +12,13 @@ import {
   getAllMentorOfFresher,
   deleteMentorOfFresher,
   addMentorOfFresher,
+  disableAnAccount,
+  enableAnAccount
 } from '../../api/userProfile';
-import { getUsers } from '../../api/hr/userApi';
-import { CircularProgress } from '@mui/material';
-import { Breadcrumb, Button, message, Input, DatePicker, Select } from 'antd';
-import { UserOutlined, MessageFilled } from '@ant-design/icons';
+import {getUsers} from '../../api/hr/userApi';
+import {CircularProgress} from '@mui/material';
+import {Breadcrumb, Button, message, Input, DatePicker, Select, Switch} from 'antd';
+import {UserOutlined, MessageFilled} from '@ant-design/icons';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -43,11 +45,13 @@ export default function UserDetail() {
   const [oldMentor, setOldMentor] = useState(null);
   const [newMentor, setNewMentor] = useState(null);
   const [edit, setEdit] = useState(false);
+  const [loadingStatus, setLoadingStatus] = useState(false);
 
-  const { userId } = useParams();
+  const {userId} = useParams();
 
   const fetchUserAccount = async () => {
     const result = await getUserAccountById(userId);
+    console.log(result);
     setUserAccount(result);
     setDisplayEmail(result.email);
     if (result.roleId === 4) {
@@ -58,11 +62,10 @@ export default function UserDetail() {
       }
     }
   };
-  console.log({ userProfile });
 
   const fetchMentors = async () => {
-    const result = await getUsers({ roleId: 3 });
-    const data = result.rows.map((user) => ({ ...user, key: user.id }));
+    const result = await getUsers({roleId: 3});
+    const data = result.rows.map((user) => ({...user, key: user.id}));
     setMentors(data || []);
   };
 
@@ -81,11 +84,7 @@ export default function UserDetail() {
     if (result === undefined) {
       const newUF = {
         address: {
-          province: null,
-          district: null,
-          ward: null,
-          street: null,
-          country: 'Vietnam',
+          province: null, district: null, ward: null, street: null, country: 'Vietnam',
         },
       };
       await createNewEmptyUserProfile(userId, newUF);
@@ -110,14 +109,7 @@ export default function UserDetail() {
 
   const fetchData = async () => {
     setLoading(true);
-    await Promise.all([
-      fetchUserAccount(),
-      fetchUserProfile(),
-      fetchProvinces(),
-      fetchMentors(),
-      fetchAllDegree(),
-      fetchAllJobPosition(),
-    ]);
+    await Promise.all([fetchUserAccount(), fetchUserProfile(), fetchProvinces(), fetchMentors(), fetchAllDegree(), fetchAllJobPosition(),]);
     setLoading(false);
   };
 
@@ -128,8 +120,7 @@ export default function UserDetail() {
   const handleUpdateUserProfile = async () => {
     message.loading('Updating...').then(async () => {
       const newUserProfile = {
-        ...userProfile,
-        address: {
+        ...userProfile, address: {
           province: selectedProvince || '',
           district: selectedDistrict || '',
           ward: selectedWard || '',
@@ -154,7 +145,7 @@ export default function UserDetail() {
   };
 
   const onDateOfBirthChange = (date, dateString) => {
-    setUserProfile({ ...userProfile, dateOfBirth: dateString });
+    setUserProfile({...userProfile, dateOfBirth: dateString});
   };
 
   const fetchProvinces = async () => {
@@ -163,11 +154,11 @@ export default function UserDetail() {
   };
 
   const fetchDistricts = async (provinceCode) => {
-    const rdata = await axios.get(`${BASE_ADDRESS_API_URL}/p/${provinceCode}`, { params: { depth: 2 } });
+    const rdata = await axios.get(`${BASE_ADDRESS_API_URL}/p/${provinceCode}`, {params: {depth: 2}});
     setDistricts(rdata.data.districts || []);
   };
   const fetchWards = async (districtCode) => {
-    const rdata = await axios.get(`${BASE_ADDRESS_API_URL}/d/${districtCode}`, { params: { depth: 2 } });
+    const rdata = await axios.get(`${BASE_ADDRESS_API_URL}/d/${districtCode}`, {params: {depth: 2}});
     setWards(rdata.data.wards || []);
   };
 
@@ -188,277 +179,275 @@ export default function UserDetail() {
     setSelectedWard(value);
   };
 
-  return (
-    <div className="user-detail">
-      {loading ? (
-        <CircularProgress />
-      ) : (
-        <div className="user-detail__container">
-          <div className="page-name">Profile</div>
-          <Breadcrumb className="breadcrumb">
-            <Breadcrumb.Item>
-              <Link to="/users">
-                <UserOutlined
-                  style={{
-                    marginRight: '5px',
-                  }}
-                />
-                <span>List User</span>
-              </Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>Profile</Breadcrumb.Item>
-          </Breadcrumb>
-          <div className="card-body">
-            <div className="cover-img">
-              <div className="card__infor">
-                <div className="avatar">
-                  <img src={userProfile?.avatar || 'https://cdn-icons-png.flaticon.com/512/21/21104.png'} alt="avt" />
-                </div>
-                <div className="card-body__right">
-                  <div className="card-body__right__name">{displayFirstName + ' ' + displayLastName}</div>
-                  <div className="card-body__right__email">{displayEmail}</div>
-                </div>
-              </div>
-              <div>
-                <Button className="message-btn" icon={<MessageFilled />}>
-                  Message
-                </Button>
-              </div>
+  const handleChangeStatusOfUserAccount = async () => {
+    const change = async () => {
+      setLoadingStatus(true);
+      if (userAccount.isActive) {
+        const result = await disableAnAccount(userId);
+        if (result) {
+          message.success('Change status successfully', 0.5);
+          await fetchUserAccount();
+        }
+        setLoadingStatus(false);
+      } else {
+        const result = await enableAnAccount(userId);
+        if (result) {
+          message.success('Change status successfully', 0.5);
+          await fetchUserAccount();
+        }
+        setLoadingStatus(false);
+      }
+    }
+    await change();
+  }
+
+  return (<div className="user-detail">
+    {loading ? (<CircularProgress/>) : (<div className="user-detail__container">
+      <div className="page-name">Profile</div>
+      <Breadcrumb className="breadcrumb">
+        <Breadcrumb.Item>
+          <Link to="/users">
+            <UserOutlined
+              style={{
+                marginRight: '5px',
+              }}
+            />
+            <span>List User</span>
+          </Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>Profile</Breadcrumb.Item>
+      </Breadcrumb>
+      <div className="card-body">
+        <div className="cover-img">
+          <div className="card__infor">
+            <div className="avatar">
+              <img src={userProfile?.avatar || 'https://cdn-icons-png.flaticon.com/512/21/21104.png'} alt="avt"/>
+            </div>
+            <div className="card-body__right">
+              <div className="card-body__right__name">{displayFirstName + ' ' + displayLastName}</div>
+              <div className="card-body__right__email">{displayEmail}</div>
             </div>
           </div>
-
-          <div className="card-body">
-            <div className="card-body__container">
-              <div className="personal-info">
-                <div className="info__title">Personal Information</div>
-                <div className="field">
-                  <div className="field__title">Username</div>
-                  <Input disabled value={userAccount.username || ''} className="input" placeholder="Username" />
-                </div>
-                <div className="field">
-                  <div className="field__title">First Name</div>
-                  <Input
-                    disabled={!edit}
-                    value={userProfile.firstName || ''}
-                    onChange={(e) => setUserProfile({ ...userProfile, firstName: e.target.value })}
-                    className="input"
-                    placeholder="First Name"
-                  />
-                </div>
-                <div className="field">
-                  <div className="field__title">Last Name</div>
-                  <Input
-                    disabled={!edit}
-                    value={userProfile.lastName || ''}
-                    onChange={(e) => setUserProfile({ ...userProfile, lastName: e.target.value })}
-                    className="input"
-                    placeholder="Last Name"
-                  />
-                </div>
-                <div className="field">
-                  <div className="field__title">Date of birth</div>
-                  <DatePicker
-                    disabled={!edit}
-                    defaultValue={moment(userProfile.dateOfBirth || '2022-01-01', dateFormat)}
-                    onChange={onDateOfBirthChange}
-                    format={dateFormat}
-                    placeholder="Due date"
-                    className="input"
-                  />
-                </div>
-                <div className="field">
-                  <div className="field__title">Gender</div>
-                  <Select
-                    disabled={!edit}
-                    showSearch
-                    optionFilterProp="children"
-                    filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                    className="input"
-                    placeholder="Gender"
-                    onChange={(value) => setUserProfile({ ...userProfile, gender: value })}
-                    value={userProfile?.gender}
-                  >
-                    <Select.Option value="Male" key="0">
-                      Male
-                    </Select.Option>
-                    <Select.Option value="Female" key="1">
-                      Female
-                    </Select.Option>
-                    <Select.Option value="Other" key="2">
-                      Other
-                    </Select.Option>
-                  </Select>
-                </div>
-
-                <div className="field">
-                  <div className="field__title">Degree</div>
-                  <Select
-                    disabled={!edit}
-                    showSearch
-                    optionFilterProp="children"
-                    filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                    placeholder="Degree"
-                    className="input"
-                    onChange={(value) => setUserProfile({ ...userProfile, degreeId: value })}
-                    value={userProfile?.degree?.id}
-                  >
-                    {degrees.map((degree) => (
-                      <Select.Option value={degree.id} key={degree.id}>
-                        {degree.name}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                </div>
-
-                <div className="field">
-                  <div className="field__title">Job position</div>
-                  <Select
-                    disabled={!edit}
-                    showSearch
-                    optionFilterProp="children"
-                    filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                    className="input"
-                    placeholder="Job position"
-                    onChange={(value) => setUserProfile({ ...userProfile, jobPositionId: value })}
-                    value={userProfile?.job_position?.id}
-                  >
-                    {jobPositions.map((job) => (
-                      <Select.Option value={job.id} key={job.id}>
-                        {job.name}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                </div>
-                {userAccount.roleId === 4 && (
-                  <div className="field">
-                    <div className="field__title">Mentor</div>
-                    <Select
-                      disabled={!edit}
-                      showSearch
-                      optionFilterProp="children"
-                      filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                      className="input"
-                      placeholder="Mentor"
-                      onChange={(value) => setNewMentor(value)}
-                      value={newMentor}
-                    >
-                      {mentors.map((mentor) => (
-                        <Select.Option value={mentor.id} key={mentor.id}>
-                          {mentor.username}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </div>
-                )}
-              </div>
-              <div className="contact-info">
-                <div className="info__title">Contact Information</div>
-                <div className="field">
-                  <div className="field__title">Email</div>
-                  <Input disabled value={userAccount.email || ''} className="input" />
-                </div>
-                <div className="field">
-                  <div className="field__title">Phone</div>
-                  <Input
-                    disabled={!edit}
-                    value={userProfile.phoneNumber || ''}
-                    onChange={(e) => setUserProfile({ ...userProfile, phoneNumber: e.target.value })}
-                    className="input"
-                    placeholder="Phone"
-                  />
-                </div>
-                <div className="field">
-                  <div className="field__title">Address</div>
-                  <div className="input">
-                    <div className="select">
-                      <Select
-                        disabled={!edit}
-                        showSearch
-                        optionFilterProp="children"
-                        filterOption={(input, option) =>
-                          option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }
-                        placeholder="Province"
-                        style={{
-                          width: '100%',
-                        }}
-                        onChange={handleChangeProvince}
-                        value={selectedProvince}
-                      >
-                        {provinces.map((province) => (
-                          <Select.Option value={`${province.code},${province.name}`} key={province.code}>
-                            {province.name}
-                          </Select.Option>
-                        ))}
-                      </Select>
-                      <Select
-                        disabled={!edit}
-                        showSearch
-                        optionFilterProp="children"
-                        filterOption={(input, option) =>
-                          option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }
-                        placeholder="District"
-                        style={{
-                          width: '100%',
-                        }}
-                        onChange={handleChangeDistrict}
-                        value={selectedDistrict}
-                      >
-                        {districts.map((district) => (
-                          <Select.Option value={`${district.code},${district.name}`} key={district.code}>
-                            {district.name}
-                          </Select.Option>
-                        ))}
-                      </Select>
-                      <Select
-                        disabled={!edit}
-                        showSearch
-                        optionFilterProp="children"
-                        filterOption={(input, option) =>
-                          option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }
-                        placeholder="Ward"
-                        style={{
-                          width: '100%',
-                        }}
-                        onChange={handleChangeWard}
-                        value={selectedWard}
-                      >
-                        {wards.map((ward) => (
-                          <Select.Option value={`${ward.code},${ward.name}`} key={ward.code}>
-                            {ward.name}
-                          </Select.Option>
-                        ))}
-                      </Select>
-                    </div>
-                    <Input
-                      disabled={!edit}
-                      value={selectedStreet || ''}
-                      onChange={(e) => setSelectedStreet(e.target.value)}
-                      style={{
-                        width: '100%',
-                      }}
-                      placeholder="Street"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="save-btn__container">
-                {edit ? (
-                  <Button className="save-btn" onClick={handleUpdateUserProfile}>
-                    Save
-                  </Button>
-                ) : (
-                  <Button className="editprofile-btn" onClick={() => setEdit(true)}>
-                    Edit
-                  </Button>
-                )}
-              </div>
-            </div>
+          <div>
+            <Button className="message-btn" icon={<MessageFilled/>}>
+              Message
+            </Button>
           </div>
         </div>
-      )}
-    </div>
-  );
+        <div className="status-btn">
+          <Switch checked={userAccount?.isActive} loading={loadingStatus} checkedChildren="Active"
+                  unCheckedChildren="Block" onChange={handleChangeStatusOfUserAccount}/>
+        </div>
+      </div>
+
+      <div className="card-body">
+        <div className="card-body__container">
+          <div className="personal-info">
+            <div className="info__title">Personal Information</div>
+            <div className="field">
+              <div className="field__title">Username</div>
+              <Input disabled value={userAccount.username || ''} className="input" placeholder="Username"/>
+            </div>
+            <div className="field">
+              <div className="field__title">First Name</div>
+              <Input
+                disabled={!edit}
+                value={userProfile.firstName || ''}
+                onChange={(e) => setUserProfile({...userProfile, firstName: e.target.value})}
+                className="input"
+                placeholder="First Name"
+              />
+            </div>
+            <div className="field">
+              <div className="field__title">Last Name</div>
+              <Input
+                disabled={!edit}
+                value={userProfile.lastName || ''}
+                onChange={(e) => setUserProfile({...userProfile, lastName: e.target.value})}
+                className="input"
+                placeholder="Last Name"
+              />
+            </div>
+            <div className="field">
+              <div className="field__title">Date of birth</div>
+              <DatePicker
+                disabled={!edit}
+                defaultValue={moment(userProfile.dateOfBirth || '2022-01-01', dateFormat)}
+                onChange={onDateOfBirthChange}
+                format={dateFormat}
+                placeholder="Due date"
+                className="input"
+              />
+            </div>
+            <div className="field">
+              <div className="field__title">Gender</div>
+              <Select
+                disabled={!edit}
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                className="input"
+                placeholder="Gender"
+                onChange={(value) => setUserProfile({...userProfile, gender: value})}
+                value={userProfile?.gender}
+              >
+                <Select.Option value="Male" key="0">
+                  Male
+                </Select.Option>
+                <Select.Option value="Female" key="1">
+                  Female
+                </Select.Option>
+                <Select.Option value="Other" key="2">
+                  Other
+                </Select.Option>
+              </Select>
+            </div>
+
+            <div className="field">
+              <div className="field__title">Degree</div>
+              <Select
+                disabled={!edit}
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                placeholder="Degree"
+                className="input"
+                onChange={(value) => setUserProfile({...userProfile, degreeId: value})}
+                value={userProfile?.degree?.id}
+              >
+                {degrees.map((degree) => (<Select.Option value={degree.id} key={degree.id}>
+                  {degree.name}
+                </Select.Option>))}
+              </Select>
+            </div>
+
+            <div className="field">
+              <div className="field__title">Job position</div>
+              <Select
+                disabled={!edit}
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                className="input"
+                placeholder="Job position"
+                onChange={(value) => setUserProfile({...userProfile, jobPositionId: value})}
+                value={userProfile?.job_position?.id}
+              >
+                {jobPositions.map((job) => (<Select.Option value={job.id} key={job.id}>
+                  {job.name}
+                </Select.Option>))}
+              </Select>
+            </div>
+            {userAccount.roleId === 4 && (<div className="field">
+              <div className="field__title">Mentor</div>
+              <Select
+                disabled={!edit}
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                className="input"
+                placeholder="Mentor"
+                onChange={(value) => setNewMentor(value)}
+                value={newMentor}
+              >
+                {mentors.map((mentor) => (<Select.Option value={mentor.id} key={mentor.id}>
+                  {mentor.username}
+                </Select.Option>))}
+              </Select>
+            </div>)}
+          </div>
+          <div className="contact-info">
+            <div className="info__title">Contact Information</div>
+            <div className="field">
+              <div className="field__title">Email</div>
+              <Input disabled value={userAccount.email || ''} className="input"/>
+            </div>
+            <div className="field">
+              <div className="field__title">Phone</div>
+              <Input
+                disabled={!edit}
+                value={userProfile.phoneNumber || ''}
+                onChange={(e) => setUserProfile({...userProfile, phoneNumber: e.target.value})}
+                className="input"
+                placeholder="Phone"
+              />
+            </div>
+            <div className="field">
+              <div className="field__title">Address</div>
+              <div className="input">
+                <div className="select">
+                  <Select
+                    disabled={!edit}
+                    showSearch
+                    optionFilterProp="children"
+                    filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    placeholder="Province"
+                    style={{
+                      width: '100%',
+                    }}
+                    onChange={handleChangeProvince}
+                    value={selectedProvince}
+                  >
+                    {provinces.map((province) => (
+                      <Select.Option value={`${province.code},${province.name}`} key={province.code}>
+                        {province.name}
+                      </Select.Option>))}
+                  </Select>
+                  <Select
+                    disabled={!edit}
+                    showSearch
+                    optionFilterProp="children"
+                    filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    placeholder="District"
+                    style={{
+                      width: '100%',
+                    }}
+                    onChange={handleChangeDistrict}
+                    value={selectedDistrict}
+                  >
+                    {districts.map((district) => (
+                      <Select.Option value={`${district.code},${district.name}`} key={district.code}>
+                        {district.name}
+                      </Select.Option>))}
+                  </Select>
+                  <Select
+                    disabled={!edit}
+                    showSearch
+                    optionFilterProp="children"
+                    filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    placeholder="Ward"
+                    style={{
+                      width: '100%',
+                    }}
+                    onChange={handleChangeWard}
+                    value={selectedWard}
+                  >
+                    {wards.map((ward) => (<Select.Option value={`${ward.code},${ward.name}`} key={ward.code}>
+                      {ward.name}
+                    </Select.Option>))}
+                  </Select>
+                </div>
+                <Input
+                  disabled={!edit}
+                  value={selectedStreet || ''}
+                  onChange={(e) => setSelectedStreet(e.target.value)}
+                  style={{
+                    width: '100%',
+                  }}
+                  placeholder="Street"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="save-btn__container">
+            {edit ? (<Button className="save-btn" onClick={handleUpdateUserProfile}>
+              Save
+            </Button>) : (<Button className="editprofile-btn" onClick={() => setEdit(true)}>
+              Edit
+            </Button>)}
+          </div>
+        </div>
+      </div>
+    </div>)}
+  </div>);
 }

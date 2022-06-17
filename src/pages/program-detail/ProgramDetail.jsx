@@ -218,7 +218,7 @@ export default function ProgramDetail() {
                     <div className="badge-left">
                       <div className="badge-avatar">
                         <img style={{
-                          width: '130px', height: '130px', objectFit: 'cover',
+                          width: '80px', objectFit: 'cover',
                         }}
                              src={badge.image}
                              alt=""/>

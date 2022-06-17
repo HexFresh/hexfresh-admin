@@ -24,7 +24,7 @@ export default function Badges() {
 
   const fetchBadges = async (keyword, limit, offset) => {
     const data = await getBadges({keyword, limit, offset});
-    setBadges(data.rows);
+    setBadges(data.rows || []);
     setCount(data.count);
   }
 
@@ -122,9 +122,11 @@ export default function Badges() {
               return (<Grid key={badge.id} item xs={12} sm={6} lg={2}>
                 <div className="program">
                   <div className="cover-photo">
-                    <img
-                      src={badge.image}
-                      alt="img"
+                    <img style={{
+                      width: '100px', height: 'auto', objectFit: 'cover',
+                    }}
+                         src={badge.image}
+                         alt="img"
                     />
                     <Tooltip className={"remove-btn"} title="remove">
                       <Button onClick={() => handleRemoveBadge(badge.id)} type="circle" shape="circle"

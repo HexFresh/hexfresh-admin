@@ -1,197 +1,204 @@
 .program-detail {
-  padding: 0;
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .program-detail-container {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .program-detail-container .top {
-  color: var(--main-color);
-  font-weight: bold;
-  font-size: var(--page-name);
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: white;
-  padding: 20px 120px;
-  height: 80px;
+    color: var(--main-color);
+    font-weight: bold;
+    font-size: var(--page-name);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    padding: 20px 120px;
+    height: 80px;
 }
 
 .program-detail-bottom {
-  width: 100%;
-  height: calc(100% - 80px);
-  overflow: auto;
-  display: flex;
-  padding: 0 40px;
-  grid-gap: 20px;
+    width: 100%;
+    height: calc(100% - 80px);
+    overflow: auto;
+    display: flex;
+    padding: 0 40px;
+    grid-gap: 20px;
 }
 
 .program-detail-bottom .users {
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  grid-gap: 20px;
-  padding: 20px 0;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    grid-gap: 20px;
+    padding: 20px 0;
 }
 
 .program-detail-bottom .users .users-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--main-color);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--main-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .program-detail-bottom .users-list {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  overflow-y: auto;
-  flex-direction: column;
-  grid-gap: 20px;
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    overflow-y: auto;
+    flex-direction: column;
+    grid-gap: 20px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
 }
 
 .program-detail-bottom .users .user {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  grid-gap: 10px;
-  padding: 10px;
-  border-radius: 10px;
-  background-color: white;
-  box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    grid-gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: var(--shadow);
 }
 
 .program-detail-bottom .users .user-left {
-  display: flex;
-  align-items: center;
-  grid-gap: 10px;
-  font-weight: bold;
+    display: flex;
+    align-items: center;
+    grid-gap: 10px;
+    font-weight: bold;
 }
 
 .program-detail-bottom .badges {
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  grid-gap: 20px;
-  padding: 20px 0;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    grid-gap: 20px;
+    padding: 20px 0;
 }
 
 .program-detail-bottom .badges .badges-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--main-color);
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--main-color);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .program-detail-bottom .badges-list {
-  width: 100%;
-  height: 100%;
-  overflow-y: auto;
-  background-color: white;
-  border-radius: 10px;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    background-color: white;
+    border-radius: 10px;
 }
 
 .program-detail-bottom .badges-list-wrap {
-  display: flex;
-  grid-gap: 15px;
-  flex-wrap: wrap;
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
+    display: flex;
+    grid-gap: 15px;
+    flex-wrap: wrap;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
 }
 
 .program-detail-bottom .badges-list .badge {
-  background-color: #007fff;
-  position: relative;
-  cursor: pointer;
+    position: relative;
+    cursor: pointer;
 }
 
 
 .program-detail-bottom .badge-right {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  opacity: 0;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    opacity: 0;
 }
 
 .program-detail-bottom .badge:hover .badge-right {
-  opacity: 1;
+    opacity: 1;
 }
 
 .program-detail-bottom .leaderboards {
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  grid-gap: 20px;
-  padding: 20px 0;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    grid-gap: 20px;
+    padding: 20px 0;
 }
 
 .program-detail-bottom .leaderboards .leaderboards-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--main-color);
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--main-color);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .program-detail-bottom .leaderboards-list {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  overflow-y: auto;
-  flex-direction: column;
-  grid-gap: 20px;
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    overflow-y: auto;
+    flex-direction: column;
+    grid-gap: 20px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
 }
 
 .program-detail-bottom .leaderboards .leaderboard {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  grid-gap: 10px;
-  padding: 10px;
-  border-radius: 10px;
-  background-color: white;
-  box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    grid-gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: var(--shadow);
 }
 
 .program-detail-bottom .leaderboards .leaderboard-left {
-  display: flex;
-  align-items: center;
-  grid-gap: 10px;
-  font-weight: bold;
+    display: flex;
+    align-items: center;
+    grid-gap: 10px;
+    font-weight: bold;
 }
 
 .program-detail-bottom .leaderboards .leaderboard-rank {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.badge-avatar {
+    width: 130px;
+    height: 130px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
