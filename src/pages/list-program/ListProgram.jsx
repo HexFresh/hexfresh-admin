@@ -58,7 +58,7 @@ function ListProgram() {
   };
 
   const submitNewProgram = async () => {
-    if (name) {
+    if (name && imageFile) {
       message.loading('Creating...').then(async () => {
         const data = new FormData();
         data.append('file', imageFile);
@@ -122,7 +122,7 @@ function ListProgram() {
                 <div className="program">
                   <div className="cover-photo">
                     <img
-                      src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/80a9d98d-327f-4bb2-b173-4298d710e51c/derkflv-9f975f3d-791f-4e16-8d9d-fb0a9e5e0554.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzgwYTlkOThkLTMyN2YtNGJiMi1iMTczLTQyOThkNzEwZTUxY1wvZGVya2Zsdi05Zjk3NWYzZC03OTFmLTRlMTYtOGQ5ZC1mYjBhOWU1ZTA1NTQucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.eEDVAlJGBqXo6OeZEORXWk1veGSHFL-ZTUMz43Jtr3Q"
+                      src={program.image.imageLink}
                       alt="img"
                     />
                     <Tooltip className={"remove-btn"} title="remove">
@@ -150,13 +150,13 @@ function ListProgram() {
     </div>
     <Modal
       className="modal"
-      title="Create new phase"
+      title="Create new program"
       visible={isModalVisible}
       onOk={handleOk}
       onCancel={handleCancel}
       footer={[<Button key="back" onClick={handleCancel}>
         Cancel
-      </Button>, <Button key="submit" type="primary" onClick={handleOk}>
+      </Button>, <Button key="submit" type="primary" onClick={handleOk} disabled={name === "" || imageFile === null}>
         Create
       </Button>,]}
     >

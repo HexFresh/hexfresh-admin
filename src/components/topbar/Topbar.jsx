@@ -11,6 +11,8 @@ import {signOut} from "../../redux/auth/auth-slice";
 import {useNavigate} from "react-router-dom";
 import {getUserProfileAction} from "../../redux/profile/profile-slice";
 import {getCountNotificationAction} from "../../redux/count-notification-slice";
+import LogoutIcon from '@mui/icons-material/Logout';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 
 export default function Topbar({openSidebar}) {
   const dispatch = useDispatch();
@@ -94,8 +96,18 @@ export default function Topbar({openSidebar}) {
         'aria-labelledby': 'basic-button',
       }}
     >
-      <MenuItem onClick={handleLogout}>Logout</MenuItem>
-      <MenuItem onClick={handleProfile}>Profile</MenuItem>
+      <MenuItem onClick={handleProfile} style={{
+        display: 'flex', alignItems: 'center', gridGap: '10px'
+      }}>
+        <AssignmentIndIcon/>
+        Profile
+      </MenuItem>
+      <MenuItem onClick={handleLogout} style={{
+        display: 'flex', alignItems: 'center', gridGap: '10px'
+      }}>
+        <LogoutIcon/>
+        Log Out
+      </MenuItem>
     </Menu>
   </div>);
 }

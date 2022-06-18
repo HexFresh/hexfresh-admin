@@ -2,7 +2,9 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import './program-detail.css';
-import {addAvailableBadgeToProgram, addNewBadgeToProgram, getProgramDetail, removeBadgeFromProgram} from './api';
+import {
+  addAvailableBadgeToProgram, addNewBadgeToProgram, addUserToProgram, getProgramDetail, removeBadgeFromProgram
+} from './api';
 import {getBadgeOfProgram, getBadges} from "../../api/badgesApi";
 import {CircularProgress} from '@mui/material';
 import {Button, Input, message, Modal, Switch, Tag, Tooltip} from 'antd';
@@ -11,6 +13,7 @@ import axios from "axios";
 import {Select} from 'antd';
 import {findAllUsersInLeaderboard, updateStatusOfLeaderboard} from "../../api/leaderboardApi";
 import Avatar from "@mui/material/Avatar";
+import {getUsers} from "../../api/hr/userApi";
 
 const {Option} = Select;
 
@@ -27,10 +30,20 @@ export default function ProgramDetail() {
   const [selectedBadge, setSelectedBadge] = useState(null);
   const [leaderboard, setLeaderboard] = useState({});
   const [loadingStatus, setLoadingStatus] = useState(false);
+  const [fullUser, setFullUser] = React.useState([]);
+
+  const [isUserModal, setIsUserModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const refInput = useRef(null);
   const {programId} = useParams();
 
+  const fetchUsers = async (keyword = "", roleId, limit, offset) => {
+    const result = await getUsers({keyword, roleId, limit, offset});
+    const fullResult = await getUsers({keyword: "", limit: result.count});
+    console.log(fullResult);
+    setFullUser(fullResult.rows);
+  };
 
   const fetchProgram = async () => {
     const result = await getProgramDetail(programId);
@@ -49,14 +62,13 @@ export default function ProgramDetail() {
 
   const fetchLeaderboard = async () => {
     const result = await findAllUsersInLeaderboard(programId);
-    console.log(result);
     setLeaderboard(result);
   }
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await Promise.all([fetchProgram(), fetchBadges(), fetchAllBadges(), fetchLeaderboard()]);
+      await Promise.all([fetchProgram(), fetchBadges(), fetchAllBadges(), fetchLeaderboard(), fetchUsers()]);
       setLoading(false);
     };
     fetchData();
@@ -156,12 +168,37 @@ export default function ProgramDetail() {
     await change();
   }
 
+  const showUserModal = () => {
+    setIsUserModal(true);
+  };
+
+  const handleUserOk = async () => {
+    if (!selectedUser) {
+      message.error({content: 'Please select a user to add'});
+    } else {
+      message.loading('Adding...').then(async () => {
+        const result = await addUserToProgram(programId, selectedUser);
+        if (result) {
+          message.success('Add user successfully', 0.5);
+          await fetchProgram();
+          handleUserCancel();
+        }
+      });
+    }
+  };
+
+  const handleUserCancel = () => {
+    setIsUserModal(false);
+    setSelectedUser(null);
+  };
+
   const handleRemoveBadge = async (badgeId) => {
     await removeBadgeFromProgram(programId, badgeId);
     message.success('Remove badge successfully', 0.5);
     await fetchBadges();
     await fetchAllBadges();
   }
+
 
   return (<div className="program-detail">
     {loading ? (<CircularProgress/>) : (<div className="program-detail-container">
@@ -176,7 +213,7 @@ export default function ProgramDetail() {
           <div className="users-title">
             <div className="users-title-name">Users</div>
             <div className="users-title-btn">
-              <Button type="primary">
+              <Button type="primary" onClick={showUserModal}>
                 Add user
               </Button>
             </div>
@@ -347,6 +384,48 @@ export default function ProgramDetail() {
           </div>
         </div>
       </div>)}
+    </Modal>
+    <Modal
+      className="modal"
+      title="Add user to program"
+      visible={isUserModal}
+      onOk={handleUserOk}
+      onCancel={handleUserCancel}
+      footer={[<Button key="back" onClick={handleUserCancel}>
+        Cancel
+      </Button>, <Button
+        disabled={selectedUser === null}
+        key="submit"
+        type="primary"
+        onClick={handleUserOk}
+      >
+        Send
+      </Button>,]}
+    >
+      <div className="form">
+        <div className="field">
+          <label>Choose user</label>
+          <Select
+            showSearch
+            optionFilterProp="children"
+            filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            allowClear
+            style={{width: '100%', marginBottom: '20px', marginTop: '5px'}}
+            placeholder="Please select user"
+            onChange={(value) => setSelectedUser(value)}
+            value={selectedUser}
+          >
+            {fullUser?.map((user) => (<Option key={user.id} value={user.id}>
+              <div style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              }}>
+                <div>{user.username}</div>
+                <div>{renderRole(user.roleId)}</div>
+              </div>
+            </Option>))}
+          </Select>
+        </div>
+      </div>
     </Modal>
   </div>);
 }
