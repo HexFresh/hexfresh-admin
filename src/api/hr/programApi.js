@@ -7,6 +7,7 @@ export const getPrograms = async (query) => {
     const response = await axiosClient.get(endpoint, {
       params: { keyword, limit, offset },
     });
+
     const { data } = response;
     return data;
   } catch (error) {

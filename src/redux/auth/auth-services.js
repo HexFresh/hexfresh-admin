@@ -1,17 +1,21 @@
-import axiosClient, {setAuthToken} from '../../api/axiosClient';
+import axiosClient from '../../api/axiosClient';
 import axiosAuth from "./axiosAuth";
+import {signOut} from "./auth-slice";
+import axios from "axios";
+import axiosNotification from "../../api/axiosNotification";
 
 export const signInService = async (credentials) => {
   try {
     const endpoint = 'auth/login';
     const response = await axiosAuth.post(endpoint, credentials);
-    console.log(axiosAuth.defaults.headers.common);
     const {token, user} = response.data;
     localStorage.setItem('token', token);
     localStorage.setItem('userId', user.id);
     localStorage.setItem('roleId', user.roleId);
     localStorage.setItem("authData", JSON.stringify(response.data));
-    setAuthToken(token);
+    axiosClient.defaults.headers.common.Authorization = `Bearer ${token}`;
+    axiosNotification.defaults.headers.common.Authorization = `Bearer ${token}`;
+    console.log(axiosClient.defaults.headers);
     return user;
   } catch (error) {
     console.log(error);
@@ -36,14 +40,15 @@ export const testAuthorization = async () => {
     const authDataString = localStorage.getItem("authData");
     if (authDataString) {
       const authData = JSON.parse(authDataString);
-      await setAuthToken(authData.token);
+      axiosClient.defaults.headers.common.Authorization = `Bearer ${authData.token}`;
+      axiosNotification.defaults.headers.common.Authorization = `Bearer ${authData.token}`;
+      console.log(axiosClient.defaults.headers);
+      console.log("ua ki vao day");
       await axiosClient.get('/');
-
       return authData;
     }
   } catch (e) {
     console.log(e);
-    alert('Access token expired');
   }
   // try {
   //   return await refreshAuthToken();
@@ -53,3 +58,60 @@ export const testAuthorization = async () => {
   // }
   return Promise.reject("No cookie");
 }
+
+export const refreshAuthToken = async () => {
+  try {
+    console.log("con cho cuong");
+    const {data: authData} = await axiosAuth.get('/auth/refresh-token');
+
+    axiosClient.defaults.headers.common.Authorization = `Bearer ${authData?.token}`;
+    axiosNotification.defaults.headers.common.Authorization = `Bearer ${authData?.token}`;
+    console.log(axiosClient.defaults.headers);
+    await localStorage.setItem("authData", JSON.stringify(authData));
+    //Connect socket
+    // Socket.initSocket(authData?.token);
+    return authData;
+  } catch (e) {
+    alert('Please login again');
+    throw e;
+  }
+}
+
+export const setUpInterceptor = (dispatch) => {
+  console.log("setup interceptor");
+  axiosClient.interceptors.response.use((res) => {
+    return res;
+  }, async (err) => {
+    const originalConfig = err.config;
+    // Access Token was expired
+    if (err.response.status === 401 && !originalConfig._retry) {
+      originalConfig._retry = true;
+      try {
+        await refreshAuthToken();
+        console.log("refresh token");
+        return axiosClient(originalConfig);
+      } catch (_error) {
+        dispatch(signOut);
+        return Promise.reject(_error);
+      }
+    }
+    return Promise.reject(err);
+  });
+  axiosNotification.interceptors.response.use((res) => {
+    return res;
+  }, async (err) => {
+    const originalConfig = err.config;
+    // Access Token was expired
+    if (err.response.status === 401 && !originalConfig._retry) {
+      originalConfig._retry = true;
+      try {
+        await refreshAuthToken();
+        return axiosNotification(originalConfig);
+      } catch (_error) {
+        dispatch(signOut);
+        return Promise.reject(_error);
+      }
+    }
+    return Promise.reject(err);
+  });
+};

@@ -11,6 +11,7 @@ export const getBadges = async (query) => {
     return data;
   } catch (error) {
     return error;
+    window.location.reload();
   }
 }
 

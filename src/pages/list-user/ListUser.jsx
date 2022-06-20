@@ -114,17 +114,24 @@ function ListUser() {
     setLoading(true);
     const result = await getUsers({keyword, roleId, limit, offset});
     const fullResult = await getUsers({keyword: "", limit: result.count});
-    const data = result.rows.map((user) => ({...user, key: user.id}));
-    setUsers(data || []);
-    setFullUser(fullResult.rows);
-    setCount(result.count);
+
+    if (result) {
+      const data = result.rows.map((user) => ({...user, key: user.id}));
+      setUsers(data || []);
+    }
+
+    setFullUser(fullResult.rows || []);
+    setCount(result?.count);
     setLoading(false);
   };
 
   const fetchMentors = async () => {
     const result = await getUsers({roleId: 3});
-    const data = result.rows.map((user) => ({...user, key: user.id}));
-    setMentors(data || []);
+    if (result) {
+      const data = result.rows.map((user) => ({...user, key: user.id}));
+      setMentors(data || []);
+    }
+
   };
 
   useEffect(() => {
@@ -318,7 +325,7 @@ function ListUser() {
             onChange={(value) => setNewUser({...newUser, mentorId: value})}
             style={{width: '100%', marginTop: '5px'}}
           >
-            {mentors.map((mentor) => (<Option key={mentor.id} value={mentor.id}>
+            {mentors?.map((mentor) => (<Option key={mentor.id} value={mentor.id}>
               {mentor.username}
             </Option>))}
           </Select>

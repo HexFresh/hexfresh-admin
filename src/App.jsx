@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {Routes, Route, Navigate, useNavigate} from 'react-router-dom';
 import Login from './pages/login/Login';
 import Sidebar from './components/sidebar/Sidebar';
@@ -16,13 +16,22 @@ import Badges from "./pages/badges/Badges";
 import {signOut} from "./redux/auth/auth-slice";
 import {ErrorBoundary} from "./pages/ErrorBoundary";
 import ForgotPassword from "./pages/forgot-password/ForgotPassword";
+import axiosClient from "./api/axiosClient";
+import {setUpInterceptor, testAuthorization} from "./redux/auth/auth-services";
 
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
+  setUpInterceptor(dispatch);
+
+  useLayoutEffect(() => {
+    const test = async () => {
+      await testAuthorization();
+    }
+    test();
+
   }, []);
 
   const openSidebar = () => {
@@ -68,9 +77,7 @@ function App() {
   </Routes>);
 
   const routedContent = isLogin ? authContent : unAuthContent;
-  return (<ErrorBoundary handleError={handleLogout}>
-    <div className="App">{routedContent}</div>
-  </ErrorBoundary>);
+  return (<div className="App">{routedContent}</div>);
 }
 
 export default App;

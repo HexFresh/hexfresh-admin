@@ -2,17 +2,15 @@ import axiosNotification from './axiosNotification';
 
 export const getNotificationsService = async (payload) => {
   const {skip, limit} = payload;
-  const token = localStorage.getItem('token');
   const endpoint = `notification`;
   try {
     const response = await axiosNotification.get(endpoint, {
-      headers: {'Content-Type': 'application/json', Authorization: 'Bearer ' + token,}, params: {skip, limit}
+      headers: {'Content-Type': 'application/json'}, params: {skip, limit}
     });
     const {data} = response;
-    console.log(data);
     return data;
   } catch (error) {
-    return error;
+    return [];
   }
 };
 
@@ -22,7 +20,7 @@ export const getNotification = async id => {
   try {
     const response = await axiosNotification.get(endpoint, {
       headers: {
-        'Content-Type': 'application/json', Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json'
       },
     });
     const {data} = response;
@@ -38,7 +36,7 @@ export const createNotification = async (notification) => {
   try {
     const response = await axiosNotification.post(endpoint, notification, {
       headers: {
-        'Content-Type': 'application/json', Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json'
       },
     });
     const {data} = response;
@@ -54,7 +52,7 @@ export const countNotification = async () => {
   try {
     const response = await axiosNotification.get(endpoint, {
       headers: {
-        'Content-Type': 'application/json', Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json'
       },
     });
     const {data} = response;

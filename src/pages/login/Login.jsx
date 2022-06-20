@@ -8,7 +8,7 @@ import {useDispatch} from 'react-redux';
 import {useNavigate} from "react-router-dom";
 import './login.css';
 import {signIn} from "../../redux/auth/auth-slice";
-import {signInService} from "../../redux/auth/auth-services";
+import {setUpInterceptor, signInService} from "../../redux/auth/auth-services";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
@@ -42,6 +42,7 @@ export default function Login() {
       const user = await signInService(credentials);
       if (user) {
         dispatch(signIn({credentials, navigate}));
+        setUpInterceptor(dispatch);
         openSuccessNotification('topRight');
         setLoading(false);
       } else {
