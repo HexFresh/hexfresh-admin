@@ -14,6 +14,7 @@ import {getCountNotificationAction} from "../../redux/count-notification-slice";
 const nPerPage = 6;
 
 const {Option} = Select;
+const {TextArea} = Input;
 
 const columns = [{
   title: 'Username',
@@ -373,7 +374,9 @@ function ListUser() {
 
         <div className="field">
           <label>Body</label>
-          <Input
+          <TextArea
+            multiline
+            rows={5}
             style={{marginBottom: '20px', marginTop: '5px'}}
             value={notification.body}
             onChange={(e) => setNotification({...notification, body: e.target.value})}
