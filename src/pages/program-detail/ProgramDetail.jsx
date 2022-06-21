@@ -411,17 +411,12 @@ export default function ProgramDetail() {
             filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
             allowClear
             style={{width: '100%', marginBottom: '20px', marginTop: '5px'}}
-            placeholder="Please select user"
+            placeholder="Please select"
             onChange={(value) => setSelectedUser(value)}
             value={selectedUser}
           >
             {fullUser?.map((user) => (<Option key={user.id} value={user.id}>
-              <div style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              }}>
-                <div>{user.username}</div>
-                <div>{renderRole(user.roleId)}</div>
-              </div>
+              {user.username}
             </Option>))}
           </Select>
         </div>
