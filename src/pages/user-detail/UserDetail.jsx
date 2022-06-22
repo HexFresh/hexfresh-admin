@@ -234,10 +234,10 @@ export default function UserDetail() {
             </Button>
           </div>
         </div>
-        <div className="status-btn">
+        {localStorage.getItem("roleId") === '1' && <div className="status-btn">
           <Switch checked={userAccount?.isActive} loading={loadingStatus} checkedChildren="Active"
                   unCheckedChildren="Block" onChange={handleChangeStatusOfUserAccount}/>
-        </div>
+        </div>}
       </div>
 
       <div className="card-body">

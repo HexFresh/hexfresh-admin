@@ -57,7 +57,7 @@ const columns = [{
 },];
 
 const initNewUser = {
-  username: '', email: '', password: '', roleId: '1', mentorId: '',
+  username: '', email: '', password: '', roleId: '2', mentorId: '',
 };
 
 function ListUser() {
@@ -71,6 +71,8 @@ function ListUser() {
   const [newUser, setNewUser] = React.useState(initNewUser);
   const [keyword, setKeyword] = React.useState('');
   const [roleId, setRoleId] = React.useState('');
+
+  const role = localStorage.getItem("roleId");
 
   const dispatch = useDispatch();
 
@@ -301,11 +303,12 @@ function ListUser() {
         <div className="field">
           <label>Choose role</label>
           <Select
-            value={newUser.roleId || 'Admin'}
+            value={newUser.roleId || 'HR'}
             onChange={(value) => setNewUser({...newUser, roleId: value})}
             style={{width: '100%', marginTop: '5px'}}
           >
-            <Option value="1">Admin</Option>
+            {role === '1' && <Option value="1">Admin</Option>}
+
             <Option value="2">HR</Option>
             <Option value="3">Mentor</Option>
             <Option value="4">Fresher</Option>
