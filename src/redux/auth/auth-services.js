@@ -1,4 +1,4 @@
-import axiosClient from '../../api/axiosClient';
+import axiosClient, {setAuthToken} from '../../api/axiosClient';
 
 export const signInService = async (credentials) => {
   try {
@@ -8,6 +8,7 @@ export const signInService = async (credentials) => {
     localStorage.setItem('token', token);
     localStorage.setItem('userId', user.id);
     localStorage.setItem('roleId', user.roleId);
+    setAuthToken(token);
     return user;
   } catch (error) {
     console.log(error);
