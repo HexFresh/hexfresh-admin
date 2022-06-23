@@ -43,11 +43,11 @@ function App() {
     <div className="sub">
       <Topbar openSidebar={openSidebar}/>
       <Routes>
-        <Route path="/" element={<Navigate replace to="/programs"/>}/>
-        <Route path="/login" element={<Navigate replace to="/programs"/>}/>
+        <Route path="/" element={<Navigate replace to="/dashboard"/>}/>
+        <Route path="/login" element={<Navigate replace to="/dashboard"/>}/>
         <Route path="/programs" element={<ListProgram/>}/>
         <Route path="/programs/:programId" element={<ProgramDetail/>}/>
-        <Route path="/mentors" element={<Dashboard/>}/>
+        <Route path="/dashboard" element={<Dashboard/>}/>
         <Route path="/users" element={<ListUser/>}/>
         <Route path="/users/:userId" element={<UserDetail/>}/>
         <Route path="/profile/:userId" element={<UserProfile/>}/>

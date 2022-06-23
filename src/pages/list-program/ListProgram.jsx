@@ -1,12 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {CircularProgress, Grid, InputBase} from '@mui/material';
-import {Link} from 'react-router-dom';
 import {Button, Input, message, Modal, Pagination, Tooltip} from 'antd';
 import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
 import {Search} from '@mui/icons-material';
-import {createProgram, getPrograms, removeProgram} from '../../api/hr/programApi';
+import {createProgram, getPrograms} from '../../api/hr/programApi';
 import './list-program.css';
 import axios from "axios";
+import ProgramItem from "./ProgramItem";
 
 const nPerPage = 4;
 
@@ -25,6 +25,7 @@ function ListProgram() {
   const fetchPrograms = async (keyword, limit, offset) => {
     setLoading(true);
     const result = await getPrograms({keyword, limit, offset});
+    console.log(result.rows)
     setPrograms(result.rows || []);
     setCount(result.count);
     setLoading(false);
@@ -77,17 +78,16 @@ function ListProgram() {
     }
   };
 
-  const handleRemoveProgram = async (id) => {
-    await removeProgram(id);
-    message.success({content: 'Removed', key: 'success'});
-    await fetchPrograms(keyword, nPerPage, (page - 1) * nPerPage);
-  }
-
   const uploadNewBadgeImage = (file) => {
     if (file) {
       setImageFile(file);
     }
   };
+
+  const refreshPrograms = async () => {
+    await fetchPrograms(keyword, nPerPage, (page - 1) * nPerPage);
+    setPage(1)
+  }
 
   return (<div className="list-program">
     <div className="list-program__container">
@@ -119,24 +119,8 @@ function ListProgram() {
           <Grid container spacing={2}>
             {programs.map((program) => {
               return (<Grid key={program.id} item xs={12} sm={6} lg={3}>
-                <div className="program">
-                  <div className="cover-photo">
-                    <img
-                      src={program.image.imageLink}
-                      alt="img"
-                    />
-                    <Tooltip className={"remove-btn"} title="remove">
-                      <Button type="circle" shape="circle"
-                              onClick={() => handleRemoveProgram(program.id)}
-                              icon={<DeleteOutlined/>}/>
-                    </Tooltip>
-                  </div>
-                  <div className="program-name">
-                    <Link className="link" to={`/programs/${program.id}`}>
-                      {program.title}
-                    </Link>
-                  </div>
-                </div>
+                <ProgramItem program={program}
+                             refreshPrograms={refreshPrograms}/>
               </Grid>);
             })}
           </Grid>

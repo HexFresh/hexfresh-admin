@@ -5,6 +5,7 @@ import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import GroupIcon from '@mui/icons-material/Group';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MenuIcon from '@mui/icons-material/Menu';
+import LoyaltyIcon from '@mui/icons-material/Loyalty';
 import './sidebar.css';
 import SidebarItem from './SidebarItem';
 import logo from '../../assets/images/logo.png';
@@ -17,9 +18,9 @@ export default function Sidebar({open, openSidebar, closeSidebar}) {
   const userId = localStorage.getItem('userId');
 
   const routes = [{
-    display_name: 'Programs', route: '/programs', icon: <DashboardIcon/>,
+    display_name: 'Programs', route: '/dashboard', icon: <DashboardIcon/>,
   }, {
-    display_name: 'Mentors', route: '/mentors', icon: <SupervisedUserCircleIcon/>,
+    display_name: 'Mentors', route: '/programs', icon: <LoyaltyIcon/>,
   }, {
     display_name: 'Users', route: '/users', icon: <GroupIcon/>,
   }, {

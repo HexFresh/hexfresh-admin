@@ -10,8 +10,11 @@ import './list-user.css';
 import {useDispatch} from "react-redux";
 import {getNotificationsAction} from "../../redux/notification/notification-slice";
 import {getCountNotificationAction} from "../../redux/count-notification-slice";
+import moment from "moment";
 
 const nPerPage = 6;
+
+const formatDateTime = "YYYY-MM-DD";
 
 const {Option} = Select;
 const {TextArea} = Input;
@@ -22,6 +25,12 @@ const columns = [{
   key: 'username',
   sorter: (a, b) => ('' + a.username).localeCompare(b.username),
   render: (text, user) => <Link to={`/users/${user.id}`}>{text}</Link>,
+}, {
+  title: 'Create date',
+  dataIndex: 'createdAt',
+  key: 'createdAt',
+  sorter: (a, b) => ('' + a.createdAt).localeCompare(b.createdAt),
+  render: (text) => <span>{moment(text).format(formatDateTime)}</span>,
 }, {
   title: 'Email',
   dataIndex: 'email',
