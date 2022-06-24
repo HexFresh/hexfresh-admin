@@ -2,7 +2,7 @@ import axios from 'axios';
 import axiosNotification from "./axiosNotification";
 
 const axiosClient = axios.create({
-  withCredentials: true, baseURL: 'https://hexfresh-gamification-backend.herokuapp.com/api/',
+  withCredentials: true, baseURL: process.env.REACT_APP_API_SERVER_URL,
 });
 
 export const setAuthToken = (token) => {

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {Routes, Route, Navigate, useNavigate} from 'react-router-dom';
 import Login from './pages/login/Login';
 import Sidebar from './components/sidebar/Sidebar';
@@ -16,13 +16,15 @@ import Badges from "./pages/badges/Badges";
 import {signOut} from "./redux/auth/auth-slice";
 import {ErrorBoundary} from "./pages/ErrorBoundary";
 import ForgotPassword from "./pages/forgot-password/ForgotPassword";
+import {setAuthToken} from "./api/axiosClient";
 
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    setAuthToken(localStorage.getItem('token'));
   }, []);
 
   const openSidebar = () => {
@@ -43,8 +45,8 @@ function App() {
     <div className="sub">
       <Topbar openSidebar={openSidebar}/>
       <Routes>
-        <Route path="/" element={<Navigate replace to="/dashboard"/>}/>
-        <Route path="/login" element={<Navigate replace to="/dashboard"/>}/>
+        <Route path="/" element={<Navigate replace to="/programs"/>}/>
+        <Route path="/login" element={<Navigate replace to="/programs"/>}/>
         <Route path="/programs" element={<ListProgram/>}/>
         <Route path="/programs/:programId" element={<ProgramDetail/>}/>
         <Route path="/dashboard" element={<Dashboard/>}/>
