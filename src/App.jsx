@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useLayoutEffect} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import {Routes, Route, Navigate, useNavigate} from 'react-router-dom';
 import Login from './pages/login/Login';
 import Sidebar from './components/sidebar/Sidebar';

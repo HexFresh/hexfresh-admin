@@ -203,7 +203,6 @@ export default function UserProfile() {
 
   return (<div className="user-profile">
     {loading ? (<CircularProgress/>) : (<div className="user-profile__container">
-      <div className="page-name">Your Profile</div>
       <div className="card-body">
         <div className="cover-img">
           <div className="card__infor">

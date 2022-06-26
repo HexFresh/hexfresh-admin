@@ -69,9 +69,10 @@ export default function Dashboard() {
   const donutData = (stat) => {
     if (stat) {
       const result = [["Program", "Fresher Count"]];
-      stat.freshersInProgramRatio.map((item) => {
+      stat.freshersInProgramRatio.forEach((item) => {
         result.push([item.title, item.total]);
       })
+
       console.log(result);
       return result;
     }

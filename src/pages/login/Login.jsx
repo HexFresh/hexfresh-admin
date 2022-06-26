@@ -1,9 +1,8 @@
 import React, {useRef, useEffect, useState} from 'react';
 import logo from '../../assets/images/logo.png';
-import InputBase from '@mui/material/InputBase';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
-import {Button, notification, Spin} from 'antd';
+import {Button, notification, Spin, Input} from 'antd';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from "react-router-dom";
 import './login.css';
@@ -12,13 +11,13 @@ import {signInService} from "../../redux/auth/auth-services";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const username = useRef();
-  const password = useRef();
 
   useEffect(() => {
-    document.title = 'Login';
+    document.title = 'HexAd - Login';
   }, []);
 
   const openFailedNotification = (placement) => {
@@ -34,10 +33,13 @@ export default function Login() {
   };
 
   const handleSignIn = async () => {
-    setLoading(true);
-    if (username.current.value !== '' && password.current.value !== '') {
+    if (username === '' || password === '') {
+      openFailedNotification('topRight');
+    } else {
+      setLoading(true);
+
       const credentials = {
-        username: username.current.value, password: password.current.value,
+        username, password,
       };
       const user = await signInService(credentials);
       if (user) {
@@ -51,18 +53,26 @@ export default function Login() {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSignIn();
+    }
+  }
+
   return (<div className="login">
     <img src={logo} alt="logo"/>
     <div className="container">
       <div className="welcome">Welcome Back</div>
       <div className="sub-welcome">Enter the credentials to access your account</div>
       <div className="filed">
-        <EmailIcon className="icon"/>
-        <InputBase inputRef={username} sx={{ml: 1, flex: 1}} placeholder="Enter your username" autoFocus/>
+        <Input onKeyDown={handleKeyDown} onChange={(e) => setUsername(e.target.value)} size="large"
+               prefix={<EmailIcon className="icon"/>} value={username}
+               placeholder="Enter your username" autoFocus/>
       </div>
       <div className="filed">
-        <LockIcon className="icon"/>
-        <InputBase inputRef={password} sx={{ml: 1, flex: 1}} placeholder="Enter your password" type="password"/>
+        <Input.Password onKeyDown={handleKeyDown} onChange={(e) => setPassword(e.target.value)} size="large"
+                        prefix={<LockIcon className="icon"/>} value={password}
+                        placeholder="Enter your password"/>
       </div>
       <p className={"f-password"} onClick={() => navigate("/forgot-password")}>Forgot your password?</p>
       <Button onClick={handleSignIn}>
