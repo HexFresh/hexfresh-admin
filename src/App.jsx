@@ -16,7 +16,6 @@ import Badges from "./pages/badges/Badges";
 import {signOut} from "./redux/auth/auth-slice";
 import {ErrorBoundary} from "./pages/ErrorBoundary";
 import ForgotPassword from "./pages/forgot-password/ForgotPassword";
-import {setAuthToken} from "./api/axiosClient";
 
 function App() {
   const dispatch = useDispatch();
@@ -24,7 +23,7 @@ function App() {
   const [open, setOpen] = useState(false);
 
   useLayoutEffect(() => {
-    setAuthToken(localStorage.getItem('token'));
+    // setAuthToken(localStorage.getItem('token'));
   }, []);
 
   const openSidebar = () => {

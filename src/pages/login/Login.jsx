@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import logo from '../../assets/images/logo.png';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
@@ -7,7 +7,7 @@ import {useDispatch} from 'react-redux';
 import {useNavigate} from "react-router-dom";
 import './login.css';
 import {signIn} from "../../redux/auth/auth-slice";
-import {signInService} from "../../redux/auth/auth-services";
+import AuthServices from "../../api/auth-services";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
@@ -41,15 +41,19 @@ export default function Login() {
       const credentials = {
         username, password,
       };
-      const user = await signInService(credentials);
-      if (user) {
-        dispatch(signIn({credentials, navigate}));
-        openSuccessNotification('topRight');
-        setLoading(false);
-      } else {
+
+      try {
+        const response = await AuthServices.login(credentials.username, credentials.password);
+        if (response) {
+          dispatch(signIn({credentials, navigate}));
+          openSuccessNotification('topRight');
+        } else {
+          openFailedNotification('topRight');
+        }
+      } catch (error) {
         openFailedNotification('topRight');
-        setLoading(false);
       }
+      setLoading(false);
     }
   };
 

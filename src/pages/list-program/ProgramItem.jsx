@@ -11,7 +11,6 @@ function ProgramItem({program, refreshPrograms}) {
 
   const fetchUserProfile = async () => {
     const result = await getUserProfileById(program.authorId);
-    console.log(result)
     setUserProfile(result);
   }
 
@@ -55,6 +54,7 @@ function ProgramItem({program, refreshPrograms}) {
 
       <div className={"author"}>
         <img
+          alt={"name"}
           style={{
             width: '40px', height: '40px', borderRadius: '50%',
 

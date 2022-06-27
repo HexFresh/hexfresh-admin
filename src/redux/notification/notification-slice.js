@@ -22,7 +22,11 @@ export const notificationSlice = createSlice({
 
     }, [getNotificationsAction.fulfilled]: (state, action) => {
       state.status = 'idle';
-      state.notifications = action.payload || [];
+      if (Array.isArray(action.payload)) {
+        state.notifications = action.payload || [];
+      } else {
+        state.notifications = [];
+      }
     }
   }
 })

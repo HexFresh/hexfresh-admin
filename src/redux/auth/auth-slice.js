@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {signInService, signOutService} from "./auth-services";
+import AuthService from "../../api/auth-services";
 
 const initialState = {
   user: {}, status: null,
@@ -7,14 +7,14 @@ const initialState = {
 
 export const signIn = createAsyncThunk('auth/signIn', async (payload) => {
   const {credentials, navigate} = payload;
-  const user = await signInService(credentials);
+  const user = AuthService.login(credentials.username, credentials.password);
   navigate('/');
   return user;
 });
 
 export const signOut = createAsyncThunk('auth/signOut', async (payload) => {
   const {navigate} = payload;
-  await signOutService(navigate);
+  AuthService.logout(navigate);
 });
 
 export const authSlice = createSlice({

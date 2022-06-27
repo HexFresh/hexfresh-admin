@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {CircularProgress, Grid, InputBase} from '@mui/material';
-import {Button, Input, message, Modal, Pagination, Tooltip} from 'antd';
-import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
+import {Button, Input, message, Modal, Pagination} from 'antd';
+import { EditOutlined, PlusOutlined} from '@ant-design/icons';
 import {Search} from '@mui/icons-material';
 import {createProgram, getPrograms} from '../../api/hr/programApi';
 import './list-program.css';
@@ -25,7 +25,6 @@ function ListProgram() {
   const fetchPrograms = async (keyword, limit, offset) => {
     setLoading(true);
     const result = await getPrograms({keyword, limit, offset});
-    console.log(result.rows)
     setPrograms(result.rows || []);
     setCount(result.count);
     setLoading(false);
