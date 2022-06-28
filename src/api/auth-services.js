@@ -11,7 +11,6 @@ class AuthService {
         if (response.data.token) {
           console.log("logged in");
           const {token, user} = response.data;
-          localStorage.setItem('token', token);
           localStorage.setItem('userId', user.id);
           localStorage.setItem('roleId', user.roleId);
           localStorage.setItem("user", JSON.stringify(response.data));
@@ -36,7 +35,6 @@ class AuthService {
     axios.get(API_URL + "/auth/logout").then(() => {
       localStorage.removeItem('userId');
       localStorage.removeItem('roleId');
-      localStorage.removeItem('token');
       localStorage.removeItem('user');
       navigate('/login', {replace: true});
     });

@@ -2,11 +2,10 @@ import axiosNotification from './axiosNotification';
 
 export const getNotificationsService = async (payload) => {
   const {skip, limit} = payload;
-  const token = localStorage.getItem('token');
   const endpoint = `notification`;
   try {
     const response = await axiosNotification.get(endpoint, {
-      headers: {'Content-Type': 'application/json', Authorization: 'Bearer ' + token,}, params: {skip, limit}
+      params: {skip, limit}
     });
     const {data} = response;
     return data;
@@ -16,14 +15,9 @@ export const getNotificationsService = async (payload) => {
 };
 
 export const getNotification = async id => {
-  const token = localStorage.getItem('token');
   const endpoint = `notification/${id}`;
   try {
-    const response = await axiosNotification.get(endpoint, {
-      headers: {
-        'Content-Type': 'application/json', Authorization: 'Bearer ' + token,
-      },
-    });
+    const response = await axiosNotification.get(endpoint);
     const {data} = response;
     return data;
   } catch (error) {
@@ -32,14 +26,9 @@ export const getNotification = async id => {
 }
 
 export const createNotification = async (notification) => {
-  const token = localStorage.getItem('token');
   const endpoint = `notification`;
   try {
-    const response = await axiosNotification.post(endpoint, notification, {
-      headers: {
-        'Content-Type': 'application/json', Authorization: 'Bearer ' + token,
-      },
-    });
+    const response = await axiosNotification.post(endpoint, notification);
     const {data} = response;
     return data;
   } catch (error) {
@@ -48,14 +37,9 @@ export const createNotification = async (notification) => {
 };
 
 export const countNotification = async () => {
-  const token = localStorage.getItem('token');
   const endpoint = `notification/counter`;
   try {
-    const response = await axiosNotification.get(endpoint, {
-      headers: {
-        'Content-Type': 'application/json', Authorization: 'Bearer ' + token,
-      },
-    });
+    const response = await axiosNotification.get(endpoint);
     const {data} = response;
     return data;
   } catch (error) {
