@@ -15,18 +15,16 @@ import BadgeIcon from '@mui/icons-material/Badge';
 export default function Sidebar({open, openSidebar, closeSidebar}) {
   const location = useLocation();
 
-  const userId = localStorage.getItem('userId');
+  // const userId = localStorage.getItem('userId');
 
   const routes = [{
-    display_name: 'Programs', route: '/dashboard', icon: <DashboardIcon/>,
+    display_name: 'Dashboard', route: '/dashboard', icon: <DashboardIcon/>,
   }, {
-    display_name: 'Mentors', route: '/programs', icon: <LoyaltyIcon/>,
+    display_name: 'Programs', route: '/programs', icon: <LoyaltyIcon/>,
   }, {
     display_name: 'Users', route: '/users', icon: <GroupIcon/>,
   }, {
     display_name: 'Badges', route: `/badges`, icon: <BadgeIcon/>,
-  }, {
-    display_name: 'Profile', route: `/profile/${userId}`, icon: <AssignmentIndIcon/>,
   },];
 
   const activeItem = routes.findIndex((item) => location.pathname.includes(item.route));
