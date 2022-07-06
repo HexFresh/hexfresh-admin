@@ -87,6 +87,10 @@
     color: black;
 }
 
+.program-detail-bottom .users .user-name {
+    color: black;
+}
+
 .program-detail-bottom .users .user-right {
     display: flex;
     align-items: center;

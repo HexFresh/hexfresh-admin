@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {Link} from 'react-router-dom';
-import {Button, message, Tooltip} from 'antd';
+import {Button, message, Tooltip, Popconfirm} from 'antd';
 import {DeleteOutlined} from '@ant-design/icons';
 import './list-program.css';
 import {removeProgram} from "../../api/hr/programApi";
@@ -41,11 +41,16 @@ function ProgramItem({program, refreshPrograms}) {
         src={program.image.imageLink}
         alt="img"
       />
-      <Tooltip className={"remove-btn"} title="remove">
-        <Button type="circle" shape="circle"
-                onClick={() => handleRemoveProgram(program.id)}
-                icon={<DeleteOutlined/>}/>
-      </Tooltip>
+      <Popconfirm
+        title="Are you sure delete this program?"
+        onConfirm={() => handleRemoveProgram(program.id)}
+      >
+        <Tooltip className={"remove-btn"} title="remove">
+          <Button type="circle" shape="circle"
+
+                  icon={<DeleteOutlined/>}/>
+        </Tooltip>
+      </Popconfirm>
     </div>
     <div className="program-name">
       <Link className="link" to={`/programs/${program.id}`}>

@@ -1,4 +1,4 @@
-import {Button, Input, message, Modal, Pagination, Tooltip} from "antd";
+import {Button, Input, message, Modal, Pagination, Tooltip, Popconfirm} from "antd";
 import {Search} from "@mui/icons-material";
 import {CircularProgress, Grid, InputBase} from "@mui/material";
 import React, {useEffect, useRef, useState} from "react";
@@ -128,10 +128,15 @@ export default function Badges() {
                          src={badge.image}
                          alt="img"
                     />
-                    <Tooltip className={"remove-btn"} title="remove">
-                      <Button onClick={() => handleRemoveBadge(badge.id)} type="circle" shape="circle"
-                              icon={<DeleteOutlined/>}/>
-                    </Tooltip>
+                    <Popconfirm
+                      title="Are you sure delete this badge?"
+                      onConfirm={() => handleRemoveBadge(badge.id)}
+                    >
+                      <Tooltip className={"remove-btn"} title="remove">
+                        <Button type="circle" shape="circle"
+                                icon={<DeleteOutlined/>}/>
+                      </Tooltip>
+                    </Popconfirm>
                   </div>
                   <div className="program-name">
                     <div className="program-title">

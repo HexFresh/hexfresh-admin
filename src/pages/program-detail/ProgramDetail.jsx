@@ -226,7 +226,7 @@ export default function ProgramDetail() {
           </div>
           <div className="users-list">
             {program?.participants?.map(participant => {
-              return (<Link to={`/users/${participant.id}`} key={participant.id} className="user">
+              return (<div key={participant.id} className="user">
                 <div className="user-left">
                   <div className="user-avatar">
                     <Avatar style={{
@@ -235,7 +235,7 @@ export default function ProgramDetail() {
                             src={participant.user_information.avatar}
                             alt=""/>
                   </div>
-                  <div className="user-name">{participant.username}</div>
+                  <Link to={`/users/${participant.id}`} className="user-name">{participant.username}</Link>
                 </div>
                 <div className="user-right">
                   <div className={"role"}>{renderRole(participant?.role?.id)}</div>
@@ -250,7 +250,7 @@ export default function ProgramDetail() {
                   </div>
                 </div>
 
-              </Link>)
+              </div>)
             })}
           </div>
 
@@ -280,10 +280,15 @@ export default function ProgramDetail() {
                     </div>
                   </Tooltip>
                   <div className="badge-right">
-                    <Tooltip className={"remove-btn"} title="remove">
-                      <Button onClick={() => handleRemoveBadge(badge.id)} type="circle" shape="circle"
-                              icon={<DeleteOutlined/>}/>
-                    </Tooltip>
+                    <Popconfirm
+                      title="Are you sure delete this badge?"
+                      onConfirm={() => handleRemoveBadge(badge.id)}
+                    >
+                      <Tooltip className={"remove-btn"} title="remove">
+                        <Button type="circle" shape="circle"
+                                icon={<DeleteOutlined/>}/>
+                      </Tooltip>
+                    </Popconfirm>
                   </div>
                 </div>)
               })}
