@@ -82,12 +82,10 @@ export default function Badges() {
     });
   }
 
-  function handleRemoveBadge(id) {
-    message.loading('Deleting...').then(async () => {
-      await deleteBadge(id);
-      message.success('Deleted!', 0.5);
-      await fetchBadges(keyword, nPerPage, (page - 1) * nPerPage);
-    });
+  const handleRemoveBadge = async (id) => {
+    await deleteBadge(id);
+    message.success('Deleted!', 0.5);
+    await fetchBadges(keyword, nPerPage, (page - 1) * nPerPage);
   }
 
   return (<div className="badges">
