@@ -1,12 +1,17 @@
 import axios from "axios";
 
 const API_URL = "https://hexfresh-auth.herokuapp.com/api";
-axios.defaults.withCredentials = true;
+
+const axiosAuth = axios.create({
+  baseURL: API_URL
+})
+
+axiosAuth.defaults.withCredentials = true;
 
 class AuthService {
   login(username, password) {
-    return axios
-      .post(API_URL + "/auth/login", {username, password})
+    return axiosAuth
+      .post("/auth/login", {username, password})
       .then((response) => {
         if (response.data.token) {
           console.log("logged in");
@@ -21,7 +26,7 @@ class AuthService {
   }
 
   refreshToken() {
-    return axios.get(API_URL + "/auth/refresh-token").then((response) => {
+    return axiosAuth.get("/auth/refresh-token").then((response) => {
       if (response.data.token) {
         console.log("refresh token");
         console.log(response.data);
@@ -32,7 +37,7 @@ class AuthService {
   }
 
   logout(navigate) {
-    axios.get(API_URL + "/auth/logout").then(() => {
+    axiosAuth.get("/auth/logout").then(() => {
       localStorage.removeItem('userId');
       localStorage.removeItem('roleId');
       localStorage.removeItem('user');

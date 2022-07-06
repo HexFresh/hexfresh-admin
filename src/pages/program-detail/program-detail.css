@@ -76,6 +76,7 @@
     border-radius: 10px;
     background-color: white;
     box-shadow: var(--shadow);
+    cursor: pointer;
 }
 
 .program-detail-bottom .users .user-left {
@@ -83,6 +84,23 @@
     align-items: center;
     grid-gap: 10px;
     font-weight: bold;
+    color: black;
+}
+
+.program-detail-bottom .users .user-right {
+    display: flex;
+    align-items: center;
+    grid-gap: 10px;
+    font-weight: bold;
+
+}
+
+.program-detail-bottom .user .user-right .remove-user-btn {
+    opacity: 0;
+}
+
+.program-detail-bottom .user:hover .user-right .remove-user-btn {
+    opacity: 1;
 }
 
 .program-detail-bottom .badges {
@@ -120,6 +138,7 @@
     background-color: white;
     padding: 20px;
     border-radius: 10px;
+    justify-content: center;
 }
 
 .program-detail-bottom .badges-list .badge {

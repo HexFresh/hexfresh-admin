@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useRef, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import './program-detail.css';
 import {
   addAvailableBadgeToProgram, addNewBadgeToProgram, addUserToProgram, getProgramDetail, removeBadgeFromProgram
@@ -10,10 +10,11 @@ import {CircularProgress} from '@mui/material';
 import {Button, Input, message, Modal, Switch, Tag, Tooltip} from 'antd';
 import {DeleteOutlined, EditOutlined, PlusOutlined} from "@ant-design/icons";
 import axios from "axios";
-import {Select} from 'antd';
+import {Select, Popconfirm} from 'antd';
 import {findAllUsersInLeaderboard, updateStatusOfLeaderboard} from "../../api/leaderboardApi";
 import Avatar from "@mui/material/Avatar";
 import {getUsers} from "../../api/hr/userApi";
+import {deleteProgramFromFresher} from "../../api/hr/programApi";
 
 const {Option} = Select;
 
@@ -199,6 +200,11 @@ export default function ProgramDetail() {
     await fetchAllBadges();
   }
 
+  const handleRemoveUser = async (userId) => {
+    await deleteProgramFromFresher(userId, programId);
+    message.success('Remove user successfully', 0.5);
+    await fetchProgram();
+  }
 
   return (<div className="program-detail">
     {loading ? (<CircularProgress/>) : (<div className="program-detail-container">
@@ -220,7 +226,7 @@ export default function ProgramDetail() {
           </div>
           <div className="users-list">
             {program?.participants?.map(participant => {
-              return (<div key={participant.id} className="user">
+              return (<Link to={`/users/${participant.id}`} key={participant.id} className="user">
                 <div className="user-left">
                   <div className="user-avatar">
                     <Avatar style={{
@@ -231,9 +237,20 @@ export default function ProgramDetail() {
                   </div>
                   <div className="user-name">{participant.username}</div>
                 </div>
-                <div className="user-right">{renderRole(participant?.role?.id)}</div>
+                <div className="user-right">
+                  <div className={"role"}>{renderRole(participant?.role?.id)}</div>
+                  <div className={"remove-user-program"}>
+                    <Popconfirm
+                      title="Are you sure delete this user from program?"
+                      onConfirm={() => handleRemoveUser(participant.id)}
+                    >
+                      <Button className={"remove-user-btn"} type="circle" shape="circle"
+                              icon={<DeleteOutlined/>}/>
+                    </Popconfirm>
+                  </div>
+                </div>
 
-              </div>)
+              </Link>)
             })}
           </div>
 
@@ -336,12 +353,9 @@ export default function ProgramDetail() {
         <Select placeholder={"Select badge"} value={selectedBadge} style={{width: '100%'}}
                 onChange={(value) => setSelectedBadge(value)}>
           {allBadges.map(badge => {
-            return (<Option style={{
-              display: 'flex', alignItems: 'center',
-            }} key={badge.id} value={badge.id}>
-              <img style={{
-                width: '20px', height: '20px', objectFit: 'cover', marginRight: '10px',
-              }} src={badge.image} alt=""/>
+            return (<Option style={{display: 'flex', alignItems: 'center',}} key={badge.id} value={badge.id}>
+              <img style={{width: '20px', height: '20px', objectFit: 'cover', marginRight: '10px',}} src={badge.image}
+                   alt=""/>
               {badge.title}
             </Option>)
           })}
