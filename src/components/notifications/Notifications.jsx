@@ -75,8 +75,15 @@ export default function Notifications({open}) {
   }
 
   return (<div className={`notifications ${active}`}>
-    {notifications.map((notification) => (<NotificationItem key={notification._id} notification={notification}
-                                                            notificationItemClick={handleNotificationItemClick}/>))}
+    {notifications.length > 0 ? (notifications.map((notification) => (
+      <NotificationItem key={notification._id} notification={notification}
+                        notificationItemClick={handleNotificationItemClick}/>))) : (<div className="notification-empty">
+      <div className="notification-empty-text">
+        You have no notifications
+      </div>
+    </div>)
+
+    }
     {loading && <CircularProgress className={"notification-circular-progress"}/>}
     {notifications.length < total &&
       <Button className="notification-load-more" onClick={handeLoadMoreNotifications}>Load more</Button>}
