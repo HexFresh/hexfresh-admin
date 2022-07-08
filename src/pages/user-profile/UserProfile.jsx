@@ -18,6 +18,7 @@ import moment from 'moment';
 import {useDispatch} from "react-redux";
 import {getUserProfileAction} from "../../redux/profile/profile-slice";
 import {verifyResetPasswordRequest} from "../../api/verificationApi";
+import Avatar from "@mui/material/Avatar";
 
 const dateFormat = 'YYYY-MM-DD';
 const BASE_ADDRESS_API_URL = 'https://provinces.open-api.vn/api';
@@ -207,10 +208,17 @@ export default function UserProfile() {
         <div className="cover-img">
           <div className="card__infor">
             <div className="avatar">
-              <img
-                src={userProfile?.avatar || 'https://cdn-icons-png.flaticon.com/512/21/21104.png'}
-                alt="avt"
-              />
+              <Avatar
+                style={{
+                  width: '100px', height: '100px',
+                }}
+                id="basic-button"
+                src={userProfile?.avatar}
+              >
+                {<div style={{
+                  fontWeight: 'bold', fontSize: '50px',
+                }}>{localStorage.getItem('username').charAt(0).toUpperCase()}</div>}
+              </Avatar>
               <Button
                 onClick={() => {
                   refInput.current?.click();

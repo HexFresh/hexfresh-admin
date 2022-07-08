@@ -4,37 +4,14 @@ import LineChart from '../../components/line-chart/LineChart';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import PieChartIcon from '@mui/icons-material/PieChart';
 import GroupIcon from '@mui/icons-material/Group';
-import PercentIcon from '@mui/icons-material/Percent';
 import StatusCard from '../../components/status-card/StatusCard';
 import {CircularProgress, Grid} from '@mui/material';
 import DonutChart from "../../components/donut-chart/DonutChart";
 import {getStat} from "../../api/stat";
 import {useNavigate} from "react-router-dom";
+import moment from "moment";
 
-
-const chartOptions = {
-  series: [{
-    name: 'New Freshers', data: [40, 70, 20, 90, 36, 80, 30, 91, 60, 70, 50, 60],
-  }, {
-    name: 'Old Freshers', data: [40, 30, 70, 80, 40, 16, 40, 20, 51, 10, 15, 20],
-  },], options: {
-    color: ['#6ab04c', '#2980b9'], chart: {
-      background: 'transparent',
-    }, dataLabels: {
-      enabled: false,
-    }, stroke: {
-      curve: 'smooth',
-    }, xaxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',],
-    }, legend: {
-      position: 'top',
-    }, grid: {
-      show: true,
-    },
-  },
-};
-
-const options = {
+const PieOptions = {
   title: "Number of freshers of each program", pieHole: 0.8, is3D: false, pieSliceText: "none", pieStartAngle: 100
 };
 
@@ -78,6 +55,29 @@ export default function Dashboard() {
     }
   }
 
+  const options = {
+    title: "New Freshers By Week", hAxis: {
+      title: "Day",
+    }, vAxis: {
+      title: "Number of freshers", viewWindow: {
+        min: 0,
+      }, format: '0'
+    }, series: {
+      1: {curveType: "function"},
+    },
+  };
+
+  const lineData = (stat) => {
+    if (stat) {
+      const result = [["Day", "Fresher Count"]];
+      stat.newFreshersByWeek.forEach((item) => {
+        const date = moment(item.week_end).format('DD/MM');
+        result.push([date, item.total]);
+      })
+      return result;
+    }
+  }
+
   return (<div className="dashboard">
     {loading ? (<CircularProgress className={"circular-progress"}/>) : (<div className="container">
       <div className="page-name">Dashboard</div>
@@ -90,8 +90,11 @@ export default function Dashboard() {
           })}
         </Grid>
       </div>
+      <div className={"chart"}>
+        <LineChart options={options} data={lineData(stat)}/>
+      </div>
       <div className="chart" onClick={() => navigate('/programs')}>
-        <DonutChart options={options} data={donutData(stat)}/>
+        <DonutChart options={PieOptions} data={donutData(stat)}/>
       </div>
     </div>)}
   </div>);

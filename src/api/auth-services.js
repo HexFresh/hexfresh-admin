@@ -18,6 +18,7 @@ class AuthService {
           const {token, user} = response.data;
           localStorage.setItem('userId', user.id);
           localStorage.setItem('roleId', user.roleId);
+          localStorage.setItem('username', user.username);
           localStorage.setItem("user", JSON.stringify(response.data));
           return user;
         }
@@ -41,6 +42,7 @@ class AuthService {
       localStorage.removeItem('userId');
       localStorage.removeItem('roleId');
       localStorage.removeItem('user');
+      localStorage.removeItem('username');
       navigate('/login', {replace: true});
     });
   }

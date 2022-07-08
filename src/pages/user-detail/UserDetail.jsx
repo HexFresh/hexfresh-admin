@@ -21,6 +21,7 @@ import {Breadcrumb, Button, message, Input, DatePicker, Select, Switch} from 'an
 import {UserOutlined, MessageFilled} from '@ant-design/icons';
 import axios from 'axios';
 import moment from 'moment';
+import Avatar from "@mui/material/Avatar";
 
 const dateFormat = 'YYYY-MM-DD';
 const BASE_ADDRESS_API_URL = 'https://provinces.open-api.vn/api';
@@ -221,7 +222,17 @@ export default function UserDetail() {
         <div className="cover-img">
           <div className="card__infor">
             <div className="avatar">
-              <img src={userProfile?.avatar || 'https://cdn-icons-png.flaticon.com/512/21/21104.png'} alt="avt"/>
+              <Avatar
+                style={{
+                  width: '100px', height: '100px',
+                }}
+                id="basic-button"
+                src={userProfile?.avatar}
+              >
+                {<div style={{
+                  fontWeight: 'bold', fontSize: '50px',
+                }}>{localStorage.getItem('username').charAt(0).toUpperCase()}</div>}
+              </Avatar>
             </div>
             <div className="card-body__right">
               <div className="card-body__right__name">{displayFirstName + ' ' + displayLastName}</div>

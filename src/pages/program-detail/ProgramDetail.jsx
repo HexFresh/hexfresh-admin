@@ -14,7 +14,9 @@ import {Select, Popconfirm} from 'antd';
 import {findAllUsersInLeaderboard, updateStatusOfLeaderboard} from "../../api/leaderboardApi";
 import Avatar from "@mui/material/Avatar";
 import {getUsers} from "../../api/hr/userApi";
-import {deleteProgramFromFresher} from "../../api/hr/programApi";
+import {deleteProgramFromFresher, getStatOfProgram} from "../../api/hr/programApi";
+import LineChart from "../../components/line-chart/LineChart";
+import moment from "moment";
 
 const {Option} = Select;
 
@@ -32,6 +34,7 @@ export default function ProgramDetail() {
   const [leaderboard, setLeaderboard] = useState({});
   const [loadingStatus, setLoadingStatus] = useState(false);
   const [fullUser, setFullUser] = React.useState([]);
+  const [stat, setStat] = React.useState(null);
 
   const [isUserModal, setIsUserModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -45,6 +48,12 @@ export default function ProgramDetail() {
     console.log(fullResult);
     setFullUser(fullResult.rows);
   };
+
+  const fetchStatOfProgram = async () => {
+    const result = await getStatOfProgram(programId);
+    setStat(result.newFreshersByDate);
+    console.log(result.newFreshersByDate);
+  }
 
   const fetchProgram = async () => {
     const result = await getProgramDetail(programId);
@@ -69,7 +78,7 @@ export default function ProgramDetail() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await Promise.all([fetchProgram(), fetchBadges(), fetchAllBadges(), fetchLeaderboard(), fetchUsers()]);
+      await Promise.all([fetchProgram(), fetchBadges(), fetchAllBadges(), fetchLeaderboard(), fetchUsers(), fetchStatOfProgram()]);
       setLoading(false);
     };
     fetchData();
@@ -206,6 +215,29 @@ export default function ProgramDetail() {
     await fetchProgram();
   }
 
+  const options = {
+    title: "New Freshers By Date", hAxis: {
+      title: "Day",
+    }, vAxis: {
+      title: "Number of freshers", viewWindow: {
+        min: 0,
+      }, format: '0'
+    }, series: {
+      1: {curveType: "function"},
+    },
+  };
+
+  const lineData = (stat) => {
+    if (stat) {
+      const result = [["Day", "Fresher Count"]];
+      stat.forEach((item) => {
+        const date = moment(item.date).format('DD/MM');
+        result.push([date, item.total]);
+      })
+      return result;
+    }
+  }
+
   return (<div className="program-detail">
     {loading ? (<CircularProgress/>) : (<div className="program-detail-container">
       <div className="top">
@@ -214,120 +246,127 @@ export default function ProgramDetail() {
 
         </div>
       </div>
-      <div className="program-detail-bottom">
-        <div className={"users"}>
-          <div className="users-title">
-            <div className="users-title-name">Users</div>
-            <div className="users-title-btn">
-              <Button type="primary" onClick={showUserModal}>
-                Add user
-              </Button>
-            </div>
-          </div>
-          <div className="users-list">
-            {program?.participants?.map(participant => {
-              return (<div key={participant.id} className="user">
-                <div className="user-left">
-                  <div className="user-avatar">
-                    <Avatar style={{
-                      width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover',
-                    }}
-                            src={participant.user_information.avatar}
-                            alt=""/>
-                  </div>
-                  <Link to={`/users/${participant.id}`} className="user-name">{participant.username}</Link>
-                </div>
-                <div className="user-right">
-                  <div className={"role"}>{renderRole(participant?.role?.id)}</div>
-                  <div className={"remove-user-program"}>
-                    <Popconfirm
-                      title="Are you sure delete this user from program?"
-                      onConfirm={() => handleRemoveUser(participant.id)}
-                    >
-                      <Button className={"remove-user-btn"} type="circle" shape="circle"
-                              icon={<DeleteOutlined/>}/>
-                    </Popconfirm>
-                  </div>
-                </div>
-
-              </div>)
-            })}
-          </div>
-
+      <div className="program-detail-content">
+        <div className={"program-detail-content__line-chart"}>
+          <LineChart options={options} data={lineData(stat)}/>
         </div>
-        <div className={"badges"}>
-          <div className="badges-title">
-            <div className="badges-title-name">Badges</div>
-            <div className="badges-title-btn">
-              <Button type="primary" onClick={showModal}>
-                Add badge
-              </Button>
+
+        <div className="program-detail-bottom">
+          <div className={"users"}>
+            <div className="users-title">
+              <div className="users-title-name">Users</div>
+              <div className="users-title-btn">
+                <Button type="primary" onClick={showUserModal}>
+                  Add user
+                </Button>
+              </div>
+            </div>
+            <div className="users-list">
+              {program?.participants?.map(participant => {
+                return (<div key={participant.id} className="user">
+                  <div className="user-left">
+                    <div className="user-avatar">
+                      <Avatar style={{
+                        width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover',
+                      }}
+                              src={participant.user_information.avatar}
+                              alt=""/>
+                    </div>
+                    <Link to={`/users/${participant.id}`} className="user-name">{participant.username}</Link>
+                  </div>
+                  <div className="user-right">
+                    <div className={"role"}>{renderRole(participant?.role?.id)}</div>
+                    <div className={"remove-user-program"}>
+                      <Popconfirm
+                        title="Are you sure delete this user from program?"
+                        onConfirm={() => handleRemoveUser(participant.id)}
+                      >
+                        <Button className={"remove-user-btn"} type="circle" shape="circle"
+                                icon={<DeleteOutlined/>}/>
+                      </Popconfirm>
+                    </div>
+                  </div>
+
+                </div>)
+              })}
+            </div>
+
+          </div>
+          <div className={"badges"}>
+            <div className="badges-title">
+              <div className="badges-title-name">Badges</div>
+              <div className="badges-title-btn">
+                <Button type="primary" onClick={showModal}>
+                  Add badge
+                </Button>
+              </div>
+            </div>
+            <div className="badges-list">
+              <div className={"badges-list-wrap"}>
+                {badges.map(badge => {
+                  return (<div key={badge.id} className="badge">
+                    <Tooltip title={badge.title}>
+                      <div className="badge-left">
+                        <div className="badge-avatar">
+                          <img style={{
+                            width: '80px', objectFit: 'cover',
+                          }}
+                               src={badge.image}
+                               alt=""/>
+                        </div>
+                      </div>
+                    </Tooltip>
+                    <div className="badge-right">
+                      <Popconfirm
+                        title="Are you sure delete this badge?"
+                        onConfirm={() => handleRemoveBadge(badge.id)}
+                      >
+                        <Tooltip className={"remove-btn"} title="remove">
+                          <Button type="circle" shape="circle"
+                                  icon={<DeleteOutlined/>}/>
+                        </Tooltip>
+                      </Popconfirm>
+                    </div>
+                  </div>)
+                })}
+              </div>
             </div>
           </div>
-          <div className="badges-list">
-            <div className={"badges-list-wrap"}>
-              {badges.map(badge => {
-                return (<div key={badge.id} className="badge">
-                  <Tooltip title={badge.title}>
-                    <div className="badge-left">
-                      <div className="badge-avatar">
-                        <img style={{
-                          width: '80px', objectFit: 'cover',
-                        }}
-                             src={badge.image}
-                             alt=""/>
-                      </div>
+
+          <div className={"leaderboards"}>
+            <div className="leaderboards-title">
+              <div className="leaderboards-title-name">Leaderboard</div>
+              <div className="leaderboards-title-btn">
+                <Switch checked={leaderboard.isActive} loading={loadingStatus} checkedChildren="Active"
+                        unCheckedChildren="Block" onChange={handleChangeLeaderboardStatus}/>
+              </div>
+            </div>
+
+            <div className="leaderboards-list">
+              {leaderboard?.user_leaderboards?.rows.map((user, index) => {
+                return (<div key={user.id} className="leaderboard">
+                  <div className="leaderboard-left">
+                    <div
+                      className="leaderboard-rank">{`#${index + 1}`}</div>
+                    <div className="leaderboard-avatar">
+                      <Avatar style={{
+                        width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%', border: 'none'
+                      }}
+                              src={user?.user?.user_information.avatar}
+                              alt=""/>
                     </div>
-                  </Tooltip>
-                  <div className="badge-right">
-                    <Popconfirm
-                      title="Are you sure delete this badge?"
-                      onConfirm={() => handleRemoveBadge(badge.id)}
-                    >
-                      <Tooltip className={"remove-btn"} title="remove">
-                        <Button type="circle" shape="circle"
-                                icon={<DeleteOutlined/>}/>
-                      </Tooltip>
-                    </Popconfirm>
+                    <div className="leaderboard-name">{user?.user.username}</div>
+                  </div>
+                  <div className="leaderboard-right">
+                    {user?.point}
                   </div>
                 </div>)
               })}
             </div>
           </div>
         </div>
-
-        <div className={"leaderboards"}>
-          <div className="leaderboards-title">
-            <div className="leaderboards-title-name">Leaderboard</div>
-            <div className="leaderboards-title-btn">
-              <Switch checked={leaderboard.isActive} loading={loadingStatus} checkedChildren="Active"
-                      unCheckedChildren="Block" onChange={handleChangeLeaderboardStatus}/>
-            </div>
-          </div>
-
-          <div className="leaderboards-list">
-            {leaderboard?.user_leaderboards?.rows.map((user, index) => {
-              return (<div key={user.id} className="leaderboard">
-                <div className="leaderboard-left">
-                  <div
-                    className="leaderboard-rank">{`#${index + 1}`}</div>
-                  <div className="leaderboard-avatar">
-                    <Avatar style={{
-                      width: '50px', height: '50px', objectFit: 'cover', borderRadius: '50%', border: 'none'
-                    }}
-                            src={user?.user?.user_information.avatar}
-                            alt=""/>
-                  </div>
-                  <div className="leaderboard-name">{user?.user.username}</div>
-                </div>
-                <div className="leaderboard-right">
-                  {user?.point}
-                </div>
-              </div>)
-            })}
-          </div>
-        </div>
       </div>
+
     </div>)}
     <Modal
       className="modal"

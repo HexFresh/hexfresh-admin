@@ -83,7 +83,9 @@ export default function Topbar({openSidebar}) {
             aria-expanded={open ? 'true' : undefined}
             onClick={handleClick}
             src={userProfile.avatar}
-          />
+          >
+            {localStorage.getItem('username').charAt(0).toUpperCase()}
+          </Avatar>
         </div>
       </div>
     </div>

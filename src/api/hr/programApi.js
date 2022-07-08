@@ -47,3 +47,14 @@ export const deleteProgramFromFresher = async (userId, programId) => {
     console.log(error);
   }
 };
+
+export const getStatOfProgram = async (programId) => {
+  const endpoint = `stat/program/${programId}`;
+  try {
+    const response = await axiosClient.get(endpoint);
+    const {data} = response;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}

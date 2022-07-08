@@ -11,6 +11,7 @@ import {useDispatch} from "react-redux";
 import {getNotificationsAction} from "../../redux/notification/notification-slice";
 import {getCountNotificationAction} from "../../redux/count-notification-slice";
 import moment from "moment";
+import Avatar from "@mui/material/Avatar";
 
 const nPerPage = 6;
 
@@ -20,11 +21,23 @@ const {Option} = Select;
 const {TextArea} = Input;
 
 const columns = [{
-  title: 'Username',
+  title: 'User',
   dataIndex: 'username',
   key: 'username',
   sorter: (a, b) => ('' + a.username).localeCompare(b.username),
-  render: (text, user) => <Link to={`/users/${user.id}`}>{text}</Link>,
+  render: (text, user) => <div style={{
+    display: 'flex', gridGap: '10px', alignItems: 'center'
+  }}><Avatar
+    style={{
+      width: '40px', height: '40px',
+    }}
+    id="basic-button"
+    src={user?.user_information?.avatar}
+  >
+    {<div style={{
+      fontWeight: 'bold', fontSize: '20px',
+    }}>{user.username.charAt(0).toUpperCase()}</div>}
+  </Avatar><Link to={`/users/${user.id}`}>{text}</Link></div>,
 }, {
   title: 'Create date',
   dataIndex: 'createdAt',
@@ -125,6 +138,7 @@ function ListUser() {
   const fetchUsers = async (keyword, roleId, limit, offset) => {
     setLoading(true);
     const result = await getUsers({keyword, roleId, limit, offset});
+    console.log(result.rows)
     const fullResult = await getUsers({keyword: "", limit: result.count});
     const data = result.rows.map((user) => ({...user, key: user.id}));
     setUsers(data || []);
