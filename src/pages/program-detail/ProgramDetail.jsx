@@ -216,7 +216,7 @@ export default function ProgramDetail() {
   }
 
   const options = {
-    title: "New Freshers By Date", hAxis: {
+    title: "Number of freshers join the program by date", hAxis: {
       title: "Day",
     }, vAxis: {
       title: "Number of freshers", viewWindow: {
@@ -229,7 +229,7 @@ export default function ProgramDetail() {
 
   const lineData = (stat) => {
     if (stat) {
-      const result = [["Day", "Fresher Count"]];
+      const result = [["Day", "Fresher"]];
       stat.forEach((item) => {
         const date = moment(item.date).format('DD/MM');
         result.push([date, item.total]);
