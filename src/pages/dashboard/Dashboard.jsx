@@ -56,7 +56,7 @@ export default function Dashboard() {
   }
 
   const options = {
-    title: "New Freshers By Week", hAxis: {
+    title: "New Freshers By Date", hAxis: {
       title: "Day",
     }, vAxis: {
       title: "Number of freshers", viewWindow: {
@@ -69,9 +69,9 @@ export default function Dashboard() {
 
   const lineData = (stat) => {
     if (stat) {
-      const result = [["Day", "Fresher Count"]];
-      stat.newFreshersByWeek.forEach((item) => {
-        const date = moment(item.week_end).format('DD/MM');
+      const result = [["Day", "Fresher"]];
+      stat.newFreshersByDate.forEach((item) => {
+        const date = moment(item.date).format('DD/MM');
         result.push([date, item.total]);
       })
       return result;
