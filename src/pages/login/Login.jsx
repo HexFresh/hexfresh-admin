@@ -28,7 +28,7 @@ export default function Login() {
 
   const openSuccessNotification = (placement) => {
     notification.success({
-      message: `Login success`, placement, duration: 2,
+      message: `Login successfully`, placement, duration: 2,
     });
   };
 
