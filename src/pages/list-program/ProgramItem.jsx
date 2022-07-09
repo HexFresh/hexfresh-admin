@@ -57,7 +57,7 @@ function ProgramItem({program, refreshPrograms}) {
         {program.title}
       </Link>
 
-      <div className={"author"}>
+      {userProfile.username ? (<div className={"author"}>
         <img
           alt={"name"}
           style={{
@@ -66,7 +66,8 @@ function ProgramItem({program, refreshPrograms}) {
           }}
           src={userProfile.avatar || "https://simg.nicepng.com/png/small/128-1280406_view-user-icon-png-user-circle-icon-png.png"}/>
         <div className={"name"}>{renderName()}</div>
-      </div>
+      </div>) : (<></>)}
+
     </div>
   </div>);
 }

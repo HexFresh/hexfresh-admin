@@ -1,21 +1,23 @@
-import React, {useState, useLayoutEffect} from 'react';
+import React, {useState, useLayoutEffect, Suspense, lazy} from 'react';
 import {Routes, Route, Navigate, useNavigate} from 'react-router-dom';
-import Login from './pages/login/Login';
 import Sidebar from './components/sidebar/Sidebar';
 import './App.css';
 import Topbar from './components/topbar/Topbar';
 import {useDispatch} from 'react-redux';
-import ListProgram from './pages/list-program/ListProgram';
-import Dashboard from './pages/dashboard/Dashboard';
-import ListUser from './pages/list-user/ListUser';
-import UserDetail from './pages/user-detail/UserDetail';
-import UserProfile from './pages/user-profile/UserProfile';
 import {Button} from 'antd';
-import ProgramDetail from './pages/program-detail/ProgramDetail';
-import Badges from "./pages/badges/Badges";
 import {signOut} from "./redux/auth/auth-slice";
 import {ErrorBoundary} from "./pages/ErrorBoundary";
-import ForgotPassword from "./pages/forgot-password/ForgotPassword";
+
+const Login = lazy(() => import('./pages/login/Login'));
+const ListProgram = lazy(() => import('./pages/list-program/ListProgram'));
+const Dashboard = lazy(() => import('./pages/dashboard/Dashboard'));
+const ListUser = lazy(() => import('./pages/list-user/ListUser'));
+const ProgramDetail = lazy(() => import('./pages/program-detail/ProgramDetail'));
+const UserProfile = lazy(() => import('./pages/user-profile/UserProfile'));
+const UserDetail = lazy(() => import('./pages/user-detail/UserDetail'));
+const ForgotPassword = lazy(() => import('./pages/forgot-password/ForgotPassword'));
+const Badges = lazy(() => import('./pages/badges/Badges'));
+
 
 function App() {
   const dispatch = useDispatch();
@@ -43,17 +45,19 @@ function App() {
     <Sidebar open={open} openSidebar={openSidebar} closeSidebar={closeSidebar}/>
     <div className="sub">
       <Topbar openSidebar={openSidebar}/>
-      <Routes>
-        <Route path="/" element={<Navigate replace to="/programs"/>}/>
-        <Route path="/login" element={<Navigate replace to="/programs"/>}/>
-        <Route path="/programs" element={<ListProgram/>}/>
-        <Route path="/programs/:programId" element={<ProgramDetail/>}/>
-        <Route path="/dashboard" element={<Dashboard/>}/>
-        <Route path="/users" element={<ListUser/>}/>
-        <Route path="/users/:userId" element={<UserDetail/>}/>
-        <Route path="/profile/:userId" element={<UserProfile/>}/>
-        <Route path={"/badges"} element={<Badges/>}/>
-      </Routes>
+      <Suspense fallback={<p> Loading...</p>}>
+        <Routes>
+          <Route path="/" element={<Navigate replace to="/programs"/>}/>
+          <Route path="/login" element={<Navigate replace to="/programs"/>}/>
+          <Route path="/programs" element={<ListProgram/>}/>
+          <Route path="/programs/:programId" element={<ProgramDetail/>}/>
+          <Route path="/dashboard" element={<Dashboard/>}/>
+          <Route path="/users" element={<ListUser/>}/>
+          <Route path="/users/:userId" element={<UserDetail/>}/>
+          <Route path="/profile/:userId" element={<UserProfile/>}/>
+          <Route path={"/badges"} element={<Badges/>}/>
+        </Routes>
+      </Suspense>
     </div>
   </>) : (<div className="no-role">
     <div className="title">You do not have permission to use this website</div>
@@ -62,11 +66,11 @@ function App() {
     </Button>
   </div>);
 
-  const unAuthContent = (<Routes>
+  const unAuthContent = (<Suspense fallback={<p> Loading...</p>}><Routes>
     <Route path="/login" element={<Login/>}/>
     <Route path="/forgot-password" element={<ForgotPassword/>}/>
     <Route path="*" element={<Navigate replace to="/login"/>}/>
-  </Routes>);
+  </Routes></Suspense>);
 
   const routedContent = isLogin ? authContent : unAuthContent;
   return (<ErrorBoundary handleError={handleLogout}>
