@@ -37,7 +37,7 @@ export default function NotificationItem(props) {
   return (<div onClick={() => notificationItemClick(notification, userProfile)} key={notification._id}
                className={`notification-item ${checkSeen() === false ? "" : "seen"}`}>
     <div className="notification-item__left">
-      <Avatar key={notification._id} src={userProfile.avatar}/>
+      <Avatar key={notification._id} src={userProfile?.avatar}/>
     </div>
     <div className="notification-item__right">
       <div className="notification-item__right__title">{notification.title}</div>
