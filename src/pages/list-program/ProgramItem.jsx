@@ -57,7 +57,7 @@ function ProgramItem({program, refreshPrograms}) {
         {program.title}
       </Link>
 
-      {userProfile.username ? (<div className={"author"}>
+      {userProfile?.username ? (<div className={"author"}>
         <img
           alt={"name"}
           style={{

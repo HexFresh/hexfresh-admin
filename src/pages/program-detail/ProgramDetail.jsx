@@ -457,7 +457,7 @@ export default function ProgramDetail() {
         type="primary"
         onClick={handleUserOk}
       >
-        Send
+        Add
       </Button>,]}
     >
       <div className="form">
