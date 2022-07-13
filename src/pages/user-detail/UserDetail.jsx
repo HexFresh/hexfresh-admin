@@ -26,6 +26,10 @@ import Avatar from "@mui/material/Avatar";
 const dateFormat = 'YYYY-MM-DD';
 const BASE_ADDRESS_API_URL = 'https://provinces.open-api.vn/api';
 
+function onlySpaces(str) {
+  return str.trim().length === 0;
+}
+
 export default function UserDetail() {
   const [loading, setLoading] = useState(false);
   const [userAccount, setUserAccount] = useState({});
@@ -119,6 +123,14 @@ export default function UserDetail() {
   }, []);
 
   const handleUpdateUserProfile = async () => {
+    if (onlySpaces(userProfile.firstName)) {
+      message.error('First name could not be empty');
+      return;
+    }
+    if (onlySpaces(userProfile.lastName)) {
+      message.error('Last name could not be empty');
+      return;
+    }
     message.loading('Updating...').then(async () => {
       const newUserProfile = {
         ...userProfile, address: {
