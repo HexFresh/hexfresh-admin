@@ -66,7 +66,7 @@ export default function Login() {
   return (<div className="login">
     <img src={logo} alt="logo"/>
     <div className="container">
-      <div className="welcome">Welcome Back</div>
+      <div className="welcome">Welcome</div>
       <div className="sub-welcome">Enter the credentials to access your account</div>
       <div className="filed">
         <Input onKeyDown={handleKeyDown} onChange={(e) => setUsername(e.target.value)} size="large"

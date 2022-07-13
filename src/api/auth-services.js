@@ -1,9 +1,7 @@
 import axios from "axios";
 
-const API_URL = "https://hexfresh-auth.herokuapp.com/api";
-
 const axiosAuth = axios.create({
-  baseURL: API_URL
+  baseURL: process.env.REACT_APP_AUTH_SERVER_URL,
 })
 
 axiosAuth.defaults.withCredentials = true;
