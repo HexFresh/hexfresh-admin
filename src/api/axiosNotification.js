@@ -4,7 +4,7 @@ import authService from "./auth-services";
 import axiosClient from "./axiosClient";
 
 const axiosNotification = axios.create({
-  baseURL: process.env.REACT_APP_CHAT_SERVER_URL, headers: {
+  baseURL: 'https://hexfresh-socket.herokuapp.com/', headers: {
     "Content-Type": "application/json",
   },
 });
